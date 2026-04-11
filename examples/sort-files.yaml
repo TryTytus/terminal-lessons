@@ -1,0 +1,22 @@
+version: 1
+id: sort-files-001
+title: "Sortowanie nazw plikow"
+commands: ["cat", "sort"]
+difficulty: "beginner"
+intro: "Utworz plik sorted.txt z alfabetycznie posortowana lista nazw z pliku names.txt."
+workspace:
+  files:
+    - path: "names.txt"
+      content: "zeta.txt\nalpha.txt\nbeta.txt\n"
+hints:
+  - "Zacznij od cat names.txt."
+  - "Pipe moze polaczyc cat z sort."
+  - "Operator > zapisuje wynik komendy do pliku."
+solution:
+  commands:
+    - "cat names.txt | sort > sorted.txt"
+  explanation: "sort porzadkuje linie alfabetycznie, a > zapisuje wynik do pliku sorted.txt."
+checks:
+  - type: "file_equals"
+    path: "sorted.txt"
+    expected: "alpha.txt\nbeta.txt\nzeta.txt\n"

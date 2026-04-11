@@ -1,0 +1,79 @@
+# Terminal Lessons AI Rules
+
+These rules are permanent project instructions for AI agents working in this repository.
+
+## Skill: Documenting And Implementing Features
+
+Trigger: Any request to add, change, fix, refactor, or complete an app feature.
+
+Workflow:
+- Keep OS-level logic in Go backend code. This includes PTY/session handling, filesystem and workspace operations, lesson import/storage, YAML validation, check execution, process cleanup, and Wails event emission.
+- Keep UI logic in React frontend code. This includes Xterm.js rendering, panels, controls, visual state, hint reveal, check-result display, and user interaction flows.
+- Use Wails bound methods for frontend-to-backend commands and Wails runtime events for backend-to-frontend streaming/status updates.
+- When changing Go structs returned to the frontend or any bound Go methods, remind the user to run `wails generate module`.
+- When a feature is complete, update `docs/architecture.md` with the feature behavior and any interface changes.
+- When adding or changing Wails events, document the event name and exact payload shape in `docs/architecture.md`.
+- When a phase or task is complete, check it off in `AGENTS.md`.
+- Prefer tests near the changed subsystem:
+  - Go: `go test ./...`
+  - Frontend: `pnpm --dir frontend test`
+  - Frontend build: `pnpm --dir frontend build`
+  - Full desktop build: `CGO_ENABLED=1 wails build`
+- For macOS/Wails builds in this repo, use a PATH that includes Go, Wails, Node, pnpm, and `/usr/sbin`.
+
+## Skill: Curriculum Developer / Lesson Generation
+
+Trigger: The user asks to create a new exercise, task, lesson, terminal challenge, or curriculum item.
+
+Output contract:
+- Generate a YAML lesson that conforms to this schema shape:
+
+```yaml
+version: 1
+id: "safe-unique-lesson-id"
+title: "Human-readable lesson title"
+commands: ["command1", "command2"]
+difficulty: "beginner"
+intro: "Clear learner-facing task instructions."
+workspace:
+  files:
+    - path: "relative/path.txt"
+      content: "Initial file content\n"
+hints:
+  - "First hint."
+  - "Second hint."
+solution:
+  commands:
+    - "example command for learner reference only"
+  explanation: "Why the solution works."
+checks:
+  - type: "file_equals"
+    path: "relative/output.txt"
+    expected: "Expected content\n"
+```
+
+Strict rules:
+- Never generate executable shell scripts, arbitrary execution code, setup scripts, teardown scripts, or test scripts inside lesson YAML.
+- `solution.commands` are educational reference only and must not be treated as executable test logic.
+- All paths must be safe relative paths.
+- Never use absolute paths.
+- Never use `..` path traversal.
+- Never include null bytes or platform-specific dangerous path tricks.
+- Keep generated workspace files small and focused.
+- Prefer deterministic checks that inspect files or terminal transcript text.
+- Use `trim: true` only when leading/trailing whitespace should not matter.
+
+Permitted check types:
+- `file_exists`
+- `file_not_exists`
+- `file_equals`
+- `file_contains`
+- `stdout_contains`
+- `stdout_matches`
+
+Check rules:
+- `file_exists`, `file_not_exists`, `file_equals`, and `file_contains` require a safe relative `path`.
+- `file_equals` and `file_contains` use `expected`.
+- `stdout_contains` uses `expected`.
+- `stdout_matches` uses `pattern` as a regular expression.
+- Do not invent new check types unless the backend is updated first and `docs/architecture.md`, `docs/lesson.schema.json`, `docs/lesson-authoring.md`, and `AGENTS.md` are updated.

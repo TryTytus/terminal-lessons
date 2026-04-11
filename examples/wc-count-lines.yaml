@@ -1,0 +1,23 @@
+version: 1
+id: wc-count-lines-001
+title: "Count lines with wc"
+commands: ["wc"]
+difficulty: "beginner"
+intro: "Create line-count.txt containing only the number of lines in access.log."
+workspace:
+  files:
+    - path: "access.log"
+      content: "GET / 200\nGET /about 200\nPOST /login 302\nGET /dashboard 200\nGET /missing 404\nGET /logout 204\n"
+hints:
+  - "wc -l counts lines."
+  - "Redirect the input from access.log if you want only the number and not the file name."
+  - "Use > to save the count."
+solution:
+  commands:
+    - "wc -l < access.log > line-count.txt"
+  explanation: "Using < sends the file as stdin to wc, so the output contains only the count."
+checks:
+  - type: "file_equals"
+    path: "line-count.txt"
+    expected: "6"
+    trim: true

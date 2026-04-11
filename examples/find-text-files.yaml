@@ -1,0 +1,28 @@
+version: 1
+id: find-text-files-001
+title: "Find text files"
+commands: ["find", "sort"]
+difficulty: "beginner"
+intro: "Create text-files.txt containing all .txt files under the current workspace, one path per line, sorted alphabetically."
+workspace:
+  files:
+    - path: "notes/alpha.txt"
+      content: "alpha\n"
+    - path: "notes/beta.txt"
+      content: "beta\n"
+    - path: "notes/todo.md"
+      content: "todo\n"
+    - path: "data/raw.csv"
+      content: "name,value\n"
+hints:
+  - "find can search below the current directory."
+  - "Use -type f to keep only files and -name \"*.txt\" to match the extension."
+  - "Pipe into sort before writing the output."
+solution:
+  commands:
+    - "find . -type f -name \"*.txt\" | sort > text-files.txt"
+  explanation: "find lists matching files below ., sort makes the output deterministic, and > writes the final list."
+checks:
+  - type: "file_equals"
+    path: "text-files.txt"
+    expected: "./notes/alpha.txt\n./notes/beta.txt\n"

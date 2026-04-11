@@ -1,0 +1,22 @@
+version: 1
+id: awk-sales-total-001
+title: "Calculate a CSV total with awk"
+commands: ["awk"]
+difficulty: "intermediate"
+intro: "Create total.txt containing the total revenue from sales.csv. Multiply quantity by price for each data row and sum the results."
+workspace:
+  files:
+    - path: "sales.csv"
+      content: "item,qty,price\napples,3,4\nbananas,5,2\ncoffee,3,9\n"
+hints:
+  - "Use comma as the awk field separator."
+  - "Skip the header row with NR > 1."
+  - "Add $2 * $3 for every data row and print the sum in END."
+solution:
+  commands:
+    - "awk -F, 'NR > 1 { total += $2 * $3 } END { print total }' sales.csv > total.txt"
+  explanation: "awk splits CSV rows on commas, multiplies quantity and price fields, and prints the accumulated total after reading the file."
+checks:
+  - type: "file_equals"
+    path: "total.txt"
+    expected: "49\n"

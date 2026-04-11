@@ -118,3 +118,27 @@ func TestStoreImportAndList(t *testing.T) {
 		t.Fatalf("List() = %#v", summaries)
 	}
 }
+
+func TestExamplesParse(t *testing.T) {
+	paths, err := filepath.Glob("../../examples/*.yaml")
+	if err != nil {
+		t.Fatalf("glob examples: %v", err)
+	}
+	if len(paths) == 0 {
+		t.Fatal("no example lessons found")
+	}
+
+	seenIDs := map[string]string{}
+	for _, path := range paths {
+		t.Run(filepath.Base(path), func(t *testing.T) {
+			lesson, _, err := ParseFile(path)
+			if err != nil {
+				t.Fatalf("ParseFile(%q) error = %v", path, err)
+			}
+			if previous, ok := seenIDs[lesson.ID]; ok {
+				t.Fatalf("duplicate lesson id %q also used by %s", lesson.ID, previous)
+			}
+			seenIDs[lesson.ID] = path
+		})
+	}
+}

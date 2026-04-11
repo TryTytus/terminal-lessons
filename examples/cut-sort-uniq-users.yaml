@@ -1,0 +1,22 @@
+version: 1
+id: cut-sort-uniq-users-001
+title: "Extract unique usernames"
+commands: ["cut", "tail", "sort", "uniq"]
+difficulty: "intermediate"
+intro: "Create users.txt containing the unique usernames from signups.csv, sorted alphabetically and without the header."
+workspace:
+  files:
+    - path: "signups.csv"
+      content: "id,username,plan\n1,ada,pro\n2,linus,free\n3,ada,pro\n4,grace,team\n5,linus,free\n"
+hints:
+  - "The username is the second comma-separated field."
+  - "Remove the header before or after cutting."
+  - "sort before uniq so duplicates are adjacent."
+solution:
+  commands:
+    - "tail -n +2 signups.csv | cut -d, -f2 | sort | uniq > users.txt"
+  explanation: "tail removes the header, cut extracts the username column, sort orders the names, and uniq removes duplicates."
+checks:
+  - type: "file_equals"
+    path: "users.txt"
+    expected: "ada\ngrace\nlinus\n"

@@ -1,0 +1,22 @@
+version: 1
+id: head-tail-window-001
+title: "Select a window with head and tail"
+commands: ["head", "tail"]
+difficulty: "beginner"
+intro: "Create selected.txt containing lines 4 and 5 from numbers.txt."
+workspace:
+  files:
+    - path: "numbers.txt"
+      content: "1\n2\n3\n4\n5\n6\n7\n8\n"
+hints:
+  - "head can keep the first five lines."
+  - "tail can take the last two lines from that smaller stream."
+  - "Pipe head into tail and redirect the result."
+solution:
+  commands:
+    - "head -n 5 numbers.txt | tail -n 2 > selected.txt"
+  explanation: "head -n 5 keeps lines 1 through 5, then tail -n 2 returns lines 4 and 5."
+checks:
+  - type: "file_equals"
+    path: "selected.txt"
+    expected: "4\n5\n"

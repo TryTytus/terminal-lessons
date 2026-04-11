@@ -1,0 +1,22 @@
+version: 1
+id: grep-errors-001
+title: "Filter error lines with grep"
+commands: ["grep"]
+difficulty: "beginner"
+intro: "Create errors.txt containing only the lines from app.log that include ERROR."
+workspace:
+  files:
+    - path: "app.log"
+      content: "INFO server started\nWARN cache miss\nERROR database timeout\nINFO retry scheduled\nERROR request failed\n"
+hints:
+  - "grep prints lines that match a text pattern."
+  - "Search for the exact word ERROR in app.log."
+  - "Use > to write the matching lines into errors.txt."
+solution:
+  commands:
+    - "grep ERROR app.log > errors.txt"
+  explanation: "grep ERROR app.log selects only matching log lines, and > writes them to errors.txt."
+checks:
+  - type: "file_equals"
+    path: "errors.txt"
+    expected: "ERROR database timeout\nERROR request failed\n"

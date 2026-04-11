@@ -1,0 +1,25 @@
+version: 1
+id: xargs-touch-files-001
+title: "Create files with xargs"
+commands: ["xargs", "touch"]
+difficulty: "intermediate"
+intro: "Use the filenames in files-to-create.txt to create empty draft files in the current workspace."
+workspace:
+  files:
+    - path: "files-to-create.txt"
+      content: "draft-alpha.txt\ndraft-beta.txt\ndraft-gamma.txt\n"
+hints:
+  - "xargs turns input lines into command arguments."
+  - "touch creates a file if it does not exist."
+  - "Feed files-to-create.txt into xargs touch."
+solution:
+  commands:
+    - "xargs touch < files-to-create.txt"
+  explanation: "xargs reads the filenames from stdin and passes them to touch, creating each listed file."
+checks:
+  - type: "file_exists"
+    path: "draft-alpha.txt"
+  - type: "file_exists"
+    path: "draft-beta.txt"
+  - type: "file_exists"
+    path: "draft-gamma.txt"

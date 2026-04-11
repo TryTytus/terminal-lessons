@@ -1,0 +1,22 @@
+version: 1
+id: uniq-deduplicate-sorted-001
+title: "Deduplicate sorted lines"
+commands: ["sort", "uniq"]
+difficulty: "beginner"
+intro: "Create unique-animals.txt containing each animal from animals.txt once, sorted alphabetically."
+workspace:
+  files:
+    - path: "animals.txt"
+      content: "otter\nlynx\notter\nbear\nlynx\nant\n"
+hints:
+  - "uniq removes adjacent duplicate lines only."
+  - "Sort the file first so duplicate animals become adjacent."
+  - "Redirect the final output to unique-animals.txt."
+solution:
+  commands:
+    - "sort animals.txt | uniq > unique-animals.txt"
+  explanation: "sort orders the lines and groups duplicates together, then uniq keeps a single copy of each line."
+checks:
+  - type: "file_equals"
+    path: "unique-animals.txt"
+    expected: "ant\nbear\nlynx\notter\n"

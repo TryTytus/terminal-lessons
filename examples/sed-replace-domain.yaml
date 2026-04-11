@@ -1,0 +1,22 @@
+version: 1
+id: sed-replace-domain-001
+title: "Replace text with sed"
+commands: ["sed"]
+difficulty: "beginner"
+intro: "Create production-urls.txt by replacing every occurrence of staging with production in urls.txt."
+workspace:
+  files:
+    - path: "urls.txt"
+      content: "https://staging.example.com/api\nhttps://staging.example.com/assets\nhttps://docs.example.com/staging-guide\n"
+hints:
+  - "sed can substitute text with s/old/new/g."
+  - "Use the g flag so every occurrence on a line is replaced."
+  - "Write the transformed output to a new file."
+solution:
+  commands:
+    - "sed 's/staging/production/g' urls.txt > production-urls.txt"
+  explanation: "sed rewrites matching text in the stream and > saves the transformed lines to production-urls.txt."
+checks:
+  - type: "file_equals"
+    path: "production-urls.txt"
+    expected: "https://production.example.com/api\nhttps://production.example.com/assets\nhttps://docs.example.com/production-guide\n"

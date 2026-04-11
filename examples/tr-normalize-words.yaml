@@ -1,0 +1,22 @@
+version: 1
+id: tr-normalize-words-001
+title: "Normalize words with tr"
+commands: ["tr", "sort", "uniq"]
+difficulty: "beginner"
+intro: "Create normalized.txt containing the lowercase unique words from words.txt, sorted alphabetically."
+workspace:
+  files:
+    - path: "words.txt"
+      content: "Apple\nbanana\nAPPLE\nCherry\nbanana\n"
+hints:
+  - "tr can convert uppercase characters to lowercase."
+  - "After normalizing case, sort the words."
+  - "Use uniq after sort to remove duplicates."
+solution:
+  commands:
+    - "tr '[:upper:]' '[:lower:]' < words.txt | sort | uniq > normalized.txt"
+  explanation: "tr normalizes case, sort groups equal words, and uniq keeps one copy of each word."
+checks:
+  - type: "file_equals"
+    path: "normalized.txt"
+    expected: "apple\nbanana\ncherry\n"

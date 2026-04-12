@@ -1,0 +1,11 @@
+ok you have successfully created course with format and validation if the user completed exercise, also the features are hints and reveal solution,
+now i want you to expand this app, i want to add a roadmap feature
+roadmap is full course containing many exercises, in each roadmap contains many commands to learn, each command have many parameters and i want you to teach also the popular used parameters (-- and -), that can be useful in daily work, i want you to teach this parameters, , but not just simple one exercise for one command but for each parameter you want to include one exercises (and also one without parameters if it make sense), also you can add for each command 1 or 2 exercises that summarizes the concept of command and maybe show more advanced use cases with many parameters (if command is very simple and there is no need for advanced exercises you can skip this part). Also if the command have like custom patters like find and you now you cant teach it with one exercise this patterns like in find there are patterns for -name you can include more excercises,
+
+i want you to create a beautiful modern and impressive roadmap view, that is available on the left side, something like sidebar and also full preview of roadmap that full screen roadmap, that is full beautiful agenda, that makes progress enjoyable, create it as you would be a senior front end dev with also ui/ux experience
+
+roadmaps must be imported, but i want them to have different behavior,
+they are imported as folders, in the folder is specific file that define this roadmap, and is summary of this roadmap, this allows to navigate easily thru exercises, in each folder there are many files of exercises and there is also one file for each command that is the explanation of command, and shows the usage, it show beautifully how to use the commands and what will be the output of command (the examples of usage) (you can do it maybe in markdown and convert it to html) each command should have this, remember that each roadmap have many commands and this commands have many exercises
+
+
+i want to leave also the behavior of importing single exercises

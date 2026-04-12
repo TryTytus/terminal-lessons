@@ -1,0 +1,22 @@
+version: 1
+id: roadmap-sort-key
+title: "Sort by a field"
+commands: ["sort"]
+difficulty: "intermediate"
+intro: "Create by-name.txt with scores.txt sorted alphabetically by the second field."
+workspace:
+  files:
+    - path: "scores.txt"
+      content: "18 zara\n41 ada\n27 maya\n"
+hints:
+  - "Fields are separated by whitespace by default."
+  - "Use -k2,2 to sort by only the second field."
+  - "Write the result into by-name.txt."
+solution:
+  commands:
+    - "sort -k2,2 scores.txt > by-name.txt"
+  explanation: "-k2,2 tells sort to use the second field as the sort key."
+checks:
+  - type: "file_equals"
+    path: "by-name.txt"
+    expected: "41 ada\n27 maya\n18 zara\n"

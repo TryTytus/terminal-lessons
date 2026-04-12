@@ -6,8 +6,20 @@ export function ImportLesson(arg1) {
   return window['go']['main']['App']['ImportLesson'](arg1);
 }
 
+export function ImportRoadmap(arg1) {
+  return window['go']['main']['App']['ImportRoadmap'](arg1);
+}
+
 export function ListLessons() {
   return window['go']['main']['App']['ListLessons']();
+}
+
+export function ListRoadmaps() {
+  return window['go']['main']['App']['ListRoadmaps']();
+}
+
+export function LoadRoadmap(arg1) {
+  return window['go']['main']['App']['LoadRoadmap'](arg1);
 }
 
 export function ResetLesson(arg1) {
@@ -22,8 +34,16 @@ export function SelectAndImportLesson() {
   return window['go']['main']['App']['SelectAndImportLesson']();
 }
 
+export function SelectAndImportRoadmap() {
+  return window['go']['main']['App']['SelectAndImportRoadmap']();
+}
+
 export function StartLesson(arg1) {
   return window['go']['main']['App']['StartLesson'](arg1);
+}
+
+export function StartRoadmapLesson(arg1, arg2) {
+  return window['go']['main']['App']['StartRoadmapLesson'](arg1, arg2);
 }
 
 export function StopLesson(arg1) {

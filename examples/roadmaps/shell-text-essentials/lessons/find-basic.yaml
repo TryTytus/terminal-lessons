@@ -1,0 +1,26 @@
+version: 1
+id: roadmap-find-basic
+title: "List a project tree"
+commands: ["find", "sort"]
+difficulty: "beginner"
+intro: "Create tree.txt containing every path below the project directory, sorted alphabetically."
+workspace:
+  files:
+    - path: "project/README.md"
+      content: "# Project\n"
+    - path: "project/src/app.js"
+      content: "console.log('app')\n"
+    - path: "project/logs/app.log"
+      content: "ok\n"
+hints:
+  - "Use find project to walk the project directory."
+  - "Pipe into sort so the order is stable."
+  - "Write the result into tree.txt in the workspace root."
+solution:
+  commands:
+    - "find project | sort > tree.txt"
+  explanation: "find project prints the directory and everything inside it. sort makes the path order deterministic."
+checks:
+  - type: "file_equals"
+    path: "tree.txt"
+    expected: "project\nproject/README.md\nproject/logs\nproject/logs/app.log\nproject/src\nproject/src/app.js\n"

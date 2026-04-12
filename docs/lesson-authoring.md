@@ -2,6 +2,9 @@
 
 Lessons are YAML files generated outside the app and imported into Terminal Lessons. The app validates the YAML and only runs declarative checks; lesson files must not include shell scripts or arbitrary test commands.
 
+Standalone lessons can be imported directly. The same lesson files can also be
+referenced from roadmap folders; see `docs/roadmap-authoring.md`.
+
 ## Minimal Shape
 
 ```yaml

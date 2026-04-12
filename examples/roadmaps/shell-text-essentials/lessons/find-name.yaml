@@ -1,0 +1,28 @@
+version: 1
+id: roadmap-find-name
+title: "Find files by name pattern"
+commands: ["find", "sort"]
+difficulty: "beginner"
+intro: "Create markdown.txt containing every Markdown file under project, sorted alphabetically."
+workspace:
+  files:
+    - path: "project/README.md"
+      content: "# Readme\n"
+    - path: "project/docs/plan.md"
+      content: "# Plan\n"
+    - path: "project/docs/data.txt"
+      content: "data\n"
+    - path: "project/src/app.js"
+      content: "console.log('app')\n"
+hints:
+  - "Use -name with a quoted glob pattern."
+  - "The pattern should be \"*.md\"."
+  - "Pipe into sort before writing markdown.txt."
+solution:
+  commands:
+    - "find project -name \"*.md\" | sort > markdown.txt"
+  explanation: "-name \"*.md\" keeps paths whose final name ends with .md."
+checks:
+  - type: "file_equals"
+    path: "markdown.txt"
+    expected: "project/README.md\nproject/docs/plan.md\n"

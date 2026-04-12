@@ -1,0 +1,22 @@
+version: 1
+id: roadmap-grep-invert-match
+title: "Invert a grep match"
+commands: ["grep"]
+difficulty: "beginner"
+intro: "Create clean.log containing every line from build.log except DEBUG lines."
+workspace:
+  files:
+    - path: "build.log"
+      content: "INFO compile started\nDEBUG temp path ready\nWARN lint skipped\nDEBUG cache key hit\nINFO compile finished\n"
+hints:
+  - "Invert match means keep lines that do not match the pattern."
+  - "Use -v with the DEBUG pattern."
+  - "Write the remaining lines into clean.log."
+solution:
+  commands:
+    - "grep -v DEBUG build.log > clean.log"
+  explanation: "grep -v DEBUG removes matching DEBUG lines from the output."
+checks:
+  - type: "file_equals"
+    path: "clean.log"
+    expected: "INFO compile started\nWARN lint skipped\nINFO compile finished\n"

@@ -1,0 +1,21 @@
+version: 1
+id: roadmap-sort-basic
+title: "Sort names alphabetically"
+commands: ["sort"]
+difficulty: "beginner"
+intro: "Create sorted-names.txt with the names from names.txt in alphabetical order."
+workspace:
+  files:
+    - path: "names.txt"
+      content: "zeta\nalpha\nbeta\n"
+hints:
+  - "sort can read a file directly."
+  - "Redirect the sorted output into sorted-names.txt."
+solution:
+  commands:
+    - "sort names.txt > sorted-names.txt"
+  explanation: "sort orders the lines alphabetically by default."
+checks:
+  - type: "file_equals"
+    path: "sorted-names.txt"
+    expected: "alpha\nbeta\nzeta\n"

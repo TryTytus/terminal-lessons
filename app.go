@@ -13,6 +13,7 @@ import (
 
 	"terminal-lessons/internal/checks"
 	"terminal-lessons/internal/lessons"
+	"terminal-lessons/internal/roadmaps"
 	"terminal-lessons/internal/terminal"
 	"terminal-lessons/internal/workspace"
 
@@ -24,26 +25,30 @@ const (
 	eventTerminalExit   = "terminal:exit"
 	eventTerminalError  = "terminal:error"
 	eventLessonState    = "lesson:state"
+	eventRoadmapState   = "roadmap:state"
 	eventChecksResult   = "checks:result"
 )
 
 type App struct {
-	ctx   context.Context
-	store *lessons.Store
+	ctx          context.Context
+	store        *lessons.Store
+	roadmapStore *roadmaps.Store
 
 	mu       sync.Mutex
 	sessions map[string]*lessonSession
 }
 
 type lessonSession struct {
-	lesson *lessons.Lesson
-	ws     *workspace.Workspace
-	term   *terminal.Session
+	lesson    *lessons.Lesson
+	roadmapID string
+	ws        *workspace.Workspace
+	term      *terminal.Session
 }
 
 type LessonSessionState struct {
 	SessionID    string          `json:"sessionID"`
 	LessonID     string          `json:"lessonID"`
+	RoadmapID    string          `json:"roadmapID,omitempty"`
 	WorkspaceDir string          `json:"workspaceDir"`
 	Lesson       *lessons.Lesson `json:"lesson"`
 }
@@ -77,6 +82,7 @@ func NewApp() *App {
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
 	a.store = lessons.NewStore(appDataDir())
+	a.roadmapStore = roadmaps.NewStore(appDataDir())
 }
 
 func (a *App) shutdown(_ context.Context) {
@@ -99,6 +105,13 @@ func (a *App) ListLessons() ([]lessons.Summary, error) {
 	return a.store.List()
 }
 
+func (a *App) ListRoadmaps() ([]roadmaps.Summary, error) {
+	if err := a.ensureRoadmapStore(); err != nil {
+		return nil, err
+	}
+	return a.roadmapStore.List()
+}
+
 func (a *App) SelectAndImportLesson() (*lessons.Summary, error) {
 	if a.ctx == nil {
 		return nil, errors.New("application is not ready")
@@ -118,6 +131,22 @@ func (a *App) SelectAndImportLesson() (*lessons.Summary, error) {
 	return a.ImportLesson(path)
 }
 
+func (a *App) SelectAndImportRoadmap() (*roadmaps.Summary, error) {
+	if a.ctx == nil {
+		return nil, errors.New("application is not ready")
+	}
+	path, err := wailsruntime.OpenDirectoryDialog(a.ctx, wailsruntime.OpenDialogOptions{
+		Title: "Import roadmap folder",
+	})
+	if err != nil {
+		return nil, fmt.Errorf("select roadmap folder: %w", err)
+	}
+	if path == "" {
+		return nil, errors.New("no roadmap folder selected")
+	}
+	return a.ImportRoadmap(path)
+}
+
 func (a *App) ImportLesson(path string) (*lessons.Summary, error) {
 	if err := a.ensureStore(); err != nil {
 		return nil, err
@@ -131,6 +160,26 @@ func (a *App) ImportLesson(path string) (*lessons.Summary, error) {
 	return &summary, nil
 }
 
+func (a *App) ImportRoadmap(path string) (*roadmaps.Summary, error) {
+	if err := a.ensureRoadmapStore(); err != nil {
+		return nil, err
+	}
+	roadmap, err := a.roadmapStore.Import(path)
+	if err != nil {
+		return nil, err
+	}
+	summary := roadmap.ToSummary()
+	a.emit(eventRoadmapState, summary)
+	return &summary, nil
+}
+
+func (a *App) LoadRoadmap(roadmapID string) (*roadmaps.Roadmap, error) {
+	if err := a.ensureRoadmapStore(); err != nil {
+		return nil, err
+	}
+	return a.roadmapStore.Load(roadmapID)
+}
+
 func (a *App) StartLesson(lessonID string) (*LessonSessionState, error) {
 	if err := a.ensureStore(); err != nil {
 		return nil, err
@@ -139,7 +188,18 @@ func (a *App) StartLesson(lessonID string) (*LessonSessionState, error) {
 	if err != nil {
 		return nil, err
 	}
-	return a.startLesson(lesson)
+	return a.startLesson(lesson, "")
+}
+
+func (a *App) StartRoadmapLesson(roadmapID, lessonID string) (*LessonSessionState, error) {
+	if err := a.ensureRoadmapStore(); err != nil {
+		return nil, err
+	}
+	lesson, err := a.roadmapStore.LoadLesson(roadmapID, lessonID)
+	if err != nil {
+		return nil, err
+	}
+	return a.startLesson(lesson, roadmapID)
 }
 
 func (a *App) TerminalInput(sessionID, data string) error {
@@ -174,10 +234,11 @@ func (a *App) ResetLesson(sessionID string) (*LessonSessionState, error) {
 		return nil, err
 	}
 	lesson := session.lesson
+	roadmapID := session.roadmapID
 	if err := stopAndRemove(session); err != nil {
 		return nil, err
 	}
-	return a.startLesson(lesson)
+	return a.startLesson(lesson, roadmapID)
 }
 
 func (a *App) StopLesson(sessionID string) error {
@@ -188,7 +249,7 @@ func (a *App) StopLesson(sessionID string) error {
 	return stopAndRemove(session)
 }
 
-func (a *App) startLesson(lesson *lessons.Lesson) (*LessonSessionState, error) {
+func (a *App) startLesson(lesson *lessons.Lesson, roadmapID string) (*LessonSessionState, error) {
 	ws, err := workspace.Create(lesson)
 	if err != nil {
 		return nil, err
@@ -227,12 +288,13 @@ func (a *App) startLesson(lesson *lessons.Lesson) (*LessonSessionState, error) {
 	}
 
 	a.mu.Lock()
-	a.sessions[sessionID] = &lessonSession{lesson: lesson, ws: ws, term: term}
+	a.sessions[sessionID] = &lessonSession{lesson: lesson, roadmapID: roadmapID, ws: ws, term: term}
 	a.mu.Unlock()
 
 	state := &LessonSessionState{
 		SessionID:    sessionID,
 		LessonID:     lesson.ID,
+		RoadmapID:    roadmapID,
 		WorkspaceDir: ws.Path,
 		Lesson:       lesson,
 	}
@@ -269,6 +331,15 @@ func (a *App) ensureStore() error {
 	}
 	root := appDataDir()
 	a.store = lessons.NewStore(root)
+	return nil
+}
+
+func (a *App) ensureRoadmapStore() error {
+	if a.roadmapStore != nil {
+		return nil
+	}
+	root := appDataDir()
+	a.roadmapStore = roadmaps.NewStore(root)
 	return nil
 }
 

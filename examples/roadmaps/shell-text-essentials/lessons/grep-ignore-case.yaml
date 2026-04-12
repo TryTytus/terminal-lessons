@@ -1,0 +1,22 @@
+version: 1
+id: roadmap-grep-ignore-case
+title: "Ignore letter case"
+commands: ["grep"]
+difficulty: "beginner"
+intro: "Create api-lines.txt containing every line from requests.log that mentions api, regardless of capitalization."
+workspace:
+  files:
+    - path: "requests.log"
+      content: "API gateway healthy\ncache hit\napi timeout\nAuth ok\nApi retry queued\n"
+hints:
+  - "The pattern api should match API, api, and Api."
+  - "Use the -i flag to ignore case."
+  - "Redirect the matches into api-lines.txt."
+solution:
+  commands:
+    - "grep -i api requests.log > api-lines.txt"
+  explanation: "grep -i ignores letter case while matching the pattern."
+checks:
+  - type: "file_equals"
+    path: "api-lines.txt"
+    expected: "API gateway healthy\napi timeout\nApi retry queued\n"

@@ -11,6 +11,7 @@ export const events = {
   terminalExit: "terminal:exit",
   terminalError: "terminal:error",
   lessonState: "lesson:state",
+  roadmapState: "roadmap:state",
   checksResult: "checks:result"
 } as const
 

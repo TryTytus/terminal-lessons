@@ -1,0 +1,22 @@
+version: 1
+id: roadmap-grep-basic
+title: "Search exact text"
+commands: ["grep"]
+difficulty: "beginner"
+intro: "Create errors.txt containing only the lines from app.log that include ERROR."
+workspace:
+  files:
+    - path: "app.log"
+      content: "INFO boot complete\nWARN cache warmup slow\nERROR database timeout\nINFO retry scheduled\nERROR request failed\n"
+hints:
+  - "grep prints matching lines from a file."
+  - "Search for the exact text ERROR in app.log."
+  - "Use > to write the matching lines into errors.txt."
+solution:
+  commands:
+    - "grep ERROR app.log > errors.txt"
+  explanation: "grep ERROR app.log keeps only lines containing ERROR, and > writes them into errors.txt."
+checks:
+  - type: "file_equals"
+    path: "errors.txt"
+    expected: "ERROR database timeout\nERROR request failed\n"

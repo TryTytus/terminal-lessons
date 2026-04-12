@@ -183,6 +183,7 @@ export namespace main {
 	export class LessonSessionState {
 	    sessionID: string;
 	    lessonID: string;
+	    roadmapID?: string;
 	    workspaceDir: string;
 	    lesson?: lessons.Lesson;
 	
@@ -194,6 +195,7 @@ export namespace main {
 	        if ('string' === typeof source) source = JSON.parse(source);
 	        this.sessionID = source["sessionID"];
 	        this.lessonID = source["lessonID"];
+	        this.roadmapID = source["roadmapID"];
 	        this.workspaceDir = source["workspaceDir"];
 	        this.lesson = this.convertValues(source["lesson"], lessons.Lesson);
 	    }
@@ -215,6 +217,152 @@ export namespace main {
 		    }
 		    return a;
 		}
+	}
+
+}
+
+export namespace roadmaps {
+	
+	export class LessonRef {
+	    id: string;
+	    path: string;
+	    title: string;
+	    intro: string;
+	    difficulty: string;
+	    commands: string[];
+	    focus: string;
+	    flag?: string;
+	    kind?: string;
+	    checkCount: number;
+	    hintCount: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new LessonRef(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.path = source["path"];
+	        this.title = source["title"];
+	        this.intro = source["intro"];
+	        this.difficulty = source["difficulty"];
+	        this.commands = source["commands"];
+	        this.focus = source["focus"];
+	        this.flag = source["flag"];
+	        this.kind = source["kind"];
+	        this.checkCount = source["checkCount"];
+	        this.hintCount = source["hintCount"];
+	    }
+	}
+	export class Command {
+	    name: string;
+	    title: string;
+	    summary: string;
+	    guide: string;
+	    guideMarkdown: string;
+	    lessons: LessonRef[];
+	
+	    static createFrom(source: any = {}) {
+	        return new Command(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.name = source["name"];
+	        this.title = source["title"];
+	        this.summary = source["summary"];
+	        this.guide = source["guide"];
+	        this.guideMarkdown = source["guideMarkdown"];
+	        this.lessons = this.convertValues(source["lessons"], LessonRef);
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	
+	export class Roadmap {
+	    version: number;
+	    id: string;
+	    title: string;
+	    summary: string;
+	    description: string;
+	    difficulty: string;
+	    commands: Command[];
+	
+	    static createFrom(source: any = {}) {
+	        return new Roadmap(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.version = source["version"];
+	        this.id = source["id"];
+	        this.title = source["title"];
+	        this.summary = source["summary"];
+	        this.description = source["description"];
+	        this.difficulty = source["difficulty"];
+	        this.commands = this.convertValues(source["commands"], Command);
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	export class Summary {
+	    id: string;
+	    title: string;
+	    summary: string;
+	    description: string;
+	    difficulty: string;
+	    commands: string[];
+	    commandCount: number;
+	    lessonCount: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new Summary(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.title = source["title"];
+	        this.summary = source["summary"];
+	        this.description = source["description"];
+	        this.difficulty = source["difficulty"];
+	        this.commands = source["commands"];
+	        this.commandCount = source["commandCount"];
+	        this.lessonCount = source["lessonCount"];
+	    }
 	}
 
 }

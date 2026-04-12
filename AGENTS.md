@@ -22,15 +22,21 @@ Backend:
 - Local PTY sessions with `github.com/creack/pty`
 - YAML parsing with `gopkg.in/yaml.v3`
 - Lesson validation and storage in `internal/lessons`
+- Roadmap folder validation and storage in `internal/roadmaps`
 - Workspace materialization in `internal/workspace`
 - Declarative check execution in `internal/checks`
 - PTY lifecycle/transcript capture in `internal/terminal`
 
 Wails bound methods:
 - `ImportLesson(path)`
+- `ImportRoadmap(path)`
 - `SelectAndImportLesson()`
+- `SelectAndImportRoadmap()`
 - `ListLessons()`
+- `ListRoadmaps()`
+- `LoadRoadmap(roadmapID)`
 - `StartLesson(lessonID)`
+- `StartRoadmapLesson(roadmapID, lessonID)`
 - `TerminalInput(sessionID, data)`
 - `TerminalResize(sessionID, cols, rows)`
 - `RunChecks(sessionID)`
@@ -42,13 +48,14 @@ Wails events:
 - `terminal:exit`
 - `terminal:error`
 - `lesson:state`
+- `roadmap:state`
 - `checks:result`
 
 ## Current State
 
 Initial baseline: Empty Repo / Scaffolding.
 
-Current actual state: scaffolded MVP implemented and verified. The project now has Go/Wails backend packages, React/Xterm frontend, YAML lesson schema/docs, 11 example lessons, tests, and a successful macOS Wails production build.
+Current actual state: scaffolded MVP implemented and verified. The project now has Go/Wails backend packages, React/Xterm frontend, YAML lesson schema/docs, roadmap folder schema/docs, 11 standalone example lessons, an importable shell text essentials roadmap with 13 exercises, tests, and a successful macOS Wails production build.
 
 Important environment notes:
 - Go is available at `/usr/local/go/bin/go`.
@@ -73,4 +80,6 @@ Important environment notes:
 - [x] Verification: Wails production build passes.
 - [ ] Next: manually run the app, import `examples/sort-files.yaml`, complete the exercise in the terminal, and confirm the UX flow.
 - [x] Next: add a richer lesson catalog with common Unix command exercises.
+- [x] Next: add roadmap folder import, roadmap storage/validation, roadmap sidebar, full roadmap agenda, command guide rendering, progress tracking, and starter roadmap content.
+- [ ] Next: manually run the app, import `examples/roadmaps/shell-text-essentials`, start a roadmap exercise, pass checks, and confirm progress updates in the roadmap view.
 - [ ] Next: decide whether to add a real app icon.

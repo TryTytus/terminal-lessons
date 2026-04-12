@@ -18,6 +18,8 @@ const roadmap: Roadmap = {
       summary: "Find matching lines.",
       guide: "commands/grep.md",
       guideMarkdown: "# grep\n\nUse `grep -i` for case-insensitive search.",
+      manual: "manuals/grep.md",
+      manualMarkdown: "# grep manual\n\nFull command lesson.",
       lessons: [
         {
           id: "grep-basic",
@@ -52,6 +54,7 @@ const roadmap: Roadmap = {
 describe("RoadmapOverview", () => {
   it("renders roadmap progress, guide markdown, and starts the first lesson", async () => {
     const startRoadmapLesson = vi.fn()
+    const showCommandManual = vi.fn()
 
     render(
       <RoadmapOverview
@@ -65,6 +68,7 @@ describe("RoadmapOverview", () => {
         onImportLesson={vi.fn()}
         onSelectRoadmap={vi.fn()}
         onStartRoadmapLesson={startRoadmapLesson}
+        onShowCommandManual={showCommandManual}
         onShowLesson={vi.fn()}
       />
     )
@@ -80,5 +84,10 @@ describe("RoadmapOverview", () => {
       "text-search",
       "grep-ignore-case"
     )
+
+    await userEvent.click(
+      screen.getByRole("button", { name: /Command lesson and cheat sheet/i })
+    )
+    expect(showCommandManual).toHaveBeenCalledWith("grep")
   })
 })

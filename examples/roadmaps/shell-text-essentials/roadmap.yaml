@@ -9,6 +9,7 @@ commands:
     title: "Search text with grep"
     summary: "Find matching lines, ignore case, invert matches, print line numbers, and use extended patterns."
     guide: "commands/grep.md"
+    manual: "manuals/grep.md"
     lessons:
       - path: "lessons/grep-basic.yaml"
         focus: "Search exact text without flags"
@@ -33,6 +34,7 @@ commands:
     title: "Locate files with find"
     summary: "Walk a directory tree and filter by file name, type, and depth."
     guide: "commands/find.md"
+    manual: "manuals/find.md"
     lessons:
       - path: "lessons/find-basic.yaml"
         focus: "List everything below the workspace"
@@ -53,6 +55,7 @@ commands:
     title: "Order text with sort"
     summary: "Sort lines alphabetically, numerically, in reverse, and by a chosen column."
     guide: "commands/sort.md"
+    manual: "manuals/sort.md"
     lessons:
       - path: "lessons/sort-basic.yaml"
         focus: "Sort lines alphabetically"

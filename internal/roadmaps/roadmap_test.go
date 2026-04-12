@@ -22,6 +22,7 @@ commands:
     title: "Find matching lines"
     summary: "Search files for text patterns."
     guide: "commands/grep.md"
+    manual: "manuals/grep.md"
     lessons:
       - path: "lessons/grep-basic.yaml"
         focus: "Search without flags"
@@ -96,6 +97,9 @@ func TestParseDirHydratesGuidesAndLessons(t *testing.T) {
 	if !strings.Contains(roadmap.Commands[0].GuideMarkdown, "grep") {
 		t.Fatalf("GuideMarkdown = %q", roadmap.Commands[0].GuideMarkdown)
 	}
+	if !strings.Contains(roadmap.Commands[0].ManualMarkdown, "cheat sheet") {
+		t.Fatalf("ManualMarkdown = %q", roadmap.Commands[0].ManualMarkdown)
+	}
 	if lesson := roadmap.Commands[0].Lessons[1]; lesson.ID != "grep-ignore-case" || lesson.Flag != "-i" || lesson.CheckCount != 1 {
 		t.Fatalf("hydrated lesson = %#v", lesson)
 	}
@@ -135,6 +139,34 @@ func TestStoreImportListAndLoadLesson(t *testing.T) {
 
 func TestParseDirRejectsUnsafeGuidePath(t *testing.T) {
 	source := strings.Replace(validRoadmapYAML, "commands/grep.md", "../grep.md", 1)
+	dir := writeRoadmapFixture(t, source)
+
+	_, err := ParseDir(dir)
+	if !errors.Is(err, lessons.ErrInvalidPath) {
+		t.Fatalf("ParseDir() error = %v, want ErrInvalidPath", err)
+	}
+}
+
+func TestParseDirFallsBackToGuideWhenManualIsMissing(t *testing.T) {
+	source := strings.Replace(validRoadmapYAML, `    manual: "manuals/grep.md"
+`, "", 1)
+	dir := writeRoadmapFixture(t, source)
+
+	parsed, err := ParseDir(dir)
+	if err != nil {
+		t.Fatalf("ParseDir() error = %v", err)
+	}
+	command := parsed.roadmap.Commands[0]
+	if command.Manual != command.Guide {
+		t.Fatalf("Manual = %q, want guide %q", command.Manual, command.Guide)
+	}
+	if command.ManualMarkdown != command.GuideMarkdown {
+		t.Fatalf("ManualMarkdown did not fall back to GuideMarkdown")
+	}
+}
+
+func TestParseDirRejectsUnsafeManualPath(t *testing.T) {
+	source := strings.Replace(validRoadmapYAML, "manuals/grep.md", "../grep.md", 1)
 	dir := writeRoadmapFixture(t, source)
 
 	_, err := ParseDir(dir)
@@ -204,6 +236,7 @@ func writeRoadmapFixture(t *testing.T, manifest string) string {
 	dir := t.TempDir()
 	writeFile(t, dir, "roadmap.yaml", manifest)
 	writeFile(t, dir, "commands/grep.md", "# grep\n\nUse grep to search matching lines.\n")
+	writeFile(t, dir, "manuals/grep.md", "# grep deep dive\n\nA grep cheat sheet.\n")
 	writeFile(t, dir, "lessons/grep-basic.yaml", grepBasicLessonYAML)
 	writeFile(t, dir, "lessons/grep-ignore-case.yaml", grepIgnoreCaseLessonYAML)
 	return dir

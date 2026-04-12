@@ -1,8 +1,8 @@
 # Roadmap Authoring
 
 Roadmaps are imported as folders. A roadmap folder contains one manifest file,
-Markdown command guides, and lesson YAML files that already follow
-`docs/lesson.schema.json`.
+short Markdown command guides, optional full Markdown command manuals, and
+lesson YAML files that already follow `docs/lesson.schema.json`.
 
 ## Folder Shape
 
@@ -10,6 +10,9 @@ Markdown command guides, and lesson YAML files that already follow
 shell-text-essentials/
   roadmap.yaml
   commands/
+    grep.md
+    find.md
+  manuals/
     grep.md
     find.md
   lessons/
@@ -32,6 +35,7 @@ commands:
     title: "Search text with grep"
     summary: "Find matching lines and use common flags."
     guide: "commands/grep.md"
+    manual: "manuals/grep.md"
     lessons:
       - path: "lessons/grep-basic.yaml"
         focus: "Search exact text without flags"
@@ -48,8 +52,12 @@ commands:
 - Use `version: 1`.
 - Use safe relative paths for `guide` and `lessons[].path`; no absolute paths,
   `..`, or null bytes.
-- Store command guides as Markdown files. The app renders headings, paragraphs,
-  bullet lists, inline code, and fenced code blocks.
+- Use `guide` for the short right-rail command guide.
+- Use `manual` for the longer full-screen command lesson and cheat sheet. If
+  `manual` is omitted, the app uses `guide` as the full page content.
+- Store command guides and manuals as Markdown files. The app renders headings,
+  paragraphs, bullet lists, blockquotes, tables, inline code, and fenced code
+  blocks.
 - Store exercises as normal lesson YAML. Roadmaps do not add executable checks or
   scripts.
 - Add one foundation lesson for a command when it makes sense.

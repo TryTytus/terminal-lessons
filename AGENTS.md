@@ -55,7 +55,7 @@ Wails events:
 
 Initial baseline: Empty Repo / Scaffolding.
 
-Current actual state: scaffolded MVP implemented and verified. The project now has Go/Wails backend packages, React/Xterm frontend, YAML lesson schema/docs, roadmap folder schema/docs, 11 standalone example lessons, an importable shell text essentials roadmap with 13 exercises, tests, and a successful macOS Wails production build.
+Current actual state: scaffolded MVP implemented and verified. The project now has Go/Wails backend packages, React/Xterm frontend, YAML lesson schema/docs, roadmap folder schema/docs, 11 standalone example lessons, an importable shell text essentials roadmap with 13 exercises, short command guides, full command manuals, tests, and a successful macOS Wails production build.
 
 Important environment notes:
 - Go is available at `/usr/local/go/bin/go`.
@@ -81,5 +81,6 @@ Important environment notes:
 - [ ] Next: manually run the app, import `examples/sort-files.yaml`, complete the exercise in the terminal, and confirm the UX flow.
 - [x] Next: add a richer lesson catalog with common Unix command exercises.
 - [x] Next: add roadmap folder import, roadmap storage/validation, roadmap sidebar, full roadmap agenda, command guide rendering, progress tracking, and starter roadmap content.
+- [x] Next: add per-command full manual Markdown pages with cheat sheets, roadmap entry points, and exercise-page book buttons.
 - [ ] Next: manually run the app, import `examples/roadmaps/shell-text-essentials`, start a roadmap exercise, pass checks, and confirm progress updates in the roadmap view.
 - [ ] Next: decide whether to add a real app icon.

@@ -1,6 +1,6 @@
-import type { ReactNode } from "react"
 import {
   ArrowRight,
+  BookOpen,
   CheckCircle2,
   Circle,
   FileText,
@@ -12,6 +12,7 @@ import {
 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { MarkdownContent } from "@/components/MarkdownContent"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { cn } from "@/lib/utils"
 import type { Roadmap, RoadmapSummary } from "@/types"
@@ -27,6 +28,7 @@ interface RoadmapOverviewProps {
   onImportLesson: () => void
   onSelectRoadmap: (roadmapID: string) => void
   onStartRoadmapLesson: (roadmapID: string, lessonID: string) => void
+  onShowCommandManual: (commandName: string) => void
   onShowLesson: () => void
 }
 
@@ -41,6 +43,7 @@ export function RoadmapOverview({
   onImportLesson,
   onSelectRoadmap,
   onStartRoadmapLesson,
+  onShowCommandManual,
   onShowLesson
 }: RoadmapOverviewProps) {
   if (!roadmap) {
@@ -224,6 +227,30 @@ export function RoadmapOverview({
                     </p>
 
                     <div className="mt-5 grid gap-2">
+                      <button
+                        className="grid grid-cols-[28px_minmax(0,1fr)_auto] items-start gap-3 rounded-lg border border-[#b8c8bc] bg-white p-3 text-left transition-colors hover:border-[#2d6b55]"
+                        onClick={() => onShowCommandManual(command.name)}
+                        disabled={busy}
+                      >
+                        <BookOpen
+                          aria-hidden
+                          className="mt-0.5 h-5 w-5 text-[#2d6b55]"
+                        />
+                        <span className="min-w-0">
+                          <span className="block break-words font-semibold text-[#17211a]">
+                            Command lesson and cheat sheet
+                          </span>
+                          <span className="mt-2 block text-sm leading-6 text-[#5d6d63]">
+                            Read the full {command.name} lesson before starting
+                            the drills.
+                          </span>
+                        </span>
+                        <ArrowRight
+                          aria-hidden
+                          className="mt-1 h-4 w-4 text-[#2d6b55]"
+                        />
+                      </button>
+
                       {command.lessons.map((lesson) => {
                         const active =
                           activeRoadmapID === roadmap.id &&
@@ -287,7 +314,10 @@ export function RoadmapOverview({
                       <FileText aria-hidden className="h-4 w-4 text-[#2d6b55]" />
                       Command guide
                     </div>
-                    <MarkdownGuide markdown={command.guideMarkdown} />
+                    <MarkdownContent
+                      markdown={command.guideMarkdown}
+                      emptyMessage="No guide content yet."
+                    />
                   </div>
                 </article>
               )
@@ -297,164 +327,4 @@ export function RoadmapOverview({
       </ScrollArea>
     </section>
   )
-}
-
-function MarkdownGuide({ markdown }: { markdown: string }) {
-  const blocks = parseMarkdown(markdown)
-
-  if (blocks.length === 0) {
-    return <p className="text-sm text-[#5d6d63]">No guide content yet.</p>
-  }
-
-  return <div className="grid gap-3 text-sm leading-6 text-[#334139]">{blocks}</div>
-}
-
-function parseMarkdown(markdown: string): ReactNode[] {
-  const blocks: ReactNode[] = []
-  const lines = markdown.replace(/\r\n/g, "\n").split("\n")
-  let paragraph: string[] = []
-  let list: string[] = []
-  let code: string[] | undefined
-
-  const flushParagraph = () => {
-    if (paragraph.length === 0) {
-      return
-    }
-    blocks.push(
-      <p key={`p-${blocks.length}`} className="break-words">
-        {renderInline(paragraph.join(" "))}
-      </p>
-    )
-    paragraph = []
-  }
-
-  const flushList = () => {
-    if (list.length === 0) {
-      return
-    }
-    blocks.push(
-      <ul key={`ul-${blocks.length}`} className="grid gap-1 pl-4">
-        {list.map((item, index) => (
-          <li key={`${item}-${index}`} className="list-disc break-words">
-            {renderInline(item)}
-          </li>
-        ))}
-      </ul>
-    )
-    list = []
-  }
-
-  const flushCode = () => {
-    if (!code) {
-      return
-    }
-    blocks.push(
-      <pre
-        key={`code-${blocks.length}`}
-        className="max-h-56 overflow-auto rounded-md bg-[#17211a] p-3 font-mono text-xs leading-5 text-[#edf5ee]"
-      >
-        {code.join("\n")}
-      </pre>
-    )
-    code = undefined
-  }
-
-  for (const rawLine of lines) {
-    const line = rawLine.trimEnd()
-    const trimmed = line.trim()
-
-    if (trimmed.startsWith("```")) {
-      if (code) {
-        flushCode()
-      } else {
-        flushParagraph()
-        flushList()
-        code = []
-      }
-      continue
-    }
-
-    if (code) {
-      code.push(line)
-      continue
-    }
-
-    if (trimmed === "") {
-      flushParagraph()
-      flushList()
-      continue
-    }
-
-    if (trimmed.startsWith("### ")) {
-      flushParagraph()
-      flushList()
-      blocks.push(
-        <h5
-          key={`h5-${blocks.length}`}
-          className="break-words pt-1 text-base font-semibold text-[#17211a]"
-        >
-          {renderInline(trimmed.slice(4))}
-        </h5>
-      )
-      continue
-    }
-
-    if (trimmed.startsWith("## ")) {
-      flushParagraph()
-      flushList()
-      blocks.push(
-        <h4
-          key={`h4-${blocks.length}`}
-          className="break-words pt-2 text-lg font-semibold text-[#17211a]"
-        >
-          {renderInline(trimmed.slice(3))}
-        </h4>
-      )
-      continue
-    }
-
-    if (trimmed.startsWith("# ")) {
-      flushParagraph()
-      flushList()
-      blocks.push(
-        <h3
-          key={`h3-${blocks.length}`}
-          className="break-words text-xl font-semibold text-[#17211a]"
-        >
-          {renderInline(trimmed.slice(2))}
-        </h3>
-      )
-      continue
-    }
-
-    if (trimmed.startsWith("- ")) {
-      flushParagraph()
-      list.push(trimmed.slice(2))
-      continue
-    }
-
-    flushList()
-    paragraph.push(trimmed)
-  }
-
-  flushParagraph()
-  flushList()
-  flushCode()
-  return blocks
-}
-
-function renderInline(text: string): ReactNode[] {
-  return text.split(/(`[^`]+`)/g).map((part, index) => {
-    if (part.startsWith("`") && part.endsWith("`")) {
-      return (
-        <code
-          key={`${part}-${index}`}
-          className="rounded-sm bg-[#dfe9e2] px-1.5 py-0.5 font-mono text-xs text-[#17211a]"
-        >
-          {part.slice(1, -1)}
-        </code>
-      )
-    }
-    return part
-  })
 }

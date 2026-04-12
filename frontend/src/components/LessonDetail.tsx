@@ -1,4 +1,4 @@
-import { Lightbulb, RotateCcw, TestTube2 } from "lucide-react"
+import { BookOpen, Lightbulb, RotateCcw, TestTube2 } from "lucide-react"
 import { useEffect, useMemo, useState } from "react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -11,6 +11,8 @@ interface LessonDetailProps {
   session?: LessonSessionState
   onRunChecks: () => void
   onReset: () => void
+  manualCommandName?: string
+  onOpenCommandManual?: () => void
   busy: boolean
 }
 
@@ -18,6 +20,8 @@ export function LessonDetail({
   session,
   onRunChecks,
   onReset,
+  manualCommandName,
+  onOpenCommandManual,
   busy
 }: LessonDetailProps) {
   const [visibleHints, setVisibleHints] = useState(0)
@@ -56,7 +60,18 @@ export function LessonDetail({
               ))}
             </div>
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
+            {onOpenCommandManual ? (
+              <Button
+                onClick={onOpenCommandManual}
+                variant="outline"
+                size="sm"
+                disabled={busy}
+              >
+                <BookOpen aria-hidden className="mr-2 h-4 w-4" />
+                {manualCommandName ?? "Guide"}
+              </Button>
+            ) : null}
             <Button onClick={onReset} variant="outline" size="sm" disabled={busy}>
               <RotateCcw aria-hidden className="mr-2 h-4 w-4" />
               Reset

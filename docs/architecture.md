@@ -8,8 +8,8 @@ The frontend lives in `frontend/` and uses React, TypeScript, Vite, Xterm.js, an
 
 Key responsibilities:
 - Render roadmap navigation, the full roadmap agenda, Markdown command guides,
-  standalone lesson list, task details, hints, solution, check results, and
-  terminal pane.
+  full command manuals, standalone lesson list, task details, hints, solution,
+  check results, and terminal pane.
 - Initialize Xterm.js, fit it to the available space, forward user input to Go, and write PTY output back into the terminal.
 - Call Wails bound methods from `frontend/wailsjs/go/main/App`.
 - Subscribe to Wails runtime events through `frontend/src/lib/events.ts`.
@@ -20,9 +20,9 @@ The backend is Go and Wails v2.
 
 Key packages:
 - `internal/lessons`: YAML lesson structs, parsing, validation, safe path checks, and imported lesson storage.
-- `internal/roadmaps`: roadmap folder manifest parsing, Markdown guide loading,
-  referenced lesson validation, immutable roadmap storage, and roadmap lesson
-  lookup.
+- `internal/roadmaps`: roadmap folder manifest parsing, Markdown guide/manual
+  loading, referenced lesson validation, immutable roadmap storage, and roadmap
+  lesson lookup.
 - `internal/workspace`: creates fresh temporary lesson workspaces and workspace-local home directories.
 - `internal/checks`: runs declarative checks against files and the bounded terminal transcript.
 - `internal/terminal`: starts local PTY sessions with `github.com/creack/pty`, streams output, handles input/resize, stores bounded transcript, and stops sessions.
@@ -37,7 +37,7 @@ The app targets macOS/Linux for the MVP. Windows/WSL is intentionally out of sco
 - `SelectAndImportRoadmap() (*roadmaps.Summary, error)`: open a native folder dialog and import the selected roadmap folder.
 - `ListLessons() ([]lessons.Summary, error)`: list imported lessons.
 - `ListRoadmaps() ([]roadmaps.Summary, error)`: list imported roadmap summaries.
-- `LoadRoadmap(roadmapID string) (*roadmaps.Roadmap, error)`: load an imported roadmap with command guide Markdown and hydrated lesson metadata.
+- `LoadRoadmap(roadmapID string) (*roadmaps.Roadmap, error)`: load an imported roadmap with command guide/manual Markdown and hydrated lesson metadata.
 - `StartLesson(lessonID string) (*LessonSessionState, error)`: create a fresh workspace and PTY session for an imported lesson.
 - `StartRoadmapLesson(roadmapID string, lessonID string) (*LessonSessionState, error)`: create a fresh workspace and PTY session for a lesson inside an imported roadmap.
 - `TerminalInput(sessionID string, data string) error`: write frontend terminal input to the PTY.
@@ -137,10 +137,10 @@ Permitted checks:
 ## Roadmap Format
 
 Roadmaps are folders generated outside the app. A roadmap folder must contain
-`roadmap.yaml` or `roadmap.yml`, Markdown command guides, and lesson YAML files.
-The roadmap manifest references the guide and lesson files by safe relative
-path. Import validates every referenced lesson with the same lesson parser used
-for standalone YAML imports.
+`roadmap.yaml` or `roadmap.yml`, Markdown command guides, optional full command
+manuals, and lesson YAML files. The roadmap manifest references guide, manual,
+and lesson files by safe relative path. Import validates every referenced lesson
+with the same lesson parser used for standalone YAML imports.
 
 ```yaml
 version: 1
@@ -154,6 +154,7 @@ commands:
     title: "Search text with grep"
     summary: "Find matching lines and use common flags."
     guide: "commands/grep.md"
+    manual: "manuals/grep.md"
     lessons:
       - path: "lessons/grep-basic.yaml"
         focus: "Search exact text without flags"

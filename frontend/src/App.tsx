@@ -12,6 +12,7 @@ import {
   StopLesson
 } from "../wailsjs/go/main/App"
 import { CheckResults } from "@/components/CheckResults"
+import { CommandManualView } from "@/components/CommandManualView"
 import { LessonDetail } from "@/components/LessonDetail"
 import { RoadmapOverview } from "@/components/RoadmapOverview"
 import { RoadmapSidebar } from "@/components/RoadmapSidebar"
@@ -33,7 +34,7 @@ import type {
   RoadmapSummary
 } from "@/types"
 
-type MainView = "roadmap" | "lesson"
+type MainView = "roadmap" | "lesson" | "manual"
 
 const completedLessonsStorageKey = "terminal-lessons.completedLessons.v1"
 
@@ -66,6 +67,9 @@ export default function App() {
     loadCompletedLessons
   )
   const [mainView, setMainView] = useState<MainView>("roadmap")
+  const [selectedManualCommandName, setSelectedManualCommandName] = useState<
+    string | undefined
+  >()
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | undefined>()
   const [terminalExit, setTerminalExit] = useState<number | undefined>()
@@ -73,6 +77,20 @@ export default function App() {
   const completedLessonSet = useMemo(
     () => new Set(completedLessonIDs),
     [completedLessonIDs]
+  )
+  const selectedManualCommand = useMemo(
+    () =>
+      selectedRoadmap?.commands.find(
+        (command) => command.name === selectedManualCommandName
+      ),
+    [selectedManualCommandName, selectedRoadmap]
+  )
+  const activeRoadmapCommand = useMemo(
+    () =>
+      selectedRoadmap?.commands.find((command) =>
+        command.lessons.some((lesson) => lesson.id === session?.lessonID)
+      ),
+    [selectedRoadmap, session?.lessonID]
   )
 
   const loadLessons = useCallback(async () => {
@@ -137,6 +155,11 @@ export default function App() {
     },
     [selectedRoadmap?.id]
   )
+
+  const showCommandManual = useCallback((commandName: string) => {
+    setSelectedManualCommandName(commandName)
+    setMainView("manual")
+  }, [])
 
   const importLesson = useCallback(async () => {
     setBusy(true)
@@ -308,8 +331,17 @@ export default function App() {
               })
             }}
             onStartRoadmapLesson={startRoadmapLesson}
+            onShowCommandManual={showCommandManual}
             onShowLesson={() => setMainView("lesson")}
             busy={busy}
+          />
+        ) : mainView === "manual" && selectedManualCommand && selectedRoadmap ? (
+          <CommandManualView
+            command={selectedManualCommand}
+            roadmapTitle={selectedRoadmap.title}
+            hasActiveLesson={session !== undefined}
+            onBackToRoadmap={() => setMainView("roadmap")}
+            onShowLesson={() => setMainView("lesson")}
           />
         ) : (
           <>
@@ -342,6 +374,14 @@ export default function App() {
                 session={session}
                 onRunChecks={runChecks}
                 onReset={resetLesson}
+                manualCommandName={
+                  session?.roadmapID ? activeRoadmapCommand?.name : undefined
+                }
+                onOpenCommandManual={
+                  activeRoadmapCommand
+                    ? () => showCommandManual(activeRoadmapCommand.name)
+                    : undefined
+                }
                 busy={busy}
               />
             </div>

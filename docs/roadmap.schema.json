@@ -64,6 +64,18 @@
               ]
             }
           },
+          "manual": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\.md$",
+            "not": {
+              "anyOf": [
+                { "pattern": "^/" },
+                { "pattern": "(^|/)\\.\\.(/|$)" },
+                { "pattern": "\\u0000" }
+              ]
+            }
+          },
           "lessons": {
             "type": "array",
             "minItems": 1,

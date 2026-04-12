@@ -37,7 +37,7 @@ Try `examples/sort-files.yaml` after starting the app.
 ## Roadmap Import
 
 The app also imports roadmap folders. A roadmap folder contains `roadmap.yaml`,
-Markdown command guides, and lesson YAML files. See `docs/roadmap-authoring.md`
-and `docs/roadmap.schema.json`.
+short Markdown command guides, optional full command manuals, and lesson YAML
+files. See `docs/roadmap-authoring.md` and `docs/roadmap.schema.json`.
 
 Try importing `examples/roadmaps/shell-text-essentials` after starting the app.

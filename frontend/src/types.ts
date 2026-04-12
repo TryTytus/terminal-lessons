@@ -69,6 +69,8 @@ export interface RoadmapCommand {
   summary: string
   guide: string
   guideMarkdown: string
+  manual: string
+  manualMarkdown: string
   lessons: RoadmapLessonRef[]
 }
 

@@ -261,6 +261,8 @@ export namespace roadmaps {
 	    summary: string;
 	    guide: string;
 	    guideMarkdown: string;
+	    manual: string;
+	    manualMarkdown: string;
 	    lessons: LessonRef[];
 	
 	    static createFrom(source: any = {}) {
@@ -274,6 +276,8 @@ export namespace roadmaps {
 	        this.summary = source["summary"];
 	        this.guide = source["guide"];
 	        this.guideMarkdown = source["guideMarkdown"];
+	        this.manual = source["manual"];
+	        this.manualMarkdown = source["manualMarkdown"];
 	        this.lessons = this.convertValues(source["lessons"], LessonRef);
 	    }
 	

@@ -19,6 +19,7 @@ const (
 	CurrentVersion   = 1
 	MaxManifestBytes = 128 * 1024
 	MaxGuideBytes    = 128 * 1024
+	MaxManualBytes   = 256 * 1024
 )
 
 var (
@@ -37,12 +38,14 @@ type Roadmap struct {
 }
 
 type Command struct {
-	Name          string      `json:"name" yaml:"name"`
-	Title         string      `json:"title" yaml:"title"`
-	Summary       string      `json:"summary" yaml:"summary"`
-	Guide         string      `json:"guide" yaml:"guide"`
-	GuideMarkdown string      `json:"guideMarkdown" yaml:"-"`
-	Lessons       []LessonRef `json:"lessons" yaml:"lessons"`
+	Name           string      `json:"name" yaml:"name"`
+	Title          string      `json:"title" yaml:"title"`
+	Summary        string      `json:"summary" yaml:"summary"`
+	Guide          string      `json:"guide" yaml:"guide"`
+	GuideMarkdown  string      `json:"guideMarkdown" yaml:"-"`
+	Manual         string      `json:"manual" yaml:"manual"`
+	ManualMarkdown string      `json:"manualMarkdown" yaml:"-"`
+	Lessons        []LessonRef `json:"lessons" yaml:"lessons"`
 }
 
 type LessonRef struct {
@@ -223,6 +226,27 @@ func ParseDir(path string) (*parsedRoadmap, error) {
 		command.Guide = guidePath
 		command.GuideMarkdown = string(guideBytes)
 		files[guidePath] = guideBytes
+
+		manualPath := strings.TrimSpace(command.Manual)
+		if manualPath == "" {
+			command.Manual = guidePath
+			command.ManualMarkdown = command.GuideMarkdown
+		} else {
+			cleanManualPath, err := cleanRoadmapPath(manualPath)
+			if err != nil {
+				return nil, fmt.Errorf("command %q manual: %w", command.Name, err)
+			}
+			if filepath.Ext(cleanManualPath) != ".md" {
+				return nil, fmt.Errorf("command %q manual must be a markdown file", command.Name)
+			}
+			manualBytes, err := readRoadmapFile(path, cleanManualPath, MaxManualBytes)
+			if err != nil {
+				return nil, fmt.Errorf("command %q manual: %w", command.Name, err)
+			}
+			command.Manual = cleanManualPath
+			command.ManualMarkdown = string(manualBytes)
+			files[cleanManualPath] = manualBytes
+		}
 
 		for lessonIndex := range command.Lessons {
 			ref := &command.Lessons[lessonIndex]

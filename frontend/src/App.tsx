@@ -35,6 +35,7 @@ import type {
 } from "@/types"
 
 type MainView = "roadmap" | "lesson" | "manual"
+type ManualBackView = Exclude<MainView, "manual">
 
 const completedLessonsStorageKey = "terminal-lessons.completedLessons.v1"
 
@@ -67,6 +68,7 @@ export default function App() {
     loadCompletedLessons
   )
   const [mainView, setMainView] = useState<MainView>("roadmap")
+  const [manualBackView, setManualBackView] = useState<ManualBackView>("roadmap")
   const [selectedManualCommandName, setSelectedManualCommandName] = useState<
     string | undefined
   >()
@@ -156,10 +158,22 @@ export default function App() {
     [selectedRoadmap?.id]
   )
 
-  const showCommandManual = useCallback((commandName: string) => {
-    setSelectedManualCommandName(commandName)
-    setMainView("manual")
-  }, [])
+  const showCommandManual = useCallback(
+    (commandName: string, backView: ManualBackView) => {
+      setSelectedManualCommandName(commandName)
+      setManualBackView(backView)
+      setMainView("manual")
+    },
+    []
+  )
+
+  const backFromManual = useCallback(() => {
+    if (manualBackView === "lesson" && session) {
+      setMainView("lesson")
+      return
+    }
+    setMainView("roadmap")
+  }, [manualBackView, session])
 
   const importLesson = useCallback(async () => {
     setBusy(true)
@@ -312,6 +326,9 @@ export default function App() {
         }}
         onStartLesson={startLesson}
         onStartRoadmapLesson={startRoadmapLesson}
+        onShowCommandManual={(commandName) =>
+          showCommandManual(commandName, "roadmap")
+        }
         busy={busy}
       />
 
@@ -331,7 +348,9 @@ export default function App() {
               })
             }}
             onStartRoadmapLesson={startRoadmapLesson}
-            onShowCommandManual={showCommandManual}
+            onShowCommandManual={(commandName) =>
+              showCommandManual(commandName, "roadmap")
+            }
             onShowLesson={() => setMainView("lesson")}
             busy={busy}
           />
@@ -340,7 +359,10 @@ export default function App() {
             command={selectedManualCommand}
             roadmapTitle={selectedRoadmap.title}
             hasActiveLesson={session !== undefined}
-            onBackToRoadmap={() => setMainView("roadmap")}
+            backLabel={
+              manualBackView === "lesson" && session ? "Exercise" : "Roadmap"
+            }
+            onBack={backFromManual}
             onShowLesson={() => setMainView("lesson")}
           />
         ) : (
@@ -379,7 +401,7 @@ export default function App() {
                 }
                 onOpenCommandManual={
                   activeRoadmapCommand
-                    ? () => showCommandManual(activeRoadmapCommand.name)
+                    ? () => showCommandManual(activeRoadmapCommand.name, "lesson")
                     : undefined
                 }
                 busy={busy}

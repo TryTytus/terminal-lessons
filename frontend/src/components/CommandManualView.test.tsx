@@ -26,7 +26,8 @@ describe("CommandManualView", () => {
         command={command}
         roadmapTitle="Text Search"
         hasActiveLesson={true}
-        onBackToRoadmap={backToRoadmap}
+        backLabel="Exercise"
+        onBack={backToRoadmap}
         onShowLesson={showLesson}
       />
     )
@@ -35,7 +36,7 @@ describe("CommandManualView", () => {
     expect(screen.getByRole("heading", { name: "grep manual" })).toBeInTheDocument()
     expect(screen.getByText("Ignore case")).toBeInTheDocument()
 
-    await userEvent.click(screen.getByRole("button", { name: /Roadmap/i }))
+    await userEvent.click(screen.getByRole("button", { name: /Exercise/i }))
     expect(backToRoadmap).toHaveBeenCalled()
 
     await userEvent.click(screen.getByRole("button", { name: /Workspace/i }))

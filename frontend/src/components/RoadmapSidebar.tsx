@@ -28,6 +28,7 @@ interface RoadmapSidebarProps {
   onSelectRoadmap: (roadmapID: string) => void
   onStartLesson: (lessonID: string) => void
   onStartRoadmapLesson: (roadmapID: string, lessonID: string) => void
+  onShowCommandManual: (commandName: string) => void
 }
 
 export function RoadmapSidebar({
@@ -42,7 +43,8 @@ export function RoadmapSidebar({
   onImportRoadmap,
   onSelectRoadmap,
   onStartLesson,
-  onStartRoadmapLesson
+  onStartRoadmapLesson,
+  onShowCommandManual
 }: RoadmapSidebarProps) {
   return (
     <aside className="flex min-h-0 w-full flex-col border-r border-[#b8c8bc] bg-[#f7faf4] md:w-[380px]">
@@ -156,6 +158,25 @@ export function RoadmapSidebar({
                     <Badge>{command.lessons.length}</Badge>
                   </div>
                   <div className="mt-3 grid gap-1.5">
+                    <button
+                      className="grid grid-cols-[18px_minmax(0,1fr)] items-start gap-2 rounded-md border border-[#d4ded6] bg-[#f8faf4] px-2 py-2 text-left text-xs transition-colors hover:border-[#2d6b55] hover:bg-[#edf5ef]"
+                      onClick={() => onShowCommandManual(command.name)}
+                      disabled={busy}
+                    >
+                      <BookOpen
+                        aria-hidden
+                        className="mt-0.5 h-4 w-4 text-[#2d6b55]"
+                      />
+                      <span className="min-w-0">
+                        <span className="block break-words font-medium text-[#17211a]">
+                          Command lesson
+                        </span>
+                        <span className="mt-1 block break-words text-[#657268]">
+                          Full {command.name} reference and cheat sheet
+                        </span>
+                      </span>
+                    </button>
+
                     {command.lessons.map((lesson) => {
                       const active =
                         activeRoadmapID === selectedRoadmap.id &&

@@ -114,6 +114,39 @@ func (s *Store) Import(path string) (*Roadmap, error) {
 	return parsed.roadmap, nil
 }
 
+func (s *Store) ImportOrReplace(path string) (*Roadmap, error) {
+	parsed, err := ParseDir(path)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := os.MkdirAll(s.RoadmapsDir(), 0o755); err != nil {
+		return nil, fmt.Errorf("create roadmap store: %w", err)
+	}
+
+	temp, err := os.MkdirTemp(s.RoadmapsDir(), "."+parsed.roadmap.ID+"-*")
+	if err != nil {
+		return nil, fmt.Errorf("create temporary roadmap import %s: %w", parsed.roadmap.ID, err)
+	}
+	defer func() {
+		_ = os.RemoveAll(temp)
+	}()
+
+	if err := writeFiles(temp, parsed.files); err != nil {
+		return nil, fmt.Errorf("stage imported roadmap %s: %w", parsed.roadmap.ID, err)
+	}
+
+	target := filepath.Join(s.RoadmapsDir(), parsed.roadmap.ID)
+	if err := os.RemoveAll(target); err != nil {
+		return nil, fmt.Errorf("replace imported roadmap %s: %w", parsed.roadmap.ID, err)
+	}
+	if err := os.Rename(temp, target); err != nil {
+		return nil, fmt.Errorf("store imported roadmap %s: %w", parsed.roadmap.ID, err)
+	}
+
+	return parsed.roadmap, nil
+}
+
 func (s *Store) List() ([]Summary, error) {
 	entries, err := os.ReadDir(s.RoadmapsDir())
 	if errors.Is(err, os.ErrNotExist) {

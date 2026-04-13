@@ -137,6 +137,42 @@ func TestStoreImportListAndLoadLesson(t *testing.T) {
 	}
 }
 
+func TestStoreImportOrReplaceRefreshesRoadmapFiles(t *testing.T) {
+	withoutManual := strings.Replace(validRoadmapYAML, `    manual: "manuals/grep.md"
+`, "", 1)
+	source := writeRoadmapFixture(t, withoutManual)
+	store := NewStore(t.TempDir())
+
+	if _, err := store.Import(source); err != nil {
+		t.Fatalf("Import() error = %v", err)
+	}
+	roadmap, err := store.Load("text-search")
+	if err != nil {
+		t.Fatalf("Load() error = %v", err)
+	}
+	if roadmap.Commands[0].Manual != roadmap.Commands[0].Guide {
+		t.Fatalf("Manual = %q, want fallback guide", roadmap.Commands[0].Manual)
+	}
+
+	source = writeRoadmapFixture(t, validRoadmapYAML)
+	if _, err := store.ImportOrReplace(source); err != nil {
+		t.Fatalf("ImportOrReplace() error = %v", err)
+	}
+	roadmap, err = store.Load("text-search")
+	if err != nil {
+		t.Fatalf("Load() after replace error = %v", err)
+	}
+	if roadmap.Commands[0].Manual != "manuals/grep.md" {
+		t.Fatalf("Manual = %q, want manuals/grep.md", roadmap.Commands[0].Manual)
+	}
+	if !strings.Contains(roadmap.Commands[0].ManualMarkdown, "cheat sheet") {
+		t.Fatalf("ManualMarkdown = %q", roadmap.Commands[0].ManualMarkdown)
+	}
+	if _, err := os.Stat(filepath.Join(store.RoadmapsDir(), "text-search", "manuals", "grep.md")); err != nil {
+		t.Fatalf("stored manual not found: %v", err)
+	}
+}
+
 func TestParseDirRejectsUnsafeGuidePath(t *testing.T) {
 	source := strings.Replace(validRoadmapYAML, "commands/grep.md", "../grep.md", 1)
 	dir := writeRoadmapFixture(t, source)

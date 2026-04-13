@@ -164,7 +164,7 @@ func (a *App) ImportRoadmap(path string) (*roadmaps.Summary, error) {
 	if err := a.ensureRoadmapStore(); err != nil {
 		return nil, err
 	}
-	roadmap, err := a.roadmapStore.Import(path)
+	roadmap, err := a.roadmapStore.ImportOrReplace(path)
 	if err != nil {
 		return nil, err
 	}

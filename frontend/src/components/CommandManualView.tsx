@@ -9,7 +9,8 @@ interface CommandManualViewProps {
   command: RoadmapCommand
   roadmapTitle: string
   hasActiveLesson: boolean
-  onBackToRoadmap: () => void
+  backLabel: string
+  onBack: () => void
   onShowLesson: () => void
 }
 
@@ -17,7 +18,8 @@ export function CommandManualView({
   command,
   roadmapTitle,
   hasActiveLesson,
-  onBackToRoadmap,
+  backLabel,
+  onBack,
   onShowLesson
 }: CommandManualViewProps) {
   return (
@@ -26,9 +28,9 @@ export function CommandManualView({
         <div className="mx-auto grid w-full max-w-5xl gap-8 p-5 lg:p-8">
           <div className="border-b border-[#c5d1c7] pb-6">
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <Button onClick={onBackToRoadmap} variant="outline">
+              <Button onClick={onBack} variant="outline">
                 <ArrowLeft aria-hidden className="mr-2 h-4 w-4" />
-                Roadmap
+                {backLabel}
               </Button>
               {hasActiveLesson ? (
                 <Button onClick={onShowLesson} variant="secondary">

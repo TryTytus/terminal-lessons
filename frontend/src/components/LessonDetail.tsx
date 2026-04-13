@@ -69,7 +69,12 @@ export function LessonDetail({
                 disabled={busy}
               >
                 <BookOpen aria-hidden className="mr-2 h-4 w-4" />
-                {manualCommandName ?? "Guide"}
+                Command lesson
+                {manualCommandName ? (
+                  <span className="ml-1 font-mono text-xs text-muted-foreground">
+                    {manualCommandName}
+                  </span>
+                ) : null}
               </Button>
             ) : null}
             <Button onClick={onReset} variant="outline" size="sm" disabled={busy}>

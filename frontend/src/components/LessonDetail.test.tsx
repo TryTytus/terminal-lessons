@@ -53,4 +53,23 @@ describe("LessonDetail", () => {
     await userEvent.click(screen.getByRole("button", { name: /Reveal hint/i }))
     expect(screen.getByText("Pipe into sort.")).toBeInTheDocument()
   })
+
+  it("opens the command lesson from the exercise panel", async () => {
+    const openCommandManual = vi.fn()
+
+    render(
+      <LessonDetail
+        session={session}
+        onRunChecks={vi.fn()}
+        onReset={vi.fn()}
+        manualCommandName="sort"
+        onOpenCommandManual={openCommandManual}
+        busy={false}
+      />
+    )
+
+    await userEvent.click(screen.getByRole("button", { name: /Command lesson sort/i }))
+
+    expect(openCommandManual).toHaveBeenCalled()
+  })
 })

@@ -1,55 +1,49 @@
 # find deep lesson
 
-`find` walks a directory tree and prints paths that match an expression. It answers questions like "where are the Markdown files?" or "which regular files are near the project root?"
+Walk directory trees and filter by name, case, type, age, size, depth, and actions.
 
 ## Mental model
 
-- Start with a directory, often `.` or a project folder.
-- Add filters such as `-name`, `-type`, and `-maxdepth`.
-- Pipe into `sort` when the exact order matters.
-
-```sh
-find project -type f -name "*.md" | sort
-```
-
-This walks `project`, keeps regular files whose names end in `.md`, and sorts the resulting paths.
+- `find` is practiced as small, observable terminal tasks.
+- Each exercise isolates one form or flag so the behavior is easy to see.
+- Redirect output into the named answer file when the prompt asks for a saved result.
+- Inspect your work with simple commands before running checks.
 
 ## Cheat sheet
 
-| Form | Use it when |
+| Form | Practice target |
 | --- | --- |
-| `find .` | You want to see everything below the current directory. |
-| `find . -name "*.txt"` | You know the file name or extension pattern. |
-| `find . -type f` | You only want regular files. |
-| `find . -type d` | You only want directories. |
-| `find . -maxdepth 2 -type f` | You only want shallow matches. |
+| `find .` | List everything below a directory. |
+| `find . -name ...` | Find by exact name. |
+| `find . -iname ...` | Find names case-insensitively. |
+| `find . -type f ...` | Find files only. |
+| `find . -type d ...` | Find directories only. |
+| `find . -mtime ...` | Find by modification time. |
+| `find . -size ...` | Find by file size. |
+| `find . -exec ...` | Execute a command for each found path. |
+| `find . -maxdepth ...` | Limit search depth. |
 
-## Name patterns
+## Worked examples
 
-`-name` uses shell-style glob patterns, not full regular expressions.
+| Exercise | Command to notice |
+| --- | --- |
+| List a project tree | `find project \| sort > tree.txt` |
+| Find an exact file name | `find project -name "target.txt" \| sort > targets.txt` |
+| Find names ignoring case | `find repo -iname "readme.md" \| sort > readmes.txt` |
+| Find regular files only | `find project -type f \| sort > files-only.txt` |
+| Find directories only | `find project -type d \| sort > directories.txt` |
+| Find old files by modification time | `find logs -type f -mtime +30 \| sort > stale.txt` |
+| Find files by size | `find files -type f -size +20c \| sort > large-files.txt` |
+| Run a command on matches | `find scratch -name "*.tmp" -exec rm {} \;` |
+| Limit search depth | `find project -maxdepth 2 -type f \| sort > shallow-files.txt` |
 
-```sh
-find . -name "*.txt"
-```
+## Practice flow
 
-The quotes matter. Without quotes, the shell may expand `*.txt` before `find` receives it.
+1. Read the task and identify the one command form being practiced.
+2. Run the command in the lesson workspace.
+3. Save the answer file exactly where the task asks for it.
+4. Run checks and adjust the command, not the lesson files.
 
-## File type filters
+## Safety note
 
-```sh
-find project -type f
-```
-
-Use `-type f` for regular files and `-type d` for directories. This prevents directory names from mixing into file lists.
-
-## Depth filters
-
-```sh
-find project -maxdepth 2 -type f
-```
-
-Depth limits are useful when a nested dependency folder or build output would make the result too large.
-
-## Practical habit
-
-Build `find` expressions from left to right: start path, depth limit, type filter, then name pattern. Add `| sort` when the result becomes a lesson answer or a saved report.
+Build expressions from left to right and quote globs such as `"*.tmp"` so the shell does not expand them first.

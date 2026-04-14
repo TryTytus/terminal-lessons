@@ -1,0 +1,23 @@
+version: 1
+id: roadmap-cd-basic
+title: "Enter a directory"
+commands: ["cd", "pwd"]
+difficulty: "beginner"
+intro: "Move into reports and save the new location in where-am-i.txt."
+workspace:
+  files:
+    - path: "reports/today.txt"
+      content: "daily notes\n"
+hints:
+  - "Use cd reports to change the shell directory."
+  - "Run pwd after changing directories."
+  - "Write the result one level up so the answer file lands in the workspace root."
+solution:
+  commands:
+    - "cd reports"
+    - "pwd > ../where-am-i.txt"
+  explanation: "cd changes the shell working directory. ../where-am-i.txt writes the answer in the workspace root."
+checks:
+  - type: "file_contains"
+    path: "where-am-i.txt"
+    expected: "/reports"

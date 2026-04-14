@@ -3,19 +3,20 @@ id: roadmap-sort-numeric
 title: "Sort numbers numerically"
 commands: ["sort"]
 difficulty: "beginner"
-intro: "Create sorted-ports.txt with the port numbers from ports.txt in numeric order."
+intro: "Create sorted-ports.txt with ports.txt sorted by numeric value."
 workspace:
   files:
     - path: "ports.txt"
-      content: "443\n80\n3000\n22\n"
+      content: "8080\n22\n443\n"
 hints:
-  - "Plain sort compares text, so 3000 can sort before 443."
+  - "Default sort compares text, so 8080 can come before 22."
   - "Use -n for numeric sorting."
+  - "Redirect output into sorted-ports.txt."
 solution:
   commands:
     - "sort -n ports.txt > sorted-ports.txt"
-  explanation: "sort -n compares lines as numbers."
+  explanation: "sort -n compares values as numbers."
 checks:
   - type: "file_equals"
     path: "sorted-ports.txt"
-    expected: "22\n80\n443\n3000\n"
+    expected: "22\n443\n8080\n"

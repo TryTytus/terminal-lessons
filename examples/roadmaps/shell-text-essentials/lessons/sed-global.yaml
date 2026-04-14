@@ -1,0 +1,22 @@
+version: 1
+id: roadmap-sed-global
+title: "Replace every match on a line"
+commands: ["sed"]
+difficulty: "beginner"
+intro: "Create all-replaced.txt where every old becomes new."
+workspace:
+  files:
+    - path: "words.txt"
+      content: "old old\nold value\n"
+hints:
+  - "Add g to the substitution command."
+  - "The g flag means global for each line."
+  - "Redirect output into all-replaced.txt."
+solution:
+  commands:
+    - "sed 's/old/new/g' words.txt > all-replaced.txt"
+  explanation: "The trailing g makes sed replace every occurrence on each line."
+checks:
+  - type: "file_equals"
+    path: "all-replaced.txt"
+    expected: "new new\nnew value\n"

@@ -1,0 +1,25 @@
+version: 1
+id: roadmap-ls-long
+title: "Use long format"
+commands: ["ls"]
+difficulty: "beginner"
+intro: "Create long-listing.txt with a long-format listing of details."
+workspace:
+  files:
+    - path: "details/report.txt"
+      content: "quarterly report\n"
+hints:
+  - "Use ls -l for permissions, owner, size, date, and name."
+  - "Redirect the result into long-listing.txt."
+  - "Look for the file mode at the start of the line."
+solution:
+  commands:
+    - "ls -l details > long-listing.txt"
+  explanation: "ls -l writes one detailed row for each entry."
+checks:
+  - type: "file_contains"
+    path: "long-listing.txt"
+    expected: "report.txt"
+  - type: "file_contains"
+    path: "long-listing.txt"
+    expected: "-rw-r--r--"

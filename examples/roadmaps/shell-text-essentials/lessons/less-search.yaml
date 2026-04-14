@@ -1,0 +1,25 @@
+version: 1
+id: roadmap-less-search
+title: "Search inside a pager"
+commands: ["less", "echo"]
+difficulty: "beginner"
+intro: "Use less to find the release_code value, then write it to less-code.txt."
+workspace:
+  files:
+    - path: "release-notes.txt"
+      content: "Release notes\n\nHighlights\n- faster startup\n- safer imports\n\nDiagnostics\nrelease_code=TX-41\nowner=docs\n"
+hints:
+  - "Open release-notes.txt with less."
+  - "Search inside less with /release_code."
+  - "Press q to return to the shell, then write the value you found."
+solution:
+  commands:
+    - "less release-notes.txt"
+    - "/release_code"
+    - "q"
+    - "echo \"release_code=TX-41\" > less-code.txt"
+  explanation: "less is interactive: / searches, Enter jumps to the match, and q quits."
+checks:
+  - type: "file_equals"
+    path: "less-code.txt"
+    expected: "release_code=TX-41\n"

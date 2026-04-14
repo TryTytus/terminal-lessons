@@ -1,0 +1,22 @@
+version: 1
+id: roadmap-grep-count
+title: "Count matching lines"
+commands: ["grep"]
+difficulty: "beginner"
+intro: "Create error-count.txt containing the number of ERROR lines in app.log."
+workspace:
+  files:
+    - path: "app.log"
+      content: "INFO boot\nERROR one\nERROR two\nWARN slow\n"
+hints:
+  - "Use -c to count matching lines."
+  - "Search for ERROR."
+  - "Redirect the count into error-count.txt."
+solution:
+  commands:
+    - "grep -c ERROR app.log > error-count.txt"
+  explanation: "grep -c prints only the number of matching lines."
+checks:
+  - type: "file_equals"
+    path: "error-count.txt"
+    expected: "2\n"

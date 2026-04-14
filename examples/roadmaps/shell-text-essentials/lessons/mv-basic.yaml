@@ -1,0 +1,24 @@
+version: 1
+id: roadmap-mv-basic
+title: "Rename a file"
+commands: ["mv"]
+difficulty: "beginner"
+intro: "Rename draft.txt to final.txt."
+workspace:
+  files:
+    - path: "draft.txt"
+      content: "ready\n"
+hints:
+  - "mv can rename a file in the same directory."
+  - "Use draft.txt as the source."
+  - "The old name should disappear."
+solution:
+  commands:
+    - "mv draft.txt final.txt"
+  explanation: "mv changes the directory entry from draft.txt to final.txt."
+checks:
+  - type: "file_equals"
+    path: "final.txt"
+    expected: "ready\n"
+  - type: "file_not_exists"
+    path: "draft.txt"

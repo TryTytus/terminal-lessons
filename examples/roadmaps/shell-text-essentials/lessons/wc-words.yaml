@@ -1,0 +1,23 @@
+version: 1
+id: roadmap-wc-words
+title: "Count words"
+commands: ["wc"]
+difficulty: "beginner"
+intro: "Create word-count.txt containing the number of words in sentence.txt."
+workspace:
+  files:
+    - path: "sentence.txt"
+      content: "shell lessons build steady habits\n"
+hints:
+  - "Use wc -w to count words."
+  - "Use input redirection for a clean number."
+  - "Write the result into word-count.txt."
+solution:
+  commands:
+    - "wc -w < sentence.txt > word-count.txt"
+  explanation: "wc -w counts whitespace-separated words."
+checks:
+  - type: "file_equals"
+    path: "word-count.txt"
+    expected: "5"
+    trim: true

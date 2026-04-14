@@ -1,0 +1,27 @@
+version: 1
+id: roadmap-ls-all
+title: "Include hidden files"
+commands: ["ls"]
+difficulty: "beginner"
+intro: "Create all-files.txt showing normal and hidden files in config."
+workspace:
+  files:
+    - path: "config/.env"
+      content: "TOKEN=local\n"
+    - path: "config/app.conf"
+      content: "mode=dev\n"
+hints:
+  - "Hidden names begin with a dot."
+  - "Use -a to include dotfiles."
+  - "Redirect the output into all-files.txt."
+solution:
+  commands:
+    - "ls -a config > all-files.txt"
+  explanation: "ls -a includes dotfiles such as .env, plus . and ..."
+checks:
+  - type: "file_contains"
+    path: "all-files.txt"
+    expected: ".env"
+  - type: "file_contains"
+    path: "all-files.txt"
+    expected: "app.conf"

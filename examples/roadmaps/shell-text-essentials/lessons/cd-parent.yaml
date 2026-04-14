@@ -1,0 +1,24 @@
+version: 1
+id: roadmap-cd-parent
+title: "Move up one level"
+commands: ["cd", "pwd"]
+difficulty: "beginner"
+intro: "Start in parent/child, move up with cd .., and save the parent path."
+workspace:
+  files:
+    - path: "parent/child/item.txt"
+      content: "nested\n"
+hints:
+  - "cd .. means the parent directory."
+  - "Start inside parent/child."
+  - "After cd .., pwd should end in parent."
+solution:
+  commands:
+    - "cd parent/child"
+    - "cd .."
+    - "pwd > ../parent-dir.txt"
+  explanation: "cd .. moves one directory up, from child to parent."
+checks:
+  - type: "file_contains"
+    path: "parent-dir.txt"
+    expected: "/parent"

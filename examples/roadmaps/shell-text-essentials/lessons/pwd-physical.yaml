@@ -1,0 +1,25 @@
+version: 1
+id: roadmap-pwd-physical
+title: "Resolve a symlinked path"
+commands: ["pwd", "cd", "ln"]
+difficulty: "beginner"
+intro: "Create physical-path.txt showing the real physical directory after entering a symlink."
+workspace:
+  files:
+    - path: "real/place/readme.txt"
+      content: "physical location\n"
+hints:
+  - "Create a symlink named shortcut that points at real/place."
+  - "cd into shortcut."
+  - "pwd -P resolves the physical path instead of the logical symlink path."
+solution:
+  commands:
+    - "ln -s real/place shortcut"
+    - "cd shortcut"
+    - "pwd -P > ../../physical-path.txt"
+    - "cd ../.."
+  explanation: "pwd -P asks the shell for the physical path, so the saved path contains real/place."
+checks:
+  - type: "file_contains"
+    path: "physical-path.txt"
+    expected: "/real/place"

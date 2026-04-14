@@ -1,0 +1,27 @@
+version: 1
+id: roadmap-cd-previous
+title: "Return to the previous directory"
+commands: ["cd", "pwd"]
+difficulty: "beginner"
+intro: "Use cd - to return from beta to alpha, then save the final location."
+workspace:
+  files:
+    - path: "alpha/a.txt"
+      content: "alpha\n"
+    - path: "beta/b.txt"
+      content: "beta\n"
+hints:
+  - "cd - switches back to the previous directory."
+  - "Visit alpha first, then beta."
+  - "After cd -, pwd should point at alpha."
+solution:
+  commands:
+    - "cd alpha"
+    - "cd ../beta"
+    - "cd -"
+    - "pwd > ../previous-dir.txt"
+  explanation: "The shell remembers the previous directory and cd - swaps back to it."
+checks:
+  - type: "file_contains"
+    path: "previous-dir.txt"
+    expected: "/alpha"

@@ -1,0 +1,25 @@
+version: 1
+id: roadmap-cp-verbose
+title: "Show copied names"
+commands: ["cp"]
+difficulty: "beginner"
+intro: "Copy invoice.txt to invoice-copy.txt and save cp verbose output in copy.log."
+workspace:
+  files:
+    - path: "invoice.txt"
+      content: "total=42\n"
+hints:
+  - "Use -v for verbose copy output."
+  - "Redirect stdout into copy.log."
+  - "The copied file should still be created."
+solution:
+  commands:
+    - "cp -v invoice.txt invoice-copy.txt > copy.log"
+  explanation: "cp -v prints the source and destination while copying."
+checks:
+  - type: "file_equals"
+    path: "invoice-copy.txt"
+    expected: "total=42\n"
+  - type: "file_contains"
+    path: "copy.log"
+    expected: "invoice-copy.txt"

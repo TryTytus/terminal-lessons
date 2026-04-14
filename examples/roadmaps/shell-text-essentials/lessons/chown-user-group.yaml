@@ -1,0 +1,22 @@
+version: 1
+id: roadmap-chown-user-group
+title: "Set current owner and group"
+commands: ["chown", "id", "echo"]
+difficulty: "beginner"
+intro: "Use chown user:group with your current user and group on package.txt."
+workspace:
+  files:
+    - path: "package.txt"
+      content: "package\n"
+hints:
+  - "id -un prints the current user."
+  - "id -gn prints the current primary group."
+  - "Use chown \"$(id -un):$(id -gn)\" package.txt."
+solution:
+  commands:
+    - "chown \"$(id -un):$(id -gn)\" package.txt && echo \"owner group ok\" > chown-user-group.txt"
+  explanation: "user:group changes both ownership fields in one command."
+checks:
+  - type: "file_equals"
+    path: "chown-user-group.txt"
+    expected: "owner group ok\n"

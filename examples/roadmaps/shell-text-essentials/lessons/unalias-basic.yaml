@@ -1,0 +1,21 @@
+version: 1
+id: roadmap-unalias-basic
+title: "Remove a temporary alias"
+commands: ["alias", "unalias", "echo"]
+difficulty: "beginner"
+intro: "Create an alias named note, remove it, and write removed to unalias-status.txt."
+workspace:
+  files: []
+hints:
+  - "Create the alias first so there is something to remove."
+  - "Use unalias note."
+  - "Use && to write the marker only if removal succeeds."
+solution:
+  commands:
+    - "alias note=\"echo still aliased\""
+    - "unalias note && echo \"removed\" > unalias-status.txt"
+  explanation: "unalias deletes the alias definition from the current shell."
+checks:
+  - type: "file_equals"
+    path: "unalias-status.txt"
+    expected: "removed\n"

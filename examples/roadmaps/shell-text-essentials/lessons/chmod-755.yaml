@@ -1,0 +1,23 @@
+version: 1
+id: roadmap-chmod-755
+title: "Set executable numeric mode"
+commands: ["chmod", "ls"]
+difficulty: "beginner"
+intro: "Set tool.sh to mode 755 and save its long listing."
+workspace:
+  files:
+    - path: "tool.sh"
+      content: "#!/bin/sh\nprintf \"tool\\n\"\n"
+hints:
+  - "755 means owner rwx, group rx, others rx."
+  - "Use chmod 755 tool.sh."
+  - "Check the mode with ls -l."
+solution:
+  commands:
+    - "chmod 755 tool.sh"
+    - "ls -l tool.sh > chmod-755.txt"
+  explanation: "Numeric mode 755 is commonly used for executable scripts and directories."
+checks:
+  - type: "file_contains"
+    path: "chmod-755.txt"
+    expected: "-rwxr-xr-x"

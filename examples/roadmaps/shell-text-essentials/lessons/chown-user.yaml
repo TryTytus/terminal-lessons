@@ -1,0 +1,22 @@
+version: 1
+id: roadmap-chown-user
+title: "Set the current user as owner"
+commands: ["chown", "id", "echo"]
+difficulty: "beginner"
+intro: "Use chown with the current user on report.txt, then write a success marker."
+workspace:
+  files:
+    - path: "report.txt"
+      content: "owned by learner\n"
+hints:
+  - "Use id -un to print your current username."
+  - "chown \"$(id -un)\" report.txt keeps the owner set to your user."
+  - "Use && so the marker is written only if chown succeeds."
+solution:
+  commands:
+    - "chown \"$(id -un)\" report.txt && echo \"owner ok\" > chown-user.txt"
+  explanation: "Using the current user avoids requiring sudo while still practicing chown syntax."
+checks:
+  - type: "file_equals"
+    path: "chown-user.txt"
+    expected: "owner ok\n"

@@ -1,0 +1,26 @@
+version: 1
+id: roadmap-ls-time
+title: "Sort by modification time"
+commands: ["ls", "touch"]
+difficulty: "beginner"
+intro: "Create by-time.txt listing timeline files with the newest file first."
+workspace:
+  files:
+    - path: "timeline/old.txt"
+      content: "old\n"
+    - path: "timeline/new.txt"
+      content: "new\n"
+hints:
+  - "Use touch -t to give the files predictable timestamps."
+  - "Use ls -t to sort newest first."
+  - "Redirect the listing into by-time.txt."
+solution:
+  commands:
+    - "touch -t 202001010000 timeline/old.txt"
+    - "touch -t 203001010000 timeline/new.txt"
+    - "ls -t timeline > by-time.txt"
+  explanation: "ls -t sorts entries by modification time with the newest first."
+checks:
+  - type: "file_equals"
+    path: "by-time.txt"
+    expected: "new.txt\nold.txt\n"

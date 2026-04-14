@@ -1,0 +1,23 @@
+version: 1
+id: roadmap-wc-bytes
+title: "Count bytes"
+commands: ["wc"]
+difficulty: "beginner"
+intro: "Create byte-count.txt containing the byte count of bytes.txt."
+workspace:
+  files:
+    - path: "bytes.txt"
+      content: "abcde\n"
+hints:
+  - "Use wc -c to count bytes."
+  - "The file contains six bytes: five letters plus a newline."
+  - "Use input redirection to omit the filename."
+solution:
+  commands:
+    - "wc -c < bytes.txt > byte-count.txt"
+  explanation: "wc -c reports byte count, not visual character width."
+checks:
+  - type: "file_equals"
+    path: "byte-count.txt"
+    expected: "6"
+    trim: true

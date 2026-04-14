@@ -1,0 +1,29 @@
+version: 1
+id: roadmap-find-exec
+title: "Run a command on matches"
+commands: ["find", "rm"]
+difficulty: "beginner"
+intro: "Remove every .tmp file under scratch using find -exec."
+workspace:
+  files:
+    - path: "scratch/a.tmp"
+      content: "delete\n"
+    - path: "scratch/nested/b.tmp"
+      content: "delete\n"
+    - path: "scratch/keep.txt"
+      content: "keep\n"
+hints:
+  - "Use -name \"*.tmp\" to select temporary files."
+  - "Use -exec rm {} \\; to run rm for each match."
+  - "The keep.txt file should remain."
+solution:
+  commands:
+    - "find scratch -name \"*.tmp\" -exec rm {} \\;"
+  explanation: "-exec replaces {} with each found path and runs the command until \\; ends the action."
+checks:
+  - type: "file_not_exists"
+    path: "scratch/a.tmp"
+  - type: "file_not_exists"
+    path: "scratch/nested/b.tmp"
+  - type: "file_exists"
+    path: "scratch/keep.txt"

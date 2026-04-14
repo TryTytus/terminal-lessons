@@ -1,0 +1,25 @@
+version: 1
+id: roadmap-find-mtime
+title: "Find old files by modification time"
+commands: ["find", "touch", "sort"]
+difficulty: "beginner"
+intro: "Create stale.txt containing log files older than 30 days."
+workspace:
+  files:
+    - path: "logs/old.log"
+      content: "old\n"
+    - path: "logs/current.log"
+      content: "current\n"
+hints:
+  - "Set old.log to an old timestamp with touch -t first."
+  - "Use -mtime +30 to find files older than 30 days."
+  - "Combine it with -type f and sort."
+solution:
+  commands:
+    - "touch -t 202001010000 logs/old.log"
+    - "find logs -type f -mtime +30 | sort > stale.txt"
+  explanation: "-mtime +30 matches files whose modification time is more than 30 days old."
+checks:
+  - type: "file_equals"
+    path: "stale.txt"
+    expected: "logs/old.log\n"

@@ -1,0 +1,23 @@
+version: 1
+id: roadmap-sed-in-place
+title: "Edit a file in place"
+commands: ["sed", "cat"]
+difficulty: "beginner"
+intro: "Change status.txt from draft to final using sed -i, then copy the result to status-after.txt."
+workspace:
+  files:
+    - path: "status.txt"
+      content: "status=draft\n"
+hints:
+  - "On macOS/BSD sed, use sed -i \"\" with an empty backup suffix."
+  - "On GNU sed, sed -i without \"\" is also common."
+  - "After editing, cat the file into status-after.txt for the check."
+solution:
+  commands:
+    - "sed -i '' 's/draft/final/' status.txt"
+    - "cat status.txt > status-after.txt"
+  explanation: "sed -i edits the file itself instead of writing a separate output stream."
+checks:
+  - type: "file_equals"
+    path: "status-after.txt"
+    expected: "status=final\n"

@@ -1,0 +1,22 @@
+version: 1
+id: roadmap-history-basic
+title: "Save recent history"
+commands: ["history", "echo"]
+difficulty: "beginner"
+intro: "Run two marker commands, then save your shell history to shell-history.txt."
+workspace:
+  files: []
+hints:
+  - "Run the two echo commands first."
+  - "Then redirect history into shell-history.txt."
+  - "The saved history should include the second marker command."
+solution:
+  commands:
+    - "echo first-step"
+    - "echo second-step"
+    - "history > shell-history.txt"
+  explanation: "history prints commands remembered by the current interactive shell."
+checks:
+  - type: "file_contains"
+    path: "shell-history.txt"
+    expected: "echo second-step"

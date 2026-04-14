@@ -1,0 +1,28 @@
+version: 1
+id: roadmap-uniq-count
+title: "Count adjacent duplicates"
+commands: ["uniq"]
+difficulty: "beginner"
+intro: "Create counted.txt with occurrence counts for grouped.txt."
+workspace:
+  files:
+    - path: "grouped.txt"
+      content: "apple\napple\napple\nbanana\nbanana\ncarrot\n"
+hints:
+  - "Use uniq -c to count each adjacent run."
+  - "Redirect the counted output into counted.txt."
+  - "The output includes leading spaces before counts."
+solution:
+  commands:
+    - "uniq -c grouped.txt > counted.txt"
+  explanation: "uniq -c prefixes each unique adjacent line with its count."
+checks:
+  - type: "file_contains"
+    path: "counted.txt"
+    expected: "3 apple"
+  - type: "file_contains"
+    path: "counted.txt"
+    expected: "2 banana"
+  - type: "file_contains"
+    path: "counted.txt"
+    expected: "1 carrot"

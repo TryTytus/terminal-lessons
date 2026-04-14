@@ -1,0 +1,22 @@
+version: 1
+id: roadmap-cp-file
+title: "Copy one file"
+commands: ["cp"]
+difficulty: "beginner"
+intro: "Copy original.txt to copy.txt."
+workspace:
+  files:
+    - path: "original.txt"
+      content: "keep this text\n"
+hints:
+  - "Use cp with a source and destination."
+  - "The source should remain in place."
+  - "The copy must have the same content."
+solution:
+  commands:
+    - "cp original.txt copy.txt"
+  explanation: "cp reads original.txt and writes the duplicate to copy.txt."
+checks:
+  - type: "file_equals"
+    path: "copy.txt"
+    expected: "keep this text\n"

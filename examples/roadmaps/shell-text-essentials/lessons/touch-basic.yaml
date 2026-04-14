@@ -1,0 +1,19 @@
+version: 1
+id: roadmap-touch-basic
+title: "Create an empty file"
+commands: ["touch"]
+difficulty: "beginner"
+intro: "Create draft.txt in the workspace root."
+workspace:
+  files: []
+hints:
+  - "touch creates the file if it is missing."
+  - "No text content is needed."
+  - "The check only requires the file to exist."
+solution:
+  commands:
+    - "touch draft.txt"
+  explanation: "touch creates draft.txt with empty content."
+checks:
+  - type: "file_exists"
+    path: "draft.txt"

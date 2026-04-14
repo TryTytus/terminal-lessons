@@ -1,26 +1,24 @@
 version: 1
 id: roadmap-find-type
-title: "Keep only files"
+title: "Find regular files only"
 commands: ["find", "sort"]
 difficulty: "beginner"
-intro: "Create files.txt containing only regular files below project, sorted alphabetically."
+intro: "Create files-only.txt containing only regular files under project."
 workspace:
   files:
-    - path: "project/README.md"
-      content: "# Readme\n"
+    - path: "project/docs/guide.md"
+      content: "# Guide\n"
     - path: "project/src/app.js"
-      content: "console.log('app')\n"
-    - path: "project/src/features/search.js"
-      content: "export const search = true\n"
+      content: "app\n"
 hints:
-  - "find prints directories and files unless you filter it."
-  - "Use -type f to keep regular files."
-  - "Pipe into sort and redirect into files.txt."
+  - "Directories appear in plain find output."
+  - "Use -type f to keep only regular files."
+  - "Sort before writing the answer."
 solution:
   commands:
-    - "find project -type f | sort > files.txt"
+    - "find project -type f | sort > files-only.txt"
   explanation: "-type f filters the traversal to regular files."
 checks:
   - type: "file_equals"
-    path: "files.txt"
-    expected: "project/README.md\nproject/src/app.js\nproject/src/features/search.js\n"
+    path: "files-only.txt"
+    expected: "project/docs/guide.md\nproject/src/app.js\n"

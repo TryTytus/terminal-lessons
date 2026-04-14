@@ -1,0 +1,24 @@
+version: 1
+id: roadmap-chmod-symbolic-specific
+title: "Adjust user and group bits"
+commands: ["chmod", "ls"]
+difficulty: "beginner"
+intro: "Change team.txt with u+rw,g-w and save the resulting long listing."
+workspace:
+  files:
+    - path: "team.txt"
+      content: "team notes\n"
+hints:
+  - "First make the file group-writable with chmod 660."
+  - "Then apply chmod u+rw,g-w."
+  - "Use ls -l to inspect the mode."
+solution:
+  commands:
+    - "chmod 660 team.txt"
+    - "chmod u+rw,g-w team.txt"
+    - "ls -l team.txt > team-mode.txt"
+  explanation: "u+rw ensures the owner can read and write, while g-w removes group write permission."
+checks:
+  - type: "file_contains"
+    path: "team-mode.txt"
+    expected: "-rw-r-----"

@@ -1,0 +1,24 @@
+version: 1
+id: roadmap-chown-recursive
+title: "Apply ownership recursively"
+commands: ["chown", "id", "echo"]
+difficulty: "beginner"
+intro: "Use chown -R with your current user and group on bundle."
+workspace:
+  files:
+    - path: "bundle/a.txt"
+      content: "a\n"
+    - path: "bundle/nested/b.txt"
+      content: "b\n"
+hints:
+  - "Use the current user and group to avoid privileged changes."
+  - "Apply chown -R to the bundle directory."
+  - "Write a marker only when the command succeeds."
+solution:
+  commands:
+    - "chown -R \"$(id -un):$(id -gn)\" bundle && echo \"recursive owner ok\" > chown-recursive.txt"
+  explanation: "chown -R walks the directory tree and applies ownership to each entry."
+checks:
+  - type: "file_equals"
+    path: "chown-recursive.txt"
+    expected: "recursive owner ok\n"

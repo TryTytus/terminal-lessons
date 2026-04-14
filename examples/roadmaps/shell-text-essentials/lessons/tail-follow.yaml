@@ -1,0 +1,26 @@
+version: 1
+id: roadmap-tail-follow
+title: "Follow a growing file"
+commands: ["tail", "echo", "kill"]
+difficulty: "beginner"
+intro: "Use tail -f to capture a new line appended to live.log in followed.txt."
+workspace:
+  files:
+    - path: "live.log"
+      content: "boot\n"
+hints:
+  - "Start tail -f in the background and redirect it into followed.txt."
+  - "Append worker ready to live.log."
+  - "Stop the background tail process after it captures the new line."
+solution:
+  commands:
+    - "tail -f live.log > followed.txt &"
+    - "echo $! > tail.pid"
+    - "echo \"worker ready\" >> live.log"
+    - "sleep 1"
+    - "kill \"$(cat tail.pid)\""
+  explanation: "tail -f keeps watching the file until you stop it; the background process captures the appended line."
+checks:
+  - type: "file_contains"
+    path: "followed.txt"
+    expected: "worker ready"

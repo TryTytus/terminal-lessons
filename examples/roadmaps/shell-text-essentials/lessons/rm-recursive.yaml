@@ -1,0 +1,23 @@
+version: 1
+id: roadmap-rm-recursive
+title: "Remove a directory tree"
+commands: ["rm"]
+difficulty: "beginner"
+intro: "Remove the build directory and everything below it."
+workspace:
+  files:
+    - path: "build/cache.tmp"
+      content: "cache\n"
+    - path: "build/logs/out.log"
+      content: "log\n"
+hints:
+  - "rm needs -r for directories."
+  - "Use rm -r build."
+  - "The whole build tree should disappear."
+solution:
+  commands:
+    - "rm -r build"
+  explanation: "rm -r recursively removes a directory and its contents."
+checks:
+  - type: "file_not_exists"
+    path: "build"

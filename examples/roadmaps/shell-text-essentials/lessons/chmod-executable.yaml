@@ -1,0 +1,23 @@
+version: 1
+id: roadmap-chmod-executable
+title: "Add execute permission"
+commands: ["chmod"]
+difficulty: "beginner"
+intro: "Make run.sh executable and run it to create ran.txt."
+workspace:
+  files:
+    - path: "run.sh"
+      content: "#!/bin/sh\nprintf \"script ran\\n\"\n"
+hints:
+  - "chmod +x adds execute permission."
+  - "Run the script after changing the mode."
+  - "Redirect the script output into ran.txt."
+solution:
+  commands:
+    - "chmod +x run.sh"
+    - "./run.sh > ran.txt"
+  explanation: "chmod +x makes the script executable by adding execute bits."
+checks:
+  - type: "file_equals"
+    path: "ran.txt"
+    expected: "script ran\n"

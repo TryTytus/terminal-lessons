@@ -1,25 +1,24 @@
 # find
 
-`find` walks directories and prints paths that match conditions. It is useful when a file name, extension, or location is more important than the file contents.
+Walk directory trees and filter by name, case, type, age, size, depth, and actions.
 
 ## Daily forms
 
-- `find .` lists everything below the current directory.
-- `find . -name "*.txt"` matches names with a shell-style pattern.
-- `find . -type f` keeps only regular files.
-- `find . -type d` keeps only directories.
-- `find . -maxdepth 2 -type f` limits the search depth before filtering.
+- `find .` - List everything below a directory.
+- `find . -name ...` - Find by exact name.
+- `find . -iname ...` - Find names case-insensitively.
+- `find . -type f ...` - Find files only.
+- `find . -type d ...` - Find directories only.
+- `find . -mtime ...` - Find by modification time.
+- `find . -size ...` - Find by file size.
+- `find . -exec ...` - Execute a command for each found path.
 
 ## Example
 
 ```sh
-find . -maxdepth 2 -type f -name "*.md" | sort
+find project | sort > tree.txt
 ```
 
-```text
-./docs/architecture.md
-./docs/lesson-authoring.md
-./README.md
-```
+## Practice note
 
-`find` uses expression-style parameters. Patterns for `-name` are shell globs, so `*.txt` means names ending with `.txt`.
+Build expressions from left to right and quote globs such as `"*.tmp"` so the shell does not expand them first.

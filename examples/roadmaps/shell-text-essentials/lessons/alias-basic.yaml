@@ -1,0 +1,26 @@
+version: 1
+id: roadmap-alias-basic
+title: "Create and use an alias"
+commands: ["alias", "ls"]
+difficulty: "beginner"
+intro: "Create an alias named ll for ls -l and use it to save a listing."
+workspace:
+  files:
+    - path: "work/item.txt"
+      content: "item\n"
+hints:
+  - "Aliases last only for the current shell session."
+  - "Use alias ll=\"ls -l\"."
+  - "Then run ll work and redirect the output."
+solution:
+  commands:
+    - "alias ll=\"ls -l\""
+    - "ll work > alias-listing.txt"
+  explanation: "The alias expands ll into ls -l before the command runs."
+checks:
+  - type: "file_contains"
+    path: "alias-listing.txt"
+    expected: "item.txt"
+  - type: "file_contains"
+    path: "alias-listing.txt"
+    expected: "-rw-r--r--"

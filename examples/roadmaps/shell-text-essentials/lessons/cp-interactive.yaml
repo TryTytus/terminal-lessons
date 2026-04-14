@@ -1,0 +1,25 @@
+version: 1
+id: roadmap-cp-interactive
+title: "Confirm before overwrite"
+commands: ["cp"]
+difficulty: "beginner"
+intro: "Use cp -i to overwrite target.txt with new.txt after confirming the prompt."
+workspace:
+  files:
+    - path: "new.txt"
+      content: "new version\n"
+    - path: "target.txt"
+      content: "old version\n"
+hints:
+  - "cp -i asks before overwriting an existing file."
+  - "Run cp -i new.txt target.txt."
+  - "Type y when cp asks for confirmation."
+solution:
+  commands:
+    - "cp -i new.txt target.txt"
+    - "y"
+  explanation: "The -i flag makes cp ask before replacing target.txt; answering y allows the copy."
+checks:
+  - type: "file_equals"
+    path: "target.txt"
+    expected: "new version\n"

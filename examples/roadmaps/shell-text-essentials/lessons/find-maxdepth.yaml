@@ -2,27 +2,25 @@ version: 1
 id: roadmap-find-maxdepth
 title: "Limit search depth"
 commands: ["find", "sort"]
-difficulty: "intermediate"
-intro: "Create shallow-files.txt containing regular files no deeper than two levels below project."
+difficulty: "beginner"
+intro: "Create shallow-files.txt containing regular files at depth 2 or less under project."
 workspace:
   files:
     - path: "project/README.md"
-      content: "# Readme\n"
+      content: "# Project\n"
     - path: "project/docs/plan.md"
       content: "# Plan\n"
-    - path: "project/src/app.js"
-      content: "console.log('app')\n"
-    - path: "project/src/features/search.js"
-      content: "export const search = true\n"
+    - path: "project/docs/archive/old.md"
+      content: "# Old\n"
 hints:
-  - "Use -maxdepth before the file type filter."
-  - "Depth 2 includes project/src/app.js but excludes project/src/features/search.js."
-  - "Combine -maxdepth 2 with -type f."
+  - "Use -maxdepth before the type filter."
+  - "Depth 1 is the starting directory contents."
+  - "The nested archive file is too deep for maxdepth 2."
 solution:
   commands:
     - "find project -maxdepth 2 -type f | sort > shallow-files.txt"
-  explanation: "-maxdepth 2 limits how far find descends from the starting directory."
+  explanation: "-maxdepth limits how far find descends before applying the rest of the expression."
 checks:
   - type: "file_equals"
     path: "shallow-files.txt"
-    expected: "project/README.md\nproject/docs/plan.md\nproject/src/app.js\n"
+    expected: "project/README.md\nproject/docs/plan.md\n"

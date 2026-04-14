@@ -1,22 +1,22 @@
 version: 1
 id: roadmap-grep-extended-regexp
-title: "Match several alert levels"
+title: "Match one of several patterns"
 commands: ["grep"]
-difficulty: "intermediate"
-intro: "Create alerts.txt containing both WARN and ERROR lines from app.log while leaving INFO lines out."
+difficulty: "beginner"
+intro: "Create alerts.txt containing WARN or ERROR lines from app.log."
 workspace:
   files:
     - path: "app.log"
-      content: "INFO boot\nWARN cache cold\nERROR database timeout\nINFO retry\nWARN queue full\n"
+      content: "INFO boot\nWARN cache slow\nDEBUG details\nERROR payment failed\nINFO done\n"
 hints:
-  - "Extended regular expressions let | mean OR without extra escaping."
-  - "Use -E with the pattern WARN|ERROR."
-  - "Quote the pattern so the shell does not treat | as a pipeline."
+  - "Use -E for extended regular expressions."
+  - "Quote the pattern WARN|ERROR so the shell does not treat | as a pipe."
+  - "Redirect the matches into alerts.txt."
 solution:
   commands:
     - "grep -E \"WARN|ERROR\" app.log > alerts.txt"
-  explanation: "grep -E enables extended regular expressions, so WARN|ERROR matches either alert level."
+  explanation: "grep -E enables the | alternation operator inside the pattern."
 checks:
   - type: "file_equals"
     path: "alerts.txt"
-    expected: "WARN cache cold\nERROR database timeout\nWARN queue full\n"
+    expected: "WARN cache slow\nERROR payment failed\n"

@@ -1,0 +1,22 @@
+version: 1
+id: roadmap-head-lines
+title: "Take the first lines"
+commands: ["head"]
+difficulty: "beginner"
+intro: "Create first-three.txt with the first three lines from access.log."
+workspace:
+  files:
+    - path: "access.log"
+      content: "line 1\nline 2\nline 3\nline 4\nline 5\n"
+hints:
+  - "Use head -n 3."
+  - "Redirect the result into first-three.txt."
+  - "Only the first three lines should appear."
+solution:
+  commands:
+    - "head -n 3 access.log > first-three.txt"
+  explanation: "head -n 3 prints the first three lines."
+checks:
+  - type: "file_equals"
+    path: "first-three.txt"
+    expected: "line 1\nline 2\nline 3\n"

@@ -1,0 +1,20 @@
+version: 1
+id: roadmap-mkdir-basic
+title: "Create one directory"
+commands: ["mkdir", "touch"]
+difficulty: "beginner"
+intro: "Create a reports directory and place summary.txt inside it."
+workspace:
+  files: []
+hints:
+  - "mkdir reports creates one directory."
+  - "Use touch after mkdir to create a file inside it."
+  - "The check looks for reports/summary.txt."
+solution:
+  commands:
+    - "mkdir reports"
+    - "touch reports/summary.txt"
+  explanation: "mkdir creates the directory, and touch proves you can use it."
+checks:
+  - type: "file_exists"
+    path: "reports/summary.txt"

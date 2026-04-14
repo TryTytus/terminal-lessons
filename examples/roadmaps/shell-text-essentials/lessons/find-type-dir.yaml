@@ -1,0 +1,24 @@
+version: 1
+id: roadmap-find-type-dir
+title: "Find directories only"
+commands: ["find", "sort"]
+difficulty: "beginner"
+intro: "Create directories.txt containing only directories under project."
+workspace:
+  files:
+    - path: "project/docs/guide.md"
+      content: "# Guide\n"
+    - path: "project/src/app.js"
+      content: "app\n"
+hints:
+  - "Use -type d for directories."
+  - "The starting directory itself is also a directory."
+  - "Sort the result before saving it."
+solution:
+  commands:
+    - "find project -type d | sort > directories.txt"
+  explanation: "-type d keeps directories and excludes regular files."
+checks:
+  - type: "file_equals"
+    path: "directories.txt"
+    expected: "project\nproject/docs\nproject/src\n"

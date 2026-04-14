@@ -1,0 +1,27 @@
+version: 1
+id: roadmap-mv-interactive
+title: "Confirm a replacement"
+commands: ["mv"]
+difficulty: "beginner"
+intro: "Use mv -i to replace current.txt with replacement.txt after confirming."
+workspace:
+  files:
+    - path: "replacement.txt"
+      content: "replacement\n"
+    - path: "current.txt"
+      content: "current\n"
+hints:
+  - "mv -i prompts before overwriting."
+  - "Run mv -i replacement.txt current.txt."
+  - "Type y when prompted."
+solution:
+  commands:
+    - "mv -i replacement.txt current.txt"
+    - "y"
+  explanation: "The -i flag asks before replacing current.txt; y confirms the move."
+checks:
+  - type: "file_equals"
+    path: "current.txt"
+    expected: "replacement\n"
+  - type: "file_not_exists"
+    path: "replacement.txt"

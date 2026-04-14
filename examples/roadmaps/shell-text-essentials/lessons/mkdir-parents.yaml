@@ -1,0 +1,20 @@
+version: 1
+id: roadmap-mkdir-parents
+title: "Create parent directories"
+commands: ["mkdir", "touch"]
+difficulty: "beginner"
+intro: "Create archive/2026/april in one command and add notes.txt inside it."
+workspace:
+  files: []
+hints:
+  - "mkdir without -p fails if a parent is missing."
+  - "Use mkdir -p for a nested path."
+  - "Then create the notes file inside the new path."
+solution:
+  commands:
+    - "mkdir -p archive/2026/april"
+    - "touch archive/2026/april/notes.txt"
+  explanation: "mkdir -p creates each missing parent directory in the path."
+checks:
+  - type: "file_exists"
+    path: "archive/2026/april/notes.txt"

@@ -1,0 +1,22 @@
+version: 1
+id: roadmap-cat-file
+title: "View a file"
+commands: ["cat"]
+difficulty: "beginner"
+intro: "Copy the contents of notes.txt into notes-copy.txt using cat."
+workspace:
+  files:
+    - path: "notes.txt"
+      content: "alpha\nbeta\n"
+hints:
+  - "cat prints the whole file to stdout."
+  - "Redirect stdout into notes-copy.txt."
+  - "The copy should match notes.txt exactly."
+solution:
+  commands:
+    - "cat notes.txt > notes-copy.txt"
+  explanation: "cat writes the file contents to stdout, and > saves them."
+checks:
+  - type: "file_equals"
+    path: "notes-copy.txt"
+    expected: "alpha\nbeta\n"

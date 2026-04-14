@@ -1,0 +1,22 @@
+version: 1
+id: roadmap-chgrp-group
+title: "Set the current group"
+commands: ["chgrp", "id", "echo"]
+difficulty: "beginner"
+intro: "Use chgrp with your current primary group on team.txt."
+workspace:
+  files:
+    - path: "team.txt"
+      content: "group file\n"
+hints:
+  - "id -gn prints your current primary group."
+  - "Use chgrp \"$(id -gn)\" team.txt."
+  - "Write the marker only if chgrp succeeds."
+solution:
+  commands:
+    - "chgrp \"$(id -gn)\" team.txt && echo \"group ok\" > chgrp-group.txt"
+  explanation: "chgrp changes only the group field; using your current group avoids sudo."
+checks:
+  - type: "file_equals"
+    path: "chgrp-group.txt"
+    expected: "group ok\n"

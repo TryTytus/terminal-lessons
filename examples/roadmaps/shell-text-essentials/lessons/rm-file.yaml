@@ -1,0 +1,21 @@
+version: 1
+id: roadmap-rm-file
+title: "Remove one file"
+commands: ["rm"]
+difficulty: "beginner"
+intro: "Remove trash.txt from the workspace."
+workspace:
+  files:
+    - path: "trash.txt"
+      content: "delete me\n"
+hints:
+  - "Use rm with the file path."
+  - "There is no recycle bin inside the lesson workspace."
+  - "The check expects trash.txt to be gone."
+solution:
+  commands:
+    - "rm trash.txt"
+  explanation: "rm unlinks the file name from the directory."
+checks:
+  - type: "file_not_exists"
+    path: "trash.txt"

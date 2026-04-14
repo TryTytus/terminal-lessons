@@ -1,0 +1,22 @@
+version: 1
+id: roadmap-sed-delete
+title: "Delete matching lines"
+commands: ["sed"]
+difficulty: "beginner"
+intro: "Create clean.log by deleting DEBUG lines from app.log."
+workspace:
+  files:
+    - path: "app.log"
+      content: "INFO start\nDEBUG verbose\nWARN slow\nDEBUG details\n"
+hints:
+  - "Use /DEBUG/d as the sed script."
+  - "d deletes matching lines."
+  - "Redirect the remaining lines into clean.log."
+solution:
+  commands:
+    - "sed '/DEBUG/d' app.log > clean.log"
+  explanation: "sed tests each line against DEBUG and d removes matching lines from the output."
+checks:
+  - type: "file_equals"
+    path: "clean.log"
+    expected: "INFO start\nWARN slow\n"

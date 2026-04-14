@@ -1,0 +1,22 @@
+version: 1
+id: roadmap-awk-separator
+title: "Use a custom field separator"
+commands: ["awk"]
+difficulty: "beginner"
+intro: "Create item-names.txt containing the second CSV field from inventory.csv."
+workspace:
+  files:
+    - path: "inventory.csv"
+      content: "sku,item,count\nA1,widget,4\nB2,gadget,7\n"
+hints:
+  - "Use -F, to split on commas."
+  - "$2 is the item field."
+  - "Skip the header with NR>1."
+solution:
+  commands:
+    - "awk -F, 'NR>1 {print $2}' inventory.csv > item-names.txt"
+  explanation: "-F, tells awk to split fields at commas instead of whitespace."
+checks:
+  - type: "file_equals"
+    path: "item-names.txt"
+    expected: "widget\ngadget\n"

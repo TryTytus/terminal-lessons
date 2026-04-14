@@ -1,0 +1,22 @@
+version: 1
+id: roadmap-tail-lines
+title: "Take the last lines"
+commands: ["tail"]
+difficulty: "beginner"
+intro: "Create last-two.txt with the last two lines from access.log."
+workspace:
+  files:
+    - path: "access.log"
+      content: "line 1\nline 2\nline 3\nline 4\nline 5\n"
+hints:
+  - "Use tail -n 2."
+  - "Redirect the result into last-two.txt."
+  - "Only lines 4 and 5 should appear."
+solution:
+  commands:
+    - "tail -n 2 access.log > last-two.txt"
+  explanation: "tail -n 2 prints the final two lines."
+checks:
+  - type: "file_equals"
+    path: "last-two.txt"
+    expected: "line 4\nline 5\n"

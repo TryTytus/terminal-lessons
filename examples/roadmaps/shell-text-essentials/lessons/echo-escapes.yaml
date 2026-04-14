@@ -1,0 +1,20 @@
+version: 1
+id: roadmap-echo-escapes
+title: "Use backslash escapes"
+commands: ["echo"]
+difficulty: "beginner"
+intro: "Create colors.txt with red and blue on separate lines using echo -e."
+workspace:
+  files: []
+hints:
+  - "echo -e interprets backslash escapes in common shells."
+  - "Use \\n between red and blue."
+  - "Redirect the result into colors.txt."
+solution:
+  commands:
+    - "echo -e \"red\\nblue\" > colors.txt"
+  explanation: "With -e, echo turns \\n into a newline."
+checks:
+  - type: "file_equals"
+    path: "colors.txt"
+    expected: "red\nblue\n"

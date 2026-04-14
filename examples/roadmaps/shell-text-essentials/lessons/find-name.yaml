@@ -1,28 +1,26 @@
 version: 1
 id: roadmap-find-name
-title: "Find files by name pattern"
+title: "Find an exact file name"
 commands: ["find", "sort"]
 difficulty: "beginner"
-intro: "Create markdown.txt containing every Markdown file under project, sorted alphabetically."
+intro: "Create targets.txt containing every file named target.txt under project."
 workspace:
   files:
-    - path: "project/README.md"
-      content: "# Readme\n"
-    - path: "project/docs/plan.md"
-      content: "# Plan\n"
-    - path: "project/docs/data.txt"
-      content: "data\n"
-    - path: "project/src/app.js"
-      content: "console.log('app')\n"
+    - path: "project/target.txt"
+      content: "root target\n"
+    - path: "project/docs/target.txt"
+      content: "docs target\n"
+    - path: "project/docs/notes.txt"
+      content: "notes\n"
 hints:
-  - "Use -name with a quoted glob pattern."
-  - "The pattern should be \"*.md\"."
-  - "Pipe into sort before writing markdown.txt."
+  - "Use -name with the exact file name target.txt."
+  - "Quote the name pattern."
+  - "Sort the paths before saving them."
 solution:
   commands:
-    - "find project -name \"*.md\" | sort > markdown.txt"
-  explanation: "-name \"*.md\" keeps paths whose final name ends with .md."
+    - "find project -name \"target.txt\" | sort > targets.txt"
+  explanation: "-name matches the final path component against the given shell-style pattern."
 checks:
   - type: "file_equals"
-    path: "markdown.txt"
-    expected: "project/README.md\nproject/docs/plan.md\n"
+    path: "targets.txt"
+    expected: "project/docs/target.txt\nproject/target.txt\n"

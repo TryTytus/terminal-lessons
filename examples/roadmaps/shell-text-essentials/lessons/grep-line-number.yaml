@@ -3,20 +3,20 @@ id: roadmap-grep-line-number
 title: "Show line numbers"
 commands: ["grep"]
 difficulty: "beginner"
-intro: "Create numbered-errors.txt with ERROR matches from app.log prefixed by their original line numbers."
+intro: "Create timeout-lines.txt with timeout matches and original line numbers."
 workspace:
   files:
-    - path: "app.log"
-      content: "INFO boot\nWARN cache\nERROR database timeout\nINFO retry\nERROR request failed\n"
+    - path: "service.log"
+      content: "startup ok\ncache warm\ntimeout waiting for api\nretry scheduled\ntimeout waiting for db\n"
 hints:
-  - "grep can prefix matches with line numbers."
-  - "Use -n together with the ERROR pattern."
-  - "The output format is line:number followed by the matching text."
+  - "Use -n to include line numbers."
+  - "Search for timeout."
+  - "Redirect the result into timeout-lines.txt."
 solution:
   commands:
-    - "grep -n ERROR app.log > numbered-errors.txt"
-  explanation: "grep -n adds the original line number before each matching line."
+    - "grep -n timeout service.log > timeout-lines.txt"
+  explanation: "grep -n prefixes each matching line with its original line number."
 checks:
   - type: "file_equals"
-    path: "numbered-errors.txt"
-    expected: "3:ERROR database timeout\n5:ERROR request failed\n"
+    path: "timeout-lines.txt"
+    expected: "3:timeout waiting for api\n5:timeout waiting for db\n"

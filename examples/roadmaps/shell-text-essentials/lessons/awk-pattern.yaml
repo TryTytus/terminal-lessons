@@ -1,0 +1,22 @@
+version: 1
+id: roadmap-awk-pattern
+title: "Print records matching a pattern"
+commands: ["awk"]
+difficulty: "beginner"
+intro: "Create awk-errors.txt containing ERROR lines from app.log."
+workspace:
+  files:
+    - path: "app.log"
+      content: "INFO boot\nERROR api\nWARN slow\nERROR db\n"
+hints:
+  - "Place the pattern before the action."
+  - "{print $0} prints the whole matching line."
+  - "Redirect output into awk-errors.txt."
+solution:
+  commands:
+    - "awk '/ERROR/ {print $0}' app.log > awk-errors.txt"
+  explanation: "awk only runs the action for records that match the /ERROR/ pattern."
+checks:
+  - type: "file_equals"
+    path: "awk-errors.txt"
+    expected: "ERROR api\nERROR db\n"

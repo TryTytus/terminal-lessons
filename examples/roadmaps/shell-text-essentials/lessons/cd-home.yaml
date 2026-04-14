@@ -1,0 +1,22 @@
+version: 1
+id: roadmap-cd-home
+title: "Jump to the home directory"
+commands: ["cd", "pwd"]
+difficulty: "beginner"
+intro: "Use cd ~ and save the home path in home-path.txt."
+workspace:
+  files: []
+hints:
+  - "The app gives each lesson a safe temporary home directory."
+  - "cd ~ moves to that home directory."
+  - "From .home, ../home-path.txt writes back into the workspace root."
+solution:
+  commands:
+    - "cd ~"
+    - "pwd > ../home-path.txt"
+    - "cd .."
+  explanation: "cd ~ expands to the lesson home directory, which is named .home inside the workspace."
+checks:
+  - type: "file_contains"
+    path: "home-path.txt"
+    expected: ".home"

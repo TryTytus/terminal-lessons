@@ -1,0 +1,23 @@
+version: 1
+id: roadmap-wc-lines
+title: "Count lines"
+commands: ["wc"]
+difficulty: "beginner"
+intro: "Create line-count.txt containing the number of lines in names.txt."
+workspace:
+  files:
+    - path: "names.txt"
+      content: "ada\nlinus\ngrace\n"
+hints:
+  - "Use wc -l to count lines."
+  - "Use < names.txt so the filename is not printed."
+  - "Trimmed checks ignore wc leading spaces."
+solution:
+  commands:
+    - "wc -l < names.txt > line-count.txt"
+  explanation: "wc -l counts newline-terminated lines; input redirection keeps the output to just the count."
+checks:
+  - type: "file_equals"
+    path: "line-count.txt"
+    expected: "3"
+    trim: true

@@ -3,19 +3,20 @@ id: roadmap-sort-reverse
 title: "Sort in reverse order"
 commands: ["sort"]
 difficulty: "beginner"
-intro: "Create reverse-names.txt with the names from names.txt sorted from Z to A."
+intro: "Create reverse-names.txt with names.txt sorted from z to a."
 workspace:
   files:
     - path: "names.txt"
-      content: "ada\nlinus\ngrace\n"
+      content: "ada\nzara\nmaya\n"
 hints:
-  - "Use -r to reverse the sorted result."
-  - "The input does not need to be sorted first."
+  - "Use -r to reverse the final sorted order."
+  - "The input does not need to be pre-sorted."
+  - "Redirect output into reverse-names.txt."
 solution:
   commands:
     - "sort -r names.txt > reverse-names.txt"
-  explanation: "sort -r sorts and then reverses the order."
+  explanation: "sort -r reverses the ordering that sort would normally produce."
 checks:
   - type: "file_equals"
     path: "reverse-names.txt"
-    expected: "linus\ngrace\nada\n"
+    expected: "zara\nmaya\nada\n"

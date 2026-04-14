@@ -1,0 +1,20 @@
+version: 1
+id: roadmap-rmdir-empty
+title: "Remove an empty directory"
+commands: ["mkdir", "rmdir"]
+difficulty: "beginner"
+intro: "Create empty-box and remove it with rmdir."
+workspace:
+  files: []
+hints:
+  - "rmdir only removes empty directories."
+  - "Create the directory first."
+  - "Remove it without using rm -r."
+solution:
+  commands:
+    - "mkdir empty-box"
+    - "rmdir empty-box"
+  explanation: "rmdir deletes the directory because it has no files inside."
+checks:
+  - type: "file_not_exists"
+    path: "empty-box"

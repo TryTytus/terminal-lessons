@@ -1,0 +1,29 @@
+version: 1
+id: roadmap-grep-recursive
+title: "Search recursively"
+commands: ["grep"]
+difficulty: "beginner"
+intro: "Create todos.txt containing TODO matches from every file under notes."
+workspace:
+  files:
+    - path: "notes/a.txt"
+      content: "TODO call supplier\nDONE pay invoice\n"
+    - path: "notes/archive/b.txt"
+      content: "no action\n"
+    - path: "notes/archive/c.txt"
+      content: "TODO renew cert\n"
+hints:
+  - "Use grep -r to search a directory tree."
+  - "Search for TODO under notes."
+  - "Redirect results into todos.txt."
+solution:
+  commands:
+    - "grep -r TODO notes > todos.txt"
+  explanation: "grep -r searches files below the given directory and prefixes matches with file paths."
+checks:
+  - type: "file_contains"
+    path: "todos.txt"
+    expected: "notes/a.txt:TODO call supplier"
+  - type: "file_contains"
+    path: "todos.txt"
+    expected: "notes/archive/c.txt:TODO renew cert"

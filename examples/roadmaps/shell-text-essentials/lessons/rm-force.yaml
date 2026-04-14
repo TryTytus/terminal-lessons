@@ -1,0 +1,20 @@
+version: 1
+id: roadmap-rm-force
+title: "Ignore missing files"
+commands: ["rm", "echo"]
+difficulty: "beginner"
+intro: "Use rm -f on a missing file and then write force ok to rm-force.txt."
+workspace:
+  files: []
+hints:
+  - "rm -f does not fail just because a file is missing."
+  - "Run rm -f missing.txt."
+  - "Use && to write the marker only if the command succeeds."
+solution:
+  commands:
+    - "rm -f missing.txt && echo \"force ok\" > rm-force.txt"
+  explanation: "The -f flag suppresses the missing-file error, so the marker command runs."
+checks:
+  - type: "file_equals"
+    path: "rm-force.txt"
+    expected: "force ok\n"

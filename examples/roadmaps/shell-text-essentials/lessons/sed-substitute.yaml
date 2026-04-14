@@ -1,0 +1,22 @@
+version: 1
+id: roadmap-sed-substitute
+title: "Replace the first match on each line"
+commands: ["sed"]
+difficulty: "beginner"
+intro: "Create first-replace.txt where only the first old on each line becomes new."
+workspace:
+  files:
+    - path: "words.txt"
+      content: "old old\nkeep old\n"
+hints:
+  - "Use sed s/old/new/ without g."
+  - "Only the first match on each line changes."
+  - "Redirect output into first-replace.txt."
+solution:
+  commands:
+    - "sed 's/old/new/' words.txt > first-replace.txt"
+  explanation: "The basic substitution command replaces the first matching text on each input line."
+checks:
+  - type: "file_equals"
+    path: "first-replace.txt"
+    expected: "new old\nkeep new\n"

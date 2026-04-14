@@ -1,67 +1,41 @@
 # grep deep lesson
 
-`grep` searches text and prints matching lines. In daily terminal work, use it to inspect logs, narrow large files, and filter output from other commands.
+Find matching lines, ignore case, invert matches, recurse, print line numbers, count matches, and use extended patterns.
 
 ## Mental model
 
-- Input is a stream of lines.
-- The pattern is tested against each line.
-- Matching lines are printed to stdout.
-- Redirection such as `>` can save matches into a file.
-
-```sh
-grep ERROR app.log > errors.txt
-```
-
-This reads `app.log`, keeps lines containing `ERROR`, and writes them into `errors.txt`.
+- `grep` is practiced as small, observable terminal tasks.
+- Each exercise isolates one form or flag so the behavior is easy to see.
+- Redirect output into the named answer file when the prompt asks for a saved result.
+- Inspect your work with simple commands before running checks.
 
 ## Cheat sheet
 
-| Form | Use it when |
+| Form | Practice target |
 | --- | --- |
-| `grep text file` | You need exact text matches. |
-| `grep -i text file` | Capitalization should not matter. |
-| `grep -v text file` | You want everything except matching lines. |
-| `grep -n text file` | You need original line numbers. |
-| `grep -E "A|B" file` | You want an OR pattern or extended regex syntax. |
+| `grep "pattern"` | Search exact text without flags. |
+| `grep -i pattern <file>` | Match text regardless of case. |
+| `grep -v pattern <file>` | Keep everything except matching lines. |
+| `grep -r pattern <file>` | Search recursively in a directory. |
+| `grep -n pattern <file>` | Show matching line numbers. |
+| `grep -c pattern <file>` | Count matching lines. |
+| `grep -E pattern <file>` | Match one of several patterns. |
 
-## Common patterns
+## Worked examples
 
-### Exact text
+| Exercise | Command to notice |
+| --- | --- |
+| Search exact text | `grep ERROR app.log > errors.txt` |
+| Ignore letter case | `grep -i api requests.log > api-lines.txt` |
+| Exclude matching lines | `grep -v DEBUG app.log > clean.log` |
+| Search recursively | `grep -r TODO notes > todos.txt` |
+| Show line numbers | `grep -n timeout service.log > timeout-lines.txt` |
+| Count matching lines | `grep -c ERROR app.log > error-count.txt` |
+| Match one of several patterns | `grep -E "WARN\|ERROR" app.log > alerts.txt` |
 
-```sh
-grep ERROR app.log
-```
+## Practice flow
 
-```text
-ERROR database timeout
-ERROR request failed
-```
-
-### Ignore case
-
-```sh
-grep -i api requests.log
-```
-
-This matches `API`, `api`, and `Api`.
-
-### Invert matches
-
-```sh
-grep -v DEBUG app.log
-```
-
-This keeps non-debug lines, which is useful when a noisy log level hides the signal.
-
-### Extended regular expressions
-
-```sh
-grep -E "WARN|ERROR" app.log
-```
-
-Quote the pattern so the shell does not interpret `|` as a pipeline.
-
-## Practical habit
-
-Start with the smallest pattern that proves the idea, then add flags. If the output will be checked or shared, redirect it into a named file.
+1. Read the task and identify the one command form being practiced.
+2. Run the command in the lesson workspace.
+3. Save the answer file exactly where the task asks for it.
+4. Run checks and adjust the command, not the lesson files.

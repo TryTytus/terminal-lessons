@@ -1,0 +1,25 @@
+version: 1
+id: roadmap-chmod-recursive
+title: "Change modes recursively"
+commands: ["chmod", "test", "echo"]
+difficulty: "beginner"
+intro: "Apply executable permissions recursively to tools and write a success marker."
+workspace:
+  files:
+    - path: "tools/run.sh"
+      content: "#!/bin/sh\nexit 0\n"
+    - path: "tools/bin/deploy.sh"
+      content: "#!/bin/sh\nexit 0\n"
+hints:
+  - "Use chmod -R to affect files below tools."
+  - "Mode 755 adds execute permissions."
+  - "Use test -x to verify both scripts before writing the marker."
+solution:
+  commands:
+    - "chmod -R 755 tools"
+    - "test -x tools/run.sh && test -x tools/bin/deploy.sh && echo \"recursive chmod ok\" > chmod-recursive.txt"
+  explanation: "chmod -R applies the requested permission change throughout the directory tree."
+checks:
+  - type: "file_equals"
+    path: "chmod-recursive.txt"
+    expected: "recursive chmod ok\n"

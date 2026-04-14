@@ -1,0 +1,24 @@
+version: 1
+id: roadmap-ls-basic
+title: "List visible files"
+commands: ["ls"]
+difficulty: "beginner"
+intro: "Create pantry-list.txt containing the visible files in pantry."
+workspace:
+  files:
+    - path: "pantry/apple.txt"
+      content: "apple\n"
+    - path: "pantry/banana.txt"
+      content: "banana\n"
+hints:
+  - "ls prints visible names in a directory."
+  - "Redirect the listing into pantry-list.txt."
+  - "Hidden files are not part of this exercise."
+solution:
+  commands:
+    - "ls pantry > pantry-list.txt"
+  explanation: "When ls output is redirected to a file, each name is written on its own line."
+checks:
+  - type: "file_equals"
+    path: "pantry-list.txt"
+    expected: "apple.txt\nbanana.txt\n"

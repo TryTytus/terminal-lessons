@@ -1,0 +1,22 @@
+version: 1
+id: roadmap-uniq-basic
+title: "Remove adjacent duplicate lines"
+commands: ["uniq"]
+difficulty: "beginner"
+intro: "Create unique.txt by collapsing adjacent duplicate lines in repeated.txt."
+workspace:
+  files:
+    - path: "repeated.txt"
+      content: "apple\napple\nbanana\nbanana\nbanana\ncarrot\n"
+hints:
+  - "uniq only collapses adjacent duplicates."
+  - "This file is already grouped."
+  - "Redirect uniq output into unique.txt."
+solution:
+  commands:
+    - "uniq repeated.txt > unique.txt"
+  explanation: "uniq prints one copy of each run of identical adjacent lines."
+checks:
+  - type: "file_equals"
+    path: "unique.txt"
+    expected: "apple\nbanana\ncarrot\n"

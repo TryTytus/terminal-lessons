@@ -1,0 +1,22 @@
+version: 1
+id: roadmap-pwd-basic
+title: "Save the current directory"
+commands: ["pwd"]
+difficulty: "beginner"
+intro: "Create current-dir.txt containing the absolute path of the lesson workspace."
+workspace:
+  files:
+    - path: "README.txt"
+      content: "You are in the lesson workspace.\n"
+hints:
+  - "pwd prints the current working directory."
+  - "Redirect pwd into current-dir.txt."
+  - "The workspace path includes terminal-lessons-."
+solution:
+  commands:
+    - "pwd > current-dir.txt"
+  explanation: "pwd prints the absolute path of the current shell directory; > saves it."
+checks:
+  - type: "file_contains"
+    path: "current-dir.txt"
+    expected: "terminal-lessons-"

@@ -1,0 +1,22 @@
+version: 1
+id: roadmap-rm-interactive
+title: "Confirm before removing"
+commands: ["rm"]
+difficulty: "beginner"
+intro: "Use rm -i to remove old.txt after confirming the prompt."
+workspace:
+  files:
+    - path: "old.txt"
+      content: "remove me\n"
+hints:
+  - "rm -i asks before deleting."
+  - "Run rm -i old.txt."
+  - "Type y to confirm."
+solution:
+  commands:
+    - "rm -i old.txt"
+    - "y"
+  explanation: "The -i flag prompts for confirmation before rm deletes the file."
+checks:
+  - type: "file_not_exists"
+    path: "old.txt"

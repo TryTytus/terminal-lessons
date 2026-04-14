@@ -1,59 +1,35 @@
 # sort deep lesson
 
-`sort` orders lines. It is useful by itself, but it becomes more powerful when paired with `find`, `grep`, `cut`, and `uniq`.
+Sort lines alphabetically, numerically, in reverse, and by a chosen field.
 
 ## Mental model
 
-- Input is a stream of lines.
-- By default, lines are sorted as text.
-- Flags change the comparison: numeric, reverse, or field-based.
-- Output goes to stdout unless you redirect it.
-
-```sh
-sort names.txt > sorted-names.txt
-```
+- `sort` is practiced as small, observable terminal tasks.
+- Each exercise isolates one form or flag so the behavior is easy to see.
+- Redirect output into the named answer file when the prompt asks for a saved result.
+- Inspect your work with simple commands before running checks.
 
 ## Cheat sheet
 
-| Form | Use it when |
+| Form | Practice target |
 | --- | --- |
-| `sort file` | Alphabetical text order is enough. |
-| `sort -n file` | Lines are numbers. |
-| `sort -r file` | You want descending or reverse order. |
-| `sort -k2,2 file` | Records should be ordered by the second field only. |
+| `sort <file>` | Default alphabetical sort. |
+| `sort -n <file>` | Numerical sort. |
+| `sort -r <file>` | Reverse sort. |
+| `sort -k <file>` | Sort records by a specific field. |
 
-## Alphabetical sorting
+## Worked examples
 
-```sh
-sort names.txt
-```
+| Exercise | Command to notice |
+| --- | --- |
+| Sort alphabetically | `sort names.txt > sorted-names.txt` |
+| Sort numbers numerically | `sort -n ports.txt > sorted-ports.txt` |
+| Sort in reverse order | `sort -r names.txt > reverse-names.txt` |
+| Sort by a field | `sort -k2,2 scores.txt > by-name.txt` |
 
-This is the default behavior and works well for filenames, labels, and simple lists.
+## Practice flow
 
-## Numeric sorting
-
-```sh
-sort -n ports.txt
-```
-
-Plain text sorting can put `3000` before `443`. Numeric sorting compares number values instead.
-
-## Reverse order
-
-```sh
-sort -r names.txt
-```
-
-Reverse order is useful for descending lists, latest-looking labels, and quick ranking when paired with numeric sorting.
-
-## Field sorting
-
-```sh
-sort -k2,2 scores.txt
-```
-
-Fields are whitespace-separated by default. `-k2,2` means "start at field 2 and stop at field 2", so only the second field controls the order.
-
-## Practical habit
-
-Use `sort` before writing files that will be checked, compared, or committed. Stable order makes shell work easier to verify.
+1. Read the task and identify the one command form being practiced.
+2. Run the command in the lesson workspace.
+3. Save the answer file exactly where the task asks for it.
+4. Run checks and adjust the command, not the lesson files.

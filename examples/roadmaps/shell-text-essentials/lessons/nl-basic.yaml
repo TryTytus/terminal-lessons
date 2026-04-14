@@ -1,0 +1,25 @@
+version: 1
+id: roadmap-nl-basic
+title: "Number file lines"
+commands: ["nl"]
+difficulty: "beginner"
+intro: "Create numbered.txt by numbering the lines in tasks.txt."
+workspace:
+  files:
+    - path: "tasks.txt"
+      content: "plan\nbuild\nverify\n"
+hints:
+  - "nl numbers non-empty lines by default."
+  - "Redirect output into numbered.txt."
+  - "The number is separated from text by a tab."
+solution:
+  commands:
+    - "nl tasks.txt > numbered.txt"
+  explanation: "nl writes numbered lines without changing the original file."
+checks:
+  - type: "file_contains"
+    path: "numbered.txt"
+    expected: "1\tplan"
+  - type: "file_contains"
+    path: "numbered.txt"
+    expected: "3\tverify"

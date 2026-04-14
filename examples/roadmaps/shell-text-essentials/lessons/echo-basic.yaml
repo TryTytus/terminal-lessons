@@ -1,0 +1,20 @@
+version: 1
+id: roadmap-echo-basic
+title: "Write a simple string"
+commands: ["echo"]
+difficulty: "beginner"
+intro: "Create message.txt containing exactly ship it."
+workspace:
+  files: []
+hints:
+  - "echo prints its arguments."
+  - "Use quotes around the message."
+  - "Redirect stdout into message.txt."
+solution:
+  commands:
+    - "echo \"ship it\" > message.txt"
+  explanation: "echo writes the string and a trailing newline."
+checks:
+  - type: "file_equals"
+    path: "message.txt"
+    expected: "ship it\n"

@@ -1,0 +1,26 @@
+version: 1
+id: roadmap-mv-no-clobber
+title: "Avoid overwriting a file"
+commands: ["mv"]
+difficulty: "beginner"
+intro: "Use mv -n so existing.txt is not overwritten by incoming.txt."
+workspace:
+  files:
+    - path: "incoming.txt"
+      content: "incoming\n"
+    - path: "existing.txt"
+      content: "keep me\n"
+hints:
+  - "-n means no clobber."
+  - "Run mv -n incoming.txt existing.txt."
+  - "The existing file should keep its original content."
+solution:
+  commands:
+    - "mv -n incoming.txt existing.txt"
+  explanation: "mv -n refuses to replace existing.txt, so incoming.txt remains."
+checks:
+  - type: "file_equals"
+    path: "existing.txt"
+    expected: "keep me\n"
+  - type: "file_exists"
+    path: "incoming.txt"

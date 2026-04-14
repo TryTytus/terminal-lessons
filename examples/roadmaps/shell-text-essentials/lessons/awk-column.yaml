@@ -1,0 +1,22 @@
+version: 1
+id: roadmap-awk-column
+title: "Print the first column"
+commands: ["awk"]
+difficulty: "beginner"
+intro: "Create names.txt containing the first field from people.txt."
+workspace:
+  files:
+    - path: "people.txt"
+      content: "ada admin\nlinus kernel\ngrace compiler\n"
+hints:
+  - "awk splits on whitespace by default."
+  - "$1 means the first field."
+  - "Redirect the printed names into names.txt."
+solution:
+  commands:
+    - "awk '{print $1}' people.txt > names.txt"
+  explanation: "awk runs the print action for each input record."
+checks:
+  - type: "file_equals"
+    path: "names.txt"
+    expected: "ada\nlinus\ngrace\n"

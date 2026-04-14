@@ -1,0 +1,24 @@
+version: 1
+id: roadmap-chmod-644
+title: "Set readable numeric mode"
+commands: ["chmod", "ls"]
+difficulty: "beginner"
+intro: "Set notes.txt back to mode 644 and save its long listing."
+workspace:
+  files:
+    - path: "notes.txt"
+      content: "shareable\n"
+hints:
+  - "Use chmod 600 first so the later change matters."
+  - "Then use chmod 644 notes.txt."
+  - "644 means owner read/write and everyone else read-only."
+solution:
+  commands:
+    - "chmod 600 notes.txt"
+    - "chmod 644 notes.txt"
+    - "ls -l notes.txt > chmod-644.txt"
+  explanation: "Numeric mode 644 is a standard mode for regular text files."
+checks:
+  - type: "file_contains"
+    path: "chmod-644.txt"
+    expected: "-rw-r--r--"

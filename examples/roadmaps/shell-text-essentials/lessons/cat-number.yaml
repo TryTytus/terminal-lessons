@@ -1,0 +1,22 @@
+version: 1
+id: roadmap-cat-number
+title: "Number all output lines"
+commands: ["cat"]
+difficulty: "beginner"
+intro: "Create numbered-poem.txt with cat -n output for poem.txt."
+workspace:
+  files:
+    - path: "poem.txt"
+      content: "roses\nviolets\n"
+hints:
+  - "Use cat -n to number every output line."
+  - "Redirect the numbered output into numbered-poem.txt."
+  - "cat uses a tab between the number and the line."
+solution:
+  commands:
+    - "cat -n poem.txt > numbered-poem.txt"
+  explanation: "cat -n prefixes each output line with a line number."
+checks:
+  - type: "file_equals"
+    path: "numbered-poem.txt"
+    expected: "     1\troses\n     2\tviolets\n"

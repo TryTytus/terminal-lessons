@@ -1,0 +1,28 @@
+version: 1
+id: roadmap-find-iname
+title: "Find names ignoring case"
+commands: ["find", "sort"]
+difficulty: "beginner"
+intro: "Create readmes.txt containing README files regardless of capitalization."
+workspace:
+  files:
+    - path: "repo/README.md"
+      content: "# Main\n"
+    - path: "repo/docs/readme.md"
+      content: "# Docs\n"
+    - path: "repo/tmp/ReadMe.MD"
+      content: "# Temp\n"
+    - path: "repo/tmp/notes.txt"
+      content: "notes\n"
+hints:
+  - "-iname is the case-insensitive version of -name."
+  - "Use the pattern readme.md."
+  - "Sort the output to make it stable."
+solution:
+  commands:
+    - "find repo -iname \"readme.md\" | sort > readmes.txt"
+  explanation: "-iname matches README.md, readme.md, and ReadMe.MD."
+checks:
+  - type: "file_equals"
+    path: "readmes.txt"
+    expected: "repo/README.md\nrepo/docs/readme.md\nrepo/tmp/ReadMe.MD\n"

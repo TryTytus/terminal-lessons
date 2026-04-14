@@ -1,0 +1,27 @@
+version: 1
+id: roadmap-ls-recursive
+title: "List directories recursively"
+commands: ["ls"]
+difficulty: "beginner"
+intro: "Create recursive-listing.txt showing the tree directory and its children."
+workspace:
+  files:
+    - path: "tree/src/app.js"
+      content: "console.log(\"ok\")\n"
+    - path: "tree/docs/readme.md"
+      content: "# Readme\n"
+hints:
+  - "Use ls -R to recurse into subdirectories."
+  - "Redirect the complete listing into recursive-listing.txt."
+  - "The output should include nested file names."
+solution:
+  commands:
+    - "ls -R tree > recursive-listing.txt"
+  explanation: "ls -R lists the starting directory and then each nested directory."
+checks:
+  - type: "file_contains"
+    path: "recursive-listing.txt"
+    expected: "app.js"
+  - type: "file_contains"
+    path: "recursive-listing.txt"
+    expected: "readme.md"

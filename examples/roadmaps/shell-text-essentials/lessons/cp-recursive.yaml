@@ -1,0 +1,27 @@
+version: 1
+id: roadmap-cp-recursive
+title: "Copy a directory tree"
+commands: ["cp"]
+difficulty: "beginner"
+intro: "Copy source into backup, including nested files."
+workspace:
+  files:
+    - path: "source/a.txt"
+      content: "alpha\n"
+    - path: "source/nested/b.txt"
+      content: "beta\n"
+hints:
+  - "Use -r when the source is a directory."
+  - "The destination directory should be named backup."
+  - "Nested files must be copied too."
+solution:
+  commands:
+    - "cp -r source backup"
+  explanation: "cp -r recursively copies directories and their contents."
+checks:
+  - type: "file_equals"
+    path: "backup/a.txt"
+    expected: "alpha\n"
+  - type: "file_equals"
+    path: "backup/nested/b.txt"
+    expected: "beta\n"

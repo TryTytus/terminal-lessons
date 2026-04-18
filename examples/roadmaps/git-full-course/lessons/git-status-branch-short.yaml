@@ -1,0 +1,25 @@
+version: 1
+id: roadmap-git-status-branch-short
+title: "Read branch summary with -sb"
+commands: ["git"]
+difficulty: "beginner"
+intro: "Initialize on main, create one untracked file todo.md, then save git status -sb output to branch-status.txt."
+workspace:
+  files:
+    - path: "todo.md"
+      content: "- test login\n"
+hints:
+  - "Use git init -b main."
+  - "Write output with git status -sb > branch-status.txt."
+solution:
+  commands:
+    - "git init -b main"
+    - "git status -sb > branch-status.txt"
+  explanation: "-sb shows branch header and compact state lines."
+checks:
+  - type: "file_contains"
+    path: "branch-status.txt"
+    expected: "## main"
+  - type: "file_contains"
+    path: "branch-status.txt"
+    expected: "?? todo.md"

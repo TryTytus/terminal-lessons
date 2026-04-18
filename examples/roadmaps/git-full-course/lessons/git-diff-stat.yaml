@@ -1,0 +1,33 @@
+version: 1
+id: roadmap-git-diff-stat
+title: "Inspect diff summary"
+commands: ["git"]
+difficulty: "beginner"
+intro: "Create baseline commit, modify app.txt and ui.txt, then save git diff --stat output to diffstat.txt."
+workspace:
+  files:
+    - path: ".home/.gitconfig"
+      content: "[user]\nname = Terminal Learner\nemail = learner@example.com\n"
+    - path: "app.txt"
+      content: "one\n"
+    - path: "ui.txt"
+      content: "button\n"
+hints:
+  - "Commit both files first."
+  - "Change both files, then run git diff --stat > diffstat.txt."
+solution:
+  commands:
+    - "git init -b main"
+    - "git add app.txt ui.txt"
+    - "git commit -m 'baseline files'"
+    - "echo 'two' > app.txt"
+    - "echo 'button primary' > ui.txt"
+    - "git diff --stat > diffstat.txt"
+  explanation: "--stat prints file names and insertion/deletion counts."
+checks:
+  - type: "file_contains"
+    path: "diffstat.txt"
+    expected: "app.txt"
+  - type: "file_contains"
+    path: "diffstat.txt"
+    expected: "ui.txt"

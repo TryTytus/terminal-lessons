@@ -1,0 +1,38 @@
+version: 1
+id: roadmap-git-log-oneline
+title: "View compact history"
+commands: ["git"]
+difficulty: "beginner"
+intro: "Create three commits and save git log --oneline output to history.txt."
+workspace:
+  files:
+    - path: ".home/.gitconfig"
+      content: "[user]\nname = Terminal Learner\nemail = learner@example.com\n"
+    - path: "notes.txt"
+      content: "line 1\n"
+hints:
+  - "Initialize with main and commit three times (append text each time)."
+  - "Write output using git log --oneline > history.txt."
+solution:
+  commands:
+    - "git init -b main"
+    - "git add notes.txt"
+    - "git commit -m 'notes v1'"
+    - "echo 'line 2' >> notes.txt"
+    - "git add notes.txt"
+    - "git commit -m 'notes v2'"
+    - "echo 'line 3' >> notes.txt"
+    - "git add notes.txt"
+    - "git commit -m 'notes v3'"
+    - "git log --oneline > history.txt"
+  explanation: "--oneline prints one commit per line with short hash and message."
+checks:
+  - type: "file_contains"
+    path: "history.txt"
+    expected: "notes v3"
+  - type: "file_contains"
+    path: "history.txt"
+    expected: "notes v2"
+  - type: "file_contains"
+    path: "history.txt"
+    expected: "notes v1"

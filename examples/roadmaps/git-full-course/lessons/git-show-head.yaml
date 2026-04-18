@@ -1,0 +1,31 @@
+version: 1
+id: roadmap-git-show-head
+title: "Inspect latest commit files"
+commands: ["git"]
+difficulty: "beginner"
+intro: "Create one commit that adds app.txt and notes.txt, then save git show --name-only --pretty=format: HEAD output to show-files.txt."
+workspace:
+  files:
+    - path: ".home/.gitconfig"
+      content: "[user]\nname = Terminal Learner\nemail = learner@example.com\n"
+    - path: "app.txt"
+      content: "app\n"
+    - path: "notes.txt"
+      content: "notes\n"
+hints:
+  - "Commit both files first."
+  - "Use --name-only and --pretty=format: to print only file names."
+solution:
+  commands:
+    - "git init -b main"
+    - "git add app.txt notes.txt"
+    - "git commit -m 'add app and notes'"
+    - "git show --name-only --pretty=format: HEAD > show-files.txt"
+  explanation: "git show can focus on file list for one commit."
+checks:
+  - type: "file_contains"
+    path: "show-files.txt"
+    expected: "app.txt"
+  - type: "file_contains"
+    path: "show-files.txt"
+    expected: "notes.txt"

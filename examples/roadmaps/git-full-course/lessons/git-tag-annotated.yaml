@@ -1,0 +1,27 @@
+version: 1
+id: roadmap-git-tag-annotated
+title: "Create annotated tag"
+commands: ["git"]
+difficulty: "intermediate"
+intro: "Create one commit, add annotated tag v1.0.0 with message 'release 1.0.0', then save git show v1.0.0 to annotated.txt."
+workspace:
+  files:
+    - path: ".home/.gitconfig"
+      content: "[user]\nname = Terminal Learner\nemail = learner@example.com\n"
+    - path: "CHANGELOG.md"
+      content: "v1.0.0\n"
+hints:
+  - "Use git tag -a v1.0.0 -m 'release 1.0.0'."
+  - "Inspect tag with git show v1.0.0 > annotated.txt."
+solution:
+  commands:
+    - "git init -b main"
+    - "git add CHANGELOG.md"
+    - "git commit -m 'prepare changelog'"
+    - "git tag -a v1.0.0 -m 'release 1.0.0'"
+    - "git show v1.0.0 > annotated.txt"
+  explanation: "Annotated tags keep author/date/message metadata."
+checks:
+  - type: "file_contains"
+    path: "annotated.txt"
+    expected: "release 1.0.0"

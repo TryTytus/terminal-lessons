@@ -1,0 +1,32 @@
+version: 1
+id: roadmap-git-cherry-pick-single
+title: "Cherry-pick one commit"
+commands: ["git"]
+difficulty: "advanced"
+intro: "Create one fix commit on feature/hotfix, switch to main, cherry-pick it by branch tip (feature/hotfix), then save one-line log to cherry-log.txt."
+workspace:
+  files:
+    - path: ".home/.gitconfig"
+      content: "[user]\nname = Terminal Learner\nemail = learner@example.com\n"
+    - path: "app.txt"
+      content: "version 1\n"
+hints:
+  - "Commit baseline on main first."
+  - "Create feature/hotfix commit, then cherry-pick feature/hotfix from main."
+solution:
+  commands:
+    - "git init -b main"
+    - "git add app.txt"
+    - "git commit -m 'base app'"
+    - "git switch -c feature/hotfix"
+    - "echo 'hotfix line' >> app.txt"
+    - "git add app.txt"
+    - "git commit -m 'hotfix commit'"
+    - "git switch main"
+    - "git cherry-pick feature/hotfix"
+    - "git log --oneline -n 2 > cherry-log.txt"
+  explanation: "Cherry-pick copies one commit patch onto current branch."
+checks:
+  - type: "file_contains"
+    path: "cherry-log.txt"
+    expected: "hotfix commit"

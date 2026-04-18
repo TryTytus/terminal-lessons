@@ -1,0 +1,33 @@
+version: 1
+id: roadmap-git-log-stat
+title: "Inspect history with --stat"
+commands: ["git"]
+difficulty: "beginner"
+intro: "Create two commits affecting different files and save git log --stat -n 2 to log-stat.txt."
+workspace:
+  files:
+    - path: ".home/.gitconfig"
+      content: "[user]\nname = Terminal Learner\nemail = learner@example.com\n"
+    - path: "api.txt"
+      content: "GET /health\n"
+    - path: "ui.txt"
+      content: "button\n"
+hints:
+  - "Commit api.txt, then modify ui.txt and commit again."
+  - "Run git log --stat -n 2 > log-stat.txt."
+solution:
+  commands:
+    - "git init -b main"
+    - "git add api.txt"
+    - "git commit -m 'api baseline'"
+    - "git add ui.txt"
+    - "git commit -m 'ui baseline'"
+    - "git log --stat -n 2 > log-stat.txt"
+  explanation: "--stat appends changed file counts to each commit."
+checks:
+  - type: "file_contains"
+    path: "log-stat.txt"
+    expected: "ui.txt"
+  - type: "file_contains"
+    path: "log-stat.txt"
+    expected: "api.txt"

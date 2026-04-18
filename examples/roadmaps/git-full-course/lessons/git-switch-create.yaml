@@ -1,0 +1,23 @@
+version: 1
+id: roadmap-git-switch-create
+title: "Create branch with switch -c"
+commands: ["git"]
+difficulty: "beginner"
+intro: "Initialize on main, create and switch to feature/ui with git switch -c, then save current branch to current.txt."
+workspace:
+  files:
+    - path: "README.md"
+      content: "switch demo\n"
+hints:
+  - "Use git switch -c feature/ui."
+  - "Capture with git branch --show-current > current.txt."
+solution:
+  commands:
+    - "git init -b main"
+    - "git switch -c feature/ui"
+    - "git branch --show-current > current.txt"
+  explanation: "switch -c combines branch creation and checkout."
+checks:
+  - type: "file_equals"
+    path: "current.txt"
+    expected: "feature/ui\n"

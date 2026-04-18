@@ -1,0 +1,22 @@
+version: 1
+id: roadmap-git-checkout-create-branch
+title: "Create branch with checkout -b"
+commands: ["git"]
+difficulty: "beginner"
+intro: "Initialize on main, create and switch to hotfix/typo with git checkout -b, then write current branch to current-legacy.txt."
+workspace:
+  files:
+    - path: "README.md"
+      content: "legacy checkout\n"
+hints:
+  - "Use git checkout -b hotfix/typo."
+solution:
+  commands:
+    - "git init -b main"
+    - "git checkout -b hotfix/typo"
+    - "git branch --show-current > current-legacy.txt"
+  explanation: "checkout -b is the legacy equivalent of switch -c."
+checks:
+  - type: "file_equals"
+    path: "current-legacy.txt"
+    expected: "hotfix/typo\n"

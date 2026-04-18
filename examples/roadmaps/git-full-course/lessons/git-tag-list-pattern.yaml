@@ -1,0 +1,32 @@
+version: 1
+id: roadmap-git-tag-list-pattern
+title: "List tags by glob pattern"
+commands: ["git"]
+difficulty: "intermediate"
+intro: "Create one commit, add tags v1.0.0, v1.1.0, and rc-1, then save git tag -l 'v1.*' output to v1-tags.txt."
+workspace:
+  files:
+    - path: ".home/.gitconfig"
+      content: "[user]\nname = Terminal Learner\nemail = learner@example.com\n"
+    - path: "release.txt"
+      content: "tag set\n"
+hints:
+  - "Create tags after committing."
+  - "Use single quotes around v1.* in the command."
+solution:
+  commands:
+    - "git init -b main"
+    - "git add release.txt"
+    - "git commit -m 'release baseline'"
+    - "git tag v1.0.0"
+    - "git tag v1.1.0"
+    - "git tag rc-1"
+    - "git tag -l 'v1.*' > v1-tags.txt"
+  explanation: "-l accepts glob filters for tag listing."
+checks:
+  - type: "file_contains"
+    path: "v1-tags.txt"
+    expected: "v1.0.0"
+  - type: "file_contains"
+    path: "v1-tags.txt"
+    expected: "v1.1.0"

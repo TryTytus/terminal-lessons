@@ -1,0 +1,41 @@
+version: 1
+id: roadmap-git-bisect-run
+title: "Find first bad commit with bisect run"
+commands: ["git"]
+difficulty: "advanced"
+intro: "Create history where BUG=1 is introduced in one commit, use git bisect run sh check.sh to find first bad commit, then reset bisect state."
+workspace:
+  files:
+    - path: ".home/.gitconfig"
+      content: "[user]\nname = Terminal Learner\nemail = learner@example.com\n"
+    - path: "app.txt"
+      content: "BUG=0\n"
+    - path: "check.sh"
+      content: "#!/bin/sh\ngrep -q 'BUG=0' app.txt\n"
+hints:
+  - "Create at least four commits where only one introduces BUG=1."
+  - "Mark HEAD as bad and a known older commit as good."
+  - "Run git bisect run sh check.sh and then git bisect reset."
+solution:
+  commands:
+    - "git init -b main"
+    - "git add app.txt check.sh"
+    - "git commit -m 'baseline good'"
+    - "echo 'DOC=1' > docs.txt"
+    - "git add docs.txt"
+    - "git commit -m 'add docs marker'"
+    - "echo 'BUG=1' > app.txt"
+    - "git add app.txt"
+    - "git commit -m 'introduce bug'"
+    - "echo 'more docs' >> docs.txt"
+    - "git add docs.txt"
+    - "git commit -m 'docs update after bug'"
+    - "git bisect start"
+    - "git bisect bad"
+    - "git bisect good HEAD~2"
+    - "git bisect run sh check.sh"
+    - "git bisect reset"
+  explanation: "Bisect performs binary search and reports first commit where test fails."
+checks:
+  - type: "stdout_contains"
+    expected: "is the first bad commit"

@@ -1,0 +1,35 @@
+version: 1
+id: roadmap-git-cherry-pick-x
+title: "Cherry-pick with source reference"
+commands: ["git"]
+difficulty: "advanced"
+intro: "Create one commit on feature/backport, cherry-pick it onto main with -x, then save latest commit body to picked-message.txt."
+workspace:
+  files:
+    - path: ".home/.gitconfig"
+      content: "[user]\nname = Terminal Learner\nemail = learner@example.com\n"
+    - path: "api.txt"
+      content: "v1\n"
+hints:
+  - "Use git cherry-pick -x feature/backport."
+  - "Capture commit body with git log -1 --pretty=%B > picked-message.txt."
+solution:
+  commands:
+    - "git init -b main"
+    - "git add api.txt"
+    - "git commit -m 'base api'"
+    - "git switch -c feature/backport"
+    - "echo 'patch' >> api.txt"
+    - "git add api.txt"
+    - "git commit -m 'backport patch'"
+    - "git switch main"
+    - "git cherry-pick -x feature/backport"
+    - "git log -1 --pretty=%B > picked-message.txt"
+  explanation: "-x records the source commit hash in the new commit message."
+checks:
+  - type: "file_contains"
+    path: "picked-message.txt"
+    expected: "backport patch"
+  - type: "file_contains"
+    path: "picked-message.txt"
+    expected: "(cherry picked from commit"

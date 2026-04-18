@@ -1,0 +1,27 @@
+version: 1
+id: roadmap-git-branch-create-list
+title: "Create and list branches"
+commands: ["git"]
+difficulty: "beginner"
+intro: "Initialize a repo on main, create branch feature/login, then save branch list to branches.txt."
+workspace:
+  files:
+    - path: "README.md"
+      content: "project\n"
+hints:
+  - "Run git init -b main first."
+  - "Create branch with git branch feature/login."
+  - "Save list with git branch > branches.txt."
+solution:
+  commands:
+    - "git init -b main"
+    - "git branch feature/login"
+    - "git branch > branches.txt"
+  explanation: "git branch creates pointers without switching to them."
+checks:
+  - type: "file_contains"
+    path: "branches.txt"
+    expected: "main"
+  - type: "file_contains"
+    path: "branches.txt"
+    expected: "feature/login"

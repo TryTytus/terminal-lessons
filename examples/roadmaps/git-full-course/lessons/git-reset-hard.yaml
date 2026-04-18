@@ -1,0 +1,28 @@
+version: 1
+id: roadmap-git-reset-hard
+title: "Reset hard discards local changes"
+commands: ["git"]
+difficulty: "advanced"
+intro: "Commit app.txt as v1, change it to v2 without committing, run git reset --hard HEAD, then save app.txt to hard-result.txt."
+workspace:
+  files:
+    - path: ".home/.gitconfig"
+      content: "[user]\nname = Terminal Learner\nemail = learner@example.com\n"
+    - path: "app.txt"
+      content: "v1\n"
+hints:
+  - "Create baseline commit before changing file."
+  - "Run git reset --hard HEAD to discard local edits."
+solution:
+  commands:
+    - "git init -b main"
+    - "git add app.txt"
+    - "git commit -m 'app v1'"
+    - "echo 'v2' > app.txt"
+    - "git reset --hard HEAD"
+    - "cat app.txt > hard-result.txt"
+  explanation: "--hard resets both index and working tree to target commit."
+checks:
+  - type: "file_equals"
+    path: "hard-result.txt"
+    expected: "v1\n"

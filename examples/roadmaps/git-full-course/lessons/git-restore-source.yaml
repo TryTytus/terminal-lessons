@@ -1,0 +1,30 @@
+version: 1
+id: roadmap-git-restore-source
+title: "Restore file from older commit"
+commands: ["git"]
+difficulty: "advanced"
+intro: "Create two commits changing app.txt from v1 to v2, then restore app.txt from HEAD~1 with git restore --source and save content to restored.txt."
+workspace:
+  files:
+    - path: ".home/.gitconfig"
+      content: "[user]\nname = Terminal Learner\nemail = learner@example.com\n"
+    - path: "app.txt"
+      content: "v1\n"
+hints:
+  - "Commit v1 first, then overwrite file with v2 and commit again."
+  - "Run git restore --source=HEAD~1 app.txt."
+solution:
+  commands:
+    - "git init -b main"
+    - "git add app.txt"
+    - "git commit -m 'app v1'"
+    - "echo 'v2' > app.txt"
+    - "git add app.txt"
+    - "git commit -m 'app v2'"
+    - "git restore --source=HEAD~1 app.txt"
+    - "cat app.txt > restored.txt"
+  explanation: "--source picks content from a selected revision."
+checks:
+  - type: "file_equals"
+    path: "restored.txt"
+    expected: "v1\n"

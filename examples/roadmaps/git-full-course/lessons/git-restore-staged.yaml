@@ -1,0 +1,29 @@
+version: 1
+id: roadmap-git-restore-staged
+title: "Unstage with restore --staged"
+commands: ["git"]
+difficulty: "intermediate"
+intro: "Commit notes.txt with one line, edit it, stage it, unstage with git restore --staged notes.txt, then save short status to status.txt."
+workspace:
+  files:
+    - path: ".home/.gitconfig"
+      content: "[user]\nname = Terminal Learner\nemail = learner@example.com\n"
+    - path: "notes.txt"
+      content: "alpha\n"
+hints:
+  - "After staging, run git restore --staged notes.txt."
+  - "Status should show unstaged modification (space then M)."
+solution:
+  commands:
+    - "git init -b main"
+    - "git add notes.txt"
+    - "git commit -m 'seed notes'"
+    - "echo 'beta' > notes.txt"
+    - "git add notes.txt"
+    - "git restore --staged notes.txt"
+    - "git status --short > status.txt"
+  explanation: "--staged removes path from index but keeps working-tree edits."
+checks:
+  - type: "file_contains"
+    path: "status.txt"
+    expected: " M notes.txt"

@@ -1,0 +1,33 @@
+version: 1
+id: roadmap-git-log-limit
+title: "Limit history output"
+commands: ["git"]
+difficulty: "beginner"
+intro: "Create three commits, run git log --oneline -n 2 > recent.txt, then save the number of lines in recent.txt to count.txt."
+workspace:
+  files:
+    - path: ".home/.gitconfig"
+      content: "[user]\nname = Terminal Learner\nemail = learner@example.com\n"
+    - path: "changelog.md"
+      content: "v1\n"
+hints:
+  - "Use -n 2 with git log --oneline."
+  - "Count lines with wc -l recent.txt > count.txt."
+solution:
+  commands:
+    - "git init -b main"
+    - "git add changelog.md"
+    - "git commit -m 'changelog v1'"
+    - "echo 'v2' >> changelog.md"
+    - "git add changelog.md"
+    - "git commit -m 'changelog v2'"
+    - "echo 'v3' >> changelog.md"
+    - "git add changelog.md"
+    - "git commit -m 'changelog v3'"
+    - "git log --oneline -n 2 > recent.txt"
+    - "wc -l recent.txt > count.txt"
+  explanation: "-n limits the number of commits printed."
+checks:
+  - type: "file_contains"
+    path: "count.txt"
+    expected: "2 recent.txt"

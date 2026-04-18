@@ -1,0 +1,39 @@
+version: 1
+id: roadmap-git-rebase-main
+title: "Rebase feature on main"
+commands: ["git"]
+difficulty: "advanced"
+intro: "Create diverged main and feature branches without conflicts, rebase feature/rebase onto main, then save one-line log of feature to rebase-log.txt."
+workspace:
+  files:
+    - path: ".home/.gitconfig"
+      content: "[user]\nname = Terminal Learner\nemail = learner@example.com\n"
+    - path: "base.txt"
+      content: "base\n"
+hints:
+  - "Use different files on main and feature to avoid conflicts."
+  - "Switch to feature/rebase before running git rebase main."
+solution:
+  commands:
+    - "git init -b main"
+    - "git add base.txt"
+    - "git commit -m 'base commit'"
+    - "git switch -c feature/rebase"
+    - "echo 'feature work' > feature.txt"
+    - "git add feature.txt"
+    - "git commit -m 'feature change'"
+    - "git switch main"
+    - "echo 'main work' > main.txt"
+    - "git add main.txt"
+    - "git commit -m 'main change'"
+    - "git switch feature/rebase"
+    - "git rebase main"
+    - "git log --oneline -n 3 > rebase-log.txt"
+  explanation: "Rebase replays feature commits on top of latest main."
+checks:
+  - type: "file_contains"
+    path: "rebase-log.txt"
+    expected: "feature change"
+  - type: "file_contains"
+    path: "rebase-log.txt"
+    expected: "main change"

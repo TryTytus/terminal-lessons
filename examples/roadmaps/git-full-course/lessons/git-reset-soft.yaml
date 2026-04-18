@@ -1,0 +1,30 @@
+version: 1
+id: roadmap-git-reset-soft
+title: "Reset soft keeps staged changes"
+commands: ["git"]
+difficulty: "advanced"
+intro: "Create two commits on notes.txt, run git reset --soft HEAD~1, then save short status to soft-status.txt."
+workspace:
+  files:
+    - path: ".home/.gitconfig"
+      content: "[user]\nname = Terminal Learner\nemail = learner@example.com\n"
+    - path: "notes.txt"
+      content: "v1\n"
+hints:
+  - "After second commit, run git reset --soft HEAD~1."
+  - "Status should show staged modification."
+solution:
+  commands:
+    - "git init -b main"
+    - "git add notes.txt"
+    - "git commit -m 'notes v1'"
+    - "echo 'v2' >> notes.txt"
+    - "git add notes.txt"
+    - "git commit -m 'notes v2'"
+    - "git reset --soft HEAD~1"
+    - "git status --short > soft-status.txt"
+  explanation: "--soft moves HEAD only; index stays staged."
+checks:
+  - type: "file_contains"
+    path: "soft-status.txt"
+    expected: "M  notes.txt"

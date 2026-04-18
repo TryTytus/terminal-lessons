@@ -1,0 +1,24 @@
+version: 1
+id: roadmap-git-switch-existing
+title: "Switch to an existing branch"
+commands: ["git"]
+difficulty: "beginner"
+intro: "Initialize on main, create branch feature/api, switch back to main, then switch to feature/api and save the active branch to branch.txt."
+workspace:
+  files:
+    - path: "README.md"
+      content: "switch existing\n"
+hints:
+  - "Create branch first with git branch feature/api."
+  - "Use git switch feature/api to move to it."
+solution:
+  commands:
+    - "git init -b main"
+    - "git branch feature/api"
+    - "git switch feature/api"
+    - "git branch --show-current > branch.txt"
+  explanation: "git switch <branch> moves HEAD to an existing branch."
+checks:
+  - type: "file_equals"
+    path: "branch.txt"
+    expected: "feature/api\n"

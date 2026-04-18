@@ -1,0 +1,32 @@
+version: 1
+id: roadmap-git-show-stat
+title: "Inspect commit with --stat"
+commands: ["git"]
+difficulty: "beginner"
+intro: "Create one commit modifying app.txt, then save git show --stat --oneline HEAD output to show-stat.txt."
+workspace:
+  files:
+    - path: ".home/.gitconfig"
+      content: "[user]\nname = Terminal Learner\nemail = learner@example.com\n"
+    - path: "app.txt"
+      content: "v1\n"
+hints:
+  - "Commit baseline first, then make another commit with changes."
+  - "Run git show --stat --oneline HEAD > show-stat.txt."
+solution:
+  commands:
+    - "git init -b main"
+    - "git add app.txt"
+    - "git commit -m 'app v1'"
+    - "echo 'v2' > app.txt"
+    - "git add app.txt"
+    - "git commit -m 'app v2'"
+    - "git show --stat --oneline HEAD > show-stat.txt"
+  explanation: "--stat provides a concise changed-files summary for the commit."
+checks:
+  - type: "file_contains"
+    path: "show-stat.txt"
+    expected: "app v2"
+  - type: "file_contains"
+    path: "show-stat.txt"
+    expected: "app.txt"

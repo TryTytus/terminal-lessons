@@ -1,0 +1,32 @@
+version: 1
+id: roadmap-git-rm-cached
+title: "Untrack file with --cached"
+commands: ["git"]
+difficulty: "intermediate"
+intro: "Commit local.env, run git rm --cached local.env, then save short status to cached-status.txt. Keep the file on disk."
+workspace:
+  files:
+    - path: ".home/.gitconfig"
+      content: "[user]\nname = Terminal Learner\nemail = learner@example.com\n"
+    - path: "local.env"
+      content: "TOKEN=abc\n"
+hints:
+  - "Create baseline commit with local.env first."
+  - "Use git rm --cached local.env."
+solution:
+  commands:
+    - "git init -b main"
+    - "git add local.env"
+    - "git commit -m 'track local env temporarily'"
+    - "git rm --cached local.env"
+    - "git status --short > cached-status.txt"
+  explanation: "--cached removes file from index while keeping local file untouched."
+checks:
+  - type: "file_exists"
+    path: "local.env"
+  - type: "file_contains"
+    path: "cached-status.txt"
+    expected: "D  local.env"
+  - type: "file_contains"
+    path: "cached-status.txt"
+    expected: "?? local.env"

@@ -1,0 +1,28 @@
+version: 1
+id: roadmap-git-add-all-dot
+title: "Stage all files with dot"
+commands: ["git"]
+difficulty: "beginner"
+intro: "Initialize on main, stage everything with git add ., and save short status to staged-all.txt."
+workspace:
+  files:
+    - path: "api.txt"
+      content: "GET /health\n"
+    - path: "ui.txt"
+      content: "button\n"
+hints:
+  - "Use git add . after init."
+  - "Capture with git status --short > staged-all.txt."
+solution:
+  commands:
+    - "git init -b main"
+    - "git add ."
+    - "git status --short > staged-all.txt"
+  explanation: "git add . stages all new and modified files in the current directory tree."
+checks:
+  - type: "file_contains"
+    path: "staged-all.txt"
+    expected: "A  api.txt"
+  - type: "file_contains"
+    path: "staged-all.txt"
+    expected: "A  ui.txt"

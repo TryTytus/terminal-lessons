@@ -1,0 +1,28 @@
+version: 1
+id: roadmap-git-restore-working-tree
+title: "Discard unstaged edits with restore"
+commands: ["git"]
+difficulty: "beginner"
+intro: "Commit config.txt containing mode=prod, change it to mode=dev, then restore config.txt and save final content to final.txt."
+workspace:
+  files:
+    - path: ".home/.gitconfig"
+      content: "[user]\nname = Terminal Learner\nemail = learner@example.com\n"
+    - path: "config.txt"
+      content: "mode=prod\n"
+hints:
+  - "Create baseline commit first."
+  - "Use git restore config.txt to discard unstaged changes."
+solution:
+  commands:
+    - "git init -b main"
+    - "git add config.txt"
+    - "git commit -m 'baseline config'"
+    - "echo 'mode=dev' > config.txt"
+    - "git restore config.txt"
+    - "cat config.txt > final.txt"
+  explanation: "git restore <path> resets file to index state."
+checks:
+  - type: "file_equals"
+    path: "final.txt"
+    expected: "mode=prod\n"

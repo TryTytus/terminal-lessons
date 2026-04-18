@@ -1,0 +1,22 @@
+version: 1
+id: roadmap-git-init-main-branch
+title: "Initialize with main branch"
+commands: ["git"]
+difficulty: "beginner"
+intro: "Initialize this directory using main as the initial branch and save the branch name to current-branch.txt."
+workspace:
+  files:
+    - path: "README.md"
+      content: "# demo\n"
+hints:
+  - "Use git init -b main."
+  - "Capture the branch with git branch --show-current > current-branch.txt."
+solution:
+  commands:
+    - "git init -b main"
+    - "git branch --show-current > current-branch.txt"
+  explanation: "-b sets the initial branch explicitly."
+checks:
+  - type: "file_equals"
+    path: "current-branch.txt"
+    expected: "main\n"

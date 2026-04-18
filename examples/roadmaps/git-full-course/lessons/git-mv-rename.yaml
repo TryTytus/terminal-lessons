@@ -1,0 +1,27 @@
+version: 1
+id: roadmap-git-mv-rename
+title: "Rename tracked file"
+commands: ["git"]
+difficulty: "beginner"
+intro: "Commit guide.txt, rename it to guide-v2.txt with git mv, then save short status to rename-status.txt."
+workspace:
+  files:
+    - path: ".home/.gitconfig"
+      content: "[user]\nname = Terminal Learner\nemail = learner@example.com\n"
+    - path: "guide.txt"
+      content: "step one\n"
+hints:
+  - "Create baseline commit with guide.txt first."
+  - "Use git mv guide.txt guide-v2.txt."
+solution:
+  commands:
+    - "git init -b main"
+    - "git add guide.txt"
+    - "git commit -m 'add guide'"
+    - "git mv guide.txt guide-v2.txt"
+    - "git status --short > rename-status.txt"
+  explanation: "git mv stages rename metadata in the index."
+checks:
+  - type: "file_contains"
+    path: "rename-status.txt"
+    expected: "guide.txt -> guide-v2.txt"

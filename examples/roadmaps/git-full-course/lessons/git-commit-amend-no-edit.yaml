@@ -1,0 +1,33 @@
+version: 1
+id: roadmap-git-commit-amend-no-edit
+title: "Amend content with --no-edit"
+commands: ["git"]
+difficulty: "intermediate"
+intro: "Create a commit containing app.txt, then stage notes.txt and amend with --no-edit. Finally, save changed file names from HEAD to files.txt."
+workspace:
+  files:
+    - path: ".home/.gitconfig"
+      content: "[user]\nname = Terminal Learner\nemail = learner@example.com\n"
+    - path: "app.txt"
+      content: "app v1\n"
+    - path: "notes.txt"
+      content: "release notes\n"
+hints:
+  - "First commit only app.txt with message 'base app'."
+  - "Then add notes.txt and run git commit --amend --no-edit."
+solution:
+  commands:
+    - "git init -b main"
+    - "git add app.txt"
+    - "git commit -m 'base app'"
+    - "git add notes.txt"
+    - "git commit --amend --no-edit"
+    - "git show --name-only --pretty=format: HEAD > files.txt"
+  explanation: "--no-edit preserves message while updating commit content."
+checks:
+  - type: "file_contains"
+    path: "files.txt"
+    expected: "app.txt"
+  - type: "file_contains"
+    path: "files.txt"
+    expected: "notes.txt"

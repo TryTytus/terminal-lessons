@@ -1,0 +1,26 @@
+version: 1
+id: roadmap-git-commit-message
+title: "Commit with -m"
+commands: ["git"]
+difficulty: "beginner"
+intro: "Initialize on main, commit app.txt with message 'add app skeleton', then write the latest one-line log to head.txt."
+workspace:
+  files:
+    - path: ".home/.gitconfig"
+      content: "[user]\nname = Terminal Learner\nemail = learner@example.com\n"
+    - path: "app.txt"
+      content: "console.log('app')\n"
+hints:
+  - "Stage app.txt first."
+  - "Use git commit -m 'add app skeleton'."
+solution:
+  commands:
+    - "git init -b main"
+    - "git add app.txt"
+    - "git commit -m 'add app skeleton'"
+    - "git log --oneline -n 1 > head.txt"
+  explanation: "Commit records the staged snapshot with the provided message."
+checks:
+  - type: "file_contains"
+    path: "head.txt"
+    expected: "add app skeleton"

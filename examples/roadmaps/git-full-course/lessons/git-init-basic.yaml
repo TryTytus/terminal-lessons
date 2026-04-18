@@ -1,0 +1,24 @@
+version: 1
+id: roadmap-git-init-basic
+title: "Initialize a repository"
+commands: ["git"]
+difficulty: "beginner"
+intro: "Initialize the current directory as a Git repository and create initialized.txt containing the output of git rev-parse --is-inside-work-tree."
+workspace:
+  files:
+    - path: "notes.txt"
+      content: "ship checklist\n"
+hints:
+  - "Run git init first."
+  - "Then run git rev-parse --is-inside-work-tree > initialized.txt."
+solution:
+  commands:
+    - "git init"
+    - "git rev-parse --is-inside-work-tree > initialized.txt"
+  explanation: "git init creates .git metadata and rev-parse confirms we are inside a repository."
+checks:
+  - type: "file_exists"
+    path: ".git/HEAD"
+  - type: "file_equals"
+    path: "initialized.txt"
+    expected: "true\n"

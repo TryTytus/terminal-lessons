@@ -55,7 +55,7 @@ Wails events:
 
 Initial baseline: Empty Repo / Scaffolding.
 
-Current actual state: scaffolded MVP implemented and verified. The project now has Go/Wails backend packages, React/Xterm frontend, YAML lesson schema/docs, roadmap folder schema/docs, 11 standalone example lessons, an importable shell text essentials roadmap with 28 command sections and 80 exercises, short command guides, full command manuals, tests, and a successful macOS Wails production build.
+Current actual state: scaffolded MVP implemented and verified. The project now has Go/Wails backend packages, React/Xterm frontend, YAML lesson schema/docs, roadmap folder schema/docs, 11 standalone example lessons, an importable shell text essentials roadmap with 28 command sections and 80 exercises, plus an importable git full course roadmap with 19 command sections and 49 exercises, short command guides, full command manuals, tests, and a successful macOS Wails production build.
 
 Important environment notes:
 - Go is available at `/usr/local/go/bin/go`.
@@ -83,5 +83,7 @@ Important environment notes:
 - [x] Next: add roadmap folder import, roadmap storage/validation, roadmap sidebar, full roadmap agenda, command guide rendering, progress tracking, and starter roadmap content.
 - [x] Next: add per-command full manual Markdown pages with cheat sheets, roadmap entry points, and exercise-page book buttons.
 - [x] Next: expand `examples/roadmaps/shell-text-essentials` to cover navigation, file operations, permissions, shell utilities, viewing, search, and text-processing commands with one exercise per common form/flag.
+- [x] Next: add `examples/roadmaps/git-full-course` with focused Git exercises for init/status/add/commit/log/diff/branch/switch/checkout/restore/mv/rm/merge/rebase/cherry-pick/reset/tag/show/bisect, including merge-vs-rebase-vs-squash ASCII diagrams.
 - [ ] Next: manually run the app, import `examples/roadmaps/shell-text-essentials`, start a roadmap exercise, pass checks, and confirm progress updates in the roadmap view.
+- [ ] Next: manually run the app, import `examples/roadmaps/git-full-course`, complete representative exercises (merge/rebase/reset/bisect), and confirm roadmap progress updates in the UI.
 - [ ] Next: decide whether to add a real app icon.

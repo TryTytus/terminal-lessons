@@ -1,0 +1,29 @@
+version: 1
+id: roadmap-git-rm-tracked
+title: "Remove tracked file"
+commands: ["git"]
+difficulty: "beginner"
+intro: "Commit old.txt, remove it with git rm old.txt, then save short status to rm-status.txt."
+workspace:
+  files:
+    - path: ".home/.gitconfig"
+      content: "[user]\nname = Terminal Learner\nemail = learner@example.com\n"
+    - path: "old.txt"
+      content: "deprecated\n"
+hints:
+  - "Create baseline commit first."
+  - "Use git rm old.txt and check status."
+solution:
+  commands:
+    - "git init -b main"
+    - "git add old.txt"
+    - "git commit -m 'add old file'"
+    - "git rm old.txt"
+    - "git status --short > rm-status.txt"
+  explanation: "git rm deletes file and stages deletion."
+checks:
+  - type: "file_contains"
+    path: "rm-status.txt"
+    expected: "D  old.txt"
+  - type: "file_not_exists"
+    path: "old.txt"

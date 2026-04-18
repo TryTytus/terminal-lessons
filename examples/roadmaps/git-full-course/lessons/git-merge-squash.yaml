@@ -1,0 +1,36 @@
+version: 1
+id: roadmap-git-merge-squash
+title: "Squash merge branch changes"
+commands: ["git"]
+difficulty: "advanced"
+intro: "Create feature/squash with two commits, squash merge into main, commit as 'squash feature/squash', then save one-line log to squash-log.txt."
+workspace:
+  files:
+    - path: ".home/.gitconfig"
+      content: "[user]\nname = Terminal Learner\nemail = learner@example.com\n"
+    - path: "ui.txt"
+      content: "header\n"
+hints:
+  - "Create two commits on feature/squash."
+  - "On main run git merge --squash feature/squash, then git commit -m 'squash feature/squash'."
+solution:
+  commands:
+    - "git init -b main"
+    - "git add ui.txt"
+    - "git commit -m 'ui base'"
+    - "git switch -c feature/squash"
+    - "echo 'body' >> ui.txt"
+    - "git add ui.txt"
+    - "git commit -m 'add body section'"
+    - "echo 'footer' >> ui.txt"
+    - "git add ui.txt"
+    - "git commit -m 'add footer section'"
+    - "git switch main"
+    - "git merge --squash feature/squash"
+    - "git commit -m 'squash feature/squash'"
+    - "git log --oneline -n 3 > squash-log.txt"
+  explanation: "--squash combines branch diff into one new commit on target branch."
+checks:
+  - type: "file_contains"
+    path: "squash-log.txt"
+    expected: "squash feature/squash"

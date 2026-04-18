@@ -1,0 +1,31 @@
+version: 1
+id: roadmap-git-diff-staged
+title: "Inspect staged changes"
+commands: ["git"]
+difficulty: "beginner"
+intro: "Create baseline commit, change notes.txt from alpha to gamma, stage it, and save git diff --staged output to staged.patch."
+workspace:
+  files:
+    - path: ".home/.gitconfig"
+      content: "[user]\nname = Terminal Learner\nemail = learner@example.com\n"
+    - path: "notes.txt"
+      content: "alpha\n"
+hints:
+  - "After changing file, run git add notes.txt."
+  - "Use git diff --staged > staged.patch."
+solution:
+  commands:
+    - "git init -b main"
+    - "git add notes.txt"
+    - "git commit -m 'seed notes'"
+    - "echo 'gamma' > notes.txt"
+    - "git add notes.txt"
+    - "git diff --staged > staged.patch"
+  explanation: "--staged compares index against HEAD."
+checks:
+  - type: "file_contains"
+    path: "staged.patch"
+    expected: "-alpha"
+  - type: "file_contains"
+    path: "staged.patch"
+    expected: "+gamma"

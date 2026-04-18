@@ -1,0 +1,27 @@
+version: 1
+id: roadmap-git-commit-amend-message
+title: "Amend latest commit message"
+commands: ["git"]
+difficulty: "intermediate"
+intro: "Make one commit with the wrong message, amend it to 'add onboarding readme', and save latest one-line log to amended.txt."
+workspace:
+  files:
+    - path: ".home/.gitconfig"
+      content: "[user]\nname = Terminal Learner\nemail = learner@example.com\n"
+    - path: "README.md"
+      content: "# onboarding\n"
+hints:
+  - "First commit with any temporary message."
+  - "Then run git commit --amend -m 'add onboarding readme'."
+solution:
+  commands:
+    - "git init -b main"
+    - "git add README.md"
+    - "git commit -m 'tmp message'"
+    - "git commit --amend -m 'add onboarding readme'"
+    - "git log --oneline -n 1 > amended.txt"
+  explanation: "--amend rewrites the latest commit metadata and hash."
+checks:
+  - type: "file_contains"
+    path: "amended.txt"
+    expected: "add onboarding readme"

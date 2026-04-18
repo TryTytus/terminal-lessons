@@ -1,0 +1,29 @@
+version: 1
+id: roadmap-git-reset-mixed
+title: "Reset mixed unstages changes"
+commands: ["git"]
+difficulty: "advanced"
+intro: "Create two commits on notes.txt, run git reset --mixed HEAD~1, then save short status to mixed-status.txt."
+workspace:
+  files:
+    - path: ".home/.gitconfig"
+      content: "[user]\nname = Terminal Learner\nemail = learner@example.com\n"
+    - path: "notes.txt"
+      content: "v1\n"
+hints:
+  - "After reset --mixed, expect unstaged modification marker."
+solution:
+  commands:
+    - "git init -b main"
+    - "git add notes.txt"
+    - "git commit -m 'notes v1'"
+    - "echo 'v2' >> notes.txt"
+    - "git add notes.txt"
+    - "git commit -m 'notes v2'"
+    - "git reset --mixed HEAD~1"
+    - "git status --short > mixed-status.txt"
+  explanation: "--mixed moves HEAD and resets index but keeps worktree edits."
+checks:
+  - type: "file_contains"
+    path: "mixed-status.txt"
+    expected: " M notes.txt"

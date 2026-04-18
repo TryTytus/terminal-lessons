@@ -1,0 +1,28 @@
+version: 1
+id: roadmap-git-add-single-file
+title: "Stage one file"
+commands: ["git"]
+difficulty: "beginner"
+intro: "Initialize on main, stage only app.txt, and save short status to status.txt."
+workspace:
+  files:
+    - path: "app.txt"
+      content: "hello\n"
+    - path: "draft.txt"
+      content: "draft\n"
+hints:
+  - "Run git init -b main first."
+  - "Stage only app.txt with git add app.txt."
+solution:
+  commands:
+    - "git init -b main"
+    - "git add app.txt"
+    - "git status --short > status.txt"
+  explanation: "Staging one path leaves other files untracked."
+checks:
+  - type: "file_contains"
+    path: "status.txt"
+    expected: "A  app.txt"
+  - type: "file_contains"
+    path: "status.txt"
+    expected: "?? draft.txt"

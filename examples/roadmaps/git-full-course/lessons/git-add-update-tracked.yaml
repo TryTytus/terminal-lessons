@@ -1,0 +1,33 @@
+version: 1
+id: roadmap-git-add-update-tracked
+title: "Stage tracked updates only"
+commands: ["git"]
+difficulty: "intermediate"
+intro: "Create an initial commit with tracked.txt, then delete tracked.txt, create new.txt, run git add -u, and save short status to status-u.txt."
+workspace:
+  files:
+    - path: ".home/.gitconfig"
+      content: "[user]\nname = Terminal Learner\nemail = learner@example.com\n"
+    - path: "tracked.txt"
+      content: "v1\n"
+hints:
+  - "Commit tracked.txt first."
+  - "Then remove tracked.txt and create new.txt."
+  - "git add -u should stage the deletion but not stage new.txt."
+solution:
+  commands:
+    - "git init -b main"
+    - "git add tracked.txt"
+    - "git commit -m 'seed tracked file'"
+    - "rm tracked.txt"
+    - "echo 'brand new' > new.txt"
+    - "git add -u"
+    - "git status --short > status-u.txt"
+  explanation: "-u updates only tracked paths, including removals."
+checks:
+  - type: "file_contains"
+    path: "status-u.txt"
+    expected: "D  tracked.txt"
+  - type: "file_contains"
+    path: "status-u.txt"
+    expected: "?? new.txt"

@@ -1,0 +1,28 @@
+version: 1
+id: roadmap-git-checkout-restore-file
+title: "Restore file with checkout --"
+commands: ["git"]
+difficulty: "intermediate"
+intro: "Commit settings.txt containing stable=true, change it to unstable=true, restore with git checkout -- settings.txt, then save settings.txt to restored.txt."
+workspace:
+  files:
+    - path: ".home/.gitconfig"
+      content: "[user]\nname = Terminal Learner\nemail = learner@example.com\n"
+    - path: "settings.txt"
+      content: "stable=true\n"
+hints:
+  - "Create baseline commit first."
+  - "Use git checkout -- settings.txt to discard unstaged edit."
+solution:
+  commands:
+    - "git init -b main"
+    - "git add settings.txt"
+    - "git commit -m 'baseline settings'"
+    - "echo 'unstable=true' > settings.txt"
+    - "git checkout -- settings.txt"
+    - "cat settings.txt > restored.txt"
+  explanation: "checkout -- <path> restores file content from HEAD/index state."
+checks:
+  - type: "file_equals"
+    path: "restored.txt"
+    expected: "stable=true\n"

@@ -1,0 +1,42 @@
+version: 1
+id: roadmap-git-rebase-conflict-abort
+title: "Abort conflicted rebase"
+commands: ["git"]
+difficulty: "advanced"
+intro: "Create a rebase conflict on config.txt, abort it, then save current branch to branch.txt and file content to after-abort.txt."
+workspace:
+  files:
+    - path: ".home/.gitconfig"
+      content: "[user]\nname = Terminal Learner\nemail = learner@example.com\n"
+    - path: "config.txt"
+      content: "mode=base\n"
+hints:
+  - "Change same line differently on main and feature/conflict."
+  - "Run git rebase main from feature/conflict to trigger conflict."
+  - "Then run git rebase --abort."
+solution:
+  commands:
+    - "git init -b main"
+    - "git add config.txt"
+    - "git commit -m 'base config'"
+    - "git switch -c feature/conflict"
+    - "echo 'mode=feature' > config.txt"
+    - "git add config.txt"
+    - "git commit -m 'feature config change'"
+    - "git switch main"
+    - "echo 'mode=main' > config.txt"
+    - "git add config.txt"
+    - "git commit -m 'main config change'"
+    - "git switch feature/conflict"
+    - "git rebase main || true"
+    - "git rebase --abort"
+    - "git branch --show-current > branch.txt"
+    - "cat config.txt > after-abort.txt"
+  explanation: "--abort returns branch and files to pre-rebase state."
+checks:
+  - type: "file_equals"
+    path: "branch.txt"
+    expected: "feature/conflict\n"
+  - type: "file_equals"
+    path: "after-abort.txt"
+    expected: "mode=feature\n"

@@ -1,0 +1,44 @@
+version: 1
+id: roadmap-git-rebase-conflict-continue
+title: "Continue rebase after conflict resolution"
+commands: ["git"]
+difficulty: "advanced"
+intro: "Create a rebase conflict on config.txt, resolve it to mode=main+feature, continue rebase, then save file content to resolved.txt and latest one-line log to continue-log.txt."
+workspace:
+  files:
+    - path: ".home/.gitconfig"
+      content: "[user]\nname = Terminal Learner\nemail = learner@example.com\n"
+    - path: "config.txt"
+      content: "mode=base\n"
+hints:
+  - "Trigger conflict by changing the same line on main and feature/replay."
+  - "After conflict, edit config.txt to mode=main+feature and stage it."
+  - "Use GIT_EDITOR=true git rebase --continue."
+solution:
+  commands:
+    - "git init -b main"
+    - "git add config.txt"
+    - "git commit -m 'base config'"
+    - "git switch -c feature/replay"
+    - "echo 'mode=feature' > config.txt"
+    - "git add config.txt"
+    - "git commit -m 'feature config change'"
+    - "git switch main"
+    - "echo 'mode=main' > config.txt"
+    - "git add config.txt"
+    - "git commit -m 'main config change'"
+    - "git switch feature/replay"
+    - "git rebase main || true"
+    - "echo 'mode=main+feature' > config.txt"
+    - "git add config.txt"
+    - "GIT_EDITOR=true git rebase --continue"
+    - "cat config.txt > resolved.txt"
+    - "git log --oneline -n 1 > continue-log.txt"
+  explanation: "--continue finalizes current rebased commit after conflict resolution."
+checks:
+  - type: "file_equals"
+    path: "resolved.txt"
+    expected: "mode=main+feature\n"
+  - type: "file_contains"
+    path: "continue-log.txt"
+    expected: "feature config change"

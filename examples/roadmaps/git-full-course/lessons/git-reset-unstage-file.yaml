@@ -1,0 +1,35 @@
+version: 1
+id: roadmap-git-reset-unstage-file
+title: "Unstage one file with reset"
+commands: ["git"]
+difficulty: "intermediate"
+intro: "Commit app.txt and notes.txt, modify both, stage both, then unstage only notes.txt with git reset HEAD notes.txt. Save short status to unstage-status.txt."
+workspace:
+  files:
+    - path: ".home/.gitconfig"
+      content: "[user]\nname = Terminal Learner\nemail = learner@example.com\n"
+    - path: "app.txt"
+      content: "app v1\n"
+    - path: "notes.txt"
+      content: "notes v1\n"
+hints:
+  - "After editing both files, stage both first."
+  - "Use git reset HEAD notes.txt to unstage one path."
+solution:
+  commands:
+    - "git init -b main"
+    - "git add app.txt notes.txt"
+    - "git commit -m 'baseline files'"
+    - "echo 'app v2' > app.txt"
+    - "echo 'notes v2' > notes.txt"
+    - "git add app.txt notes.txt"
+    - "git reset HEAD notes.txt"
+    - "git status --short > unstage-status.txt"
+  explanation: "Path reset unstages selected file while preserving content edits."
+checks:
+  - type: "file_contains"
+    path: "unstage-status.txt"
+    expected: "M  app.txt"
+  - type: "file_contains"
+    path: "unstage-status.txt"
+    expected: " M notes.txt"

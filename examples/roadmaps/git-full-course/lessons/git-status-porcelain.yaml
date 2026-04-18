@@ -1,0 +1,31 @@
+version: 1
+id: roadmap-git-status-porcelain
+title: "Inspect status in short mode"
+commands: ["git"]
+difficulty: "beginner"
+intro: "Initialize a repo on main, stage only app.txt, then write git status --short output to status.txt."
+workspace:
+  files:
+    - path: ".home/.gitconfig"
+      content: "[user]\nname = Terminal Learner\nemail = learner@example.com\n"
+    - path: "app.txt"
+      content: "v1\n"
+    - path: "notes.txt"
+      content: "todo\n"
+hints:
+  - "Create repository with git init -b main."
+  - "Run git add app.txt only."
+  - "Save status with git status --short > status.txt."
+solution:
+  commands:
+    - "git init -b main"
+    - "git add app.txt"
+    - "git status --short > status.txt"
+  explanation: "Short status uses two columns: staged and unstaged."
+checks:
+  - type: "file_contains"
+    path: "status.txt"
+    expected: "A  app.txt"
+  - type: "file_contains"
+    path: "status.txt"
+    expected: "?? notes.txt"

@@ -1,0 +1,35 @@
+version: 1
+id: roadmap-git-merge-no-ff
+title: "Force a merge commit"
+commands: ["git"]
+difficulty: "intermediate"
+intro: "Create feature/noff with one commit, merge into main using --no-ff and message 'merge feature/noff', then save one-line log to noff-log.txt."
+workspace:
+  files:
+    - path: ".home/.gitconfig"
+      content: "[user]\nname = Terminal Learner\nemail = learner@example.com\n"
+    - path: "service.txt"
+      content: "core\n"
+hints:
+  - "Use git merge --no-ff feature/noff -m 'merge feature/noff'."
+  - "Check top commits in log."
+solution:
+  commands:
+    - "git init -b main"
+    - "git add service.txt"
+    - "git commit -m 'base service'"
+    - "git switch -c feature/noff"
+    - "echo 'api extension' >> service.txt"
+    - "git add service.txt"
+    - "git commit -m 'feature noff change'"
+    - "git switch main"
+    - "git merge --no-ff feature/noff -m 'merge feature/noff'"
+    - "git log --oneline -n 3 > noff-log.txt"
+  explanation: "--no-ff keeps explicit merge commit even when ff is possible."
+checks:
+  - type: "file_contains"
+    path: "noff-log.txt"
+    expected: "merge feature/noff"
+  - type: "file_contains"
+    path: "noff-log.txt"
+    expected: "feature noff change"

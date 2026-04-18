@@ -1,0 +1,32 @@
+version: 1
+id: roadmap-git-branch-delete-merged
+title: "Delete a merged branch"
+commands: ["git"]
+difficulty: "intermediate"
+intro: "Create and merge feature/cleanup into main, then delete it with git branch -d."
+workspace:
+  files:
+    - path: ".home/.gitconfig"
+      content: "[user]\nname = Terminal Learner\nemail = learner@example.com\n"
+    - path: "app.txt"
+      content: "base\n"
+hints:
+  - "Commit baseline on main first."
+  - "Make one commit on feature/cleanup and merge it back."
+  - "Run git branch -d feature/cleanup."
+solution:
+  commands:
+    - "git init -b main"
+    - "git add app.txt"
+    - "git commit -m 'base commit'"
+    - "git switch -c feature/cleanup"
+    - "echo 'cleanup' >> app.txt"
+    - "git add app.txt"
+    - "git commit -m 'cleanup change'"
+    - "git switch main"
+    - "git merge feature/cleanup"
+    - "git branch -d feature/cleanup"
+  explanation: "-d safely deletes only already-merged branches."
+checks:
+  - type: "stdout_contains"
+    expected: "Deleted branch feature/cleanup"

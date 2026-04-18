@@ -1,0 +1,30 @@
+version: 1
+id: roadmap-git-diff-working-tree
+title: "Inspect unstaged changes"
+commands: ["git"]
+difficulty: "beginner"
+intro: "Commit notes.txt with text 'alpha', change it to 'beta', then write git diff output to working.patch."
+workspace:
+  files:
+    - path: ".home/.gitconfig"
+      content: "[user]\nname = Terminal Learner\nemail = learner@example.com\n"
+    - path: "notes.txt"
+      content: "alpha\n"
+hints:
+  - "Create baseline commit first."
+  - "Edit notes.txt and run git diff > working.patch."
+solution:
+  commands:
+    - "git init -b main"
+    - "git add notes.txt"
+    - "git commit -m 'seed notes'"
+    - "echo 'beta' > notes.txt"
+    - "git diff > working.patch"
+  explanation: "git diff shows unstaged edits relative to index."
+checks:
+  - type: "file_contains"
+    path: "working.patch"
+    expected: "-alpha"
+  - type: "file_contains"
+    path: "working.patch"
+    expected: "+beta"

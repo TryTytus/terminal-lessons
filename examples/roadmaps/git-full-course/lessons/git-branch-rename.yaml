@@ -1,0 +1,24 @@
+version: 1
+id: roadmap-git-branch-rename
+title: "Rename a branch"
+commands: ["git"]
+difficulty: "intermediate"
+intro: "Initialize on main, create branch feature/login, rename it to feature/auth with git branch -m, then save branch list to renamed-branches.txt."
+workspace:
+  files:
+    - path: "README.md"
+      content: "rename flow\n"
+hints:
+  - "Create branch before renaming it."
+  - "Use git branch -m feature/login feature/auth."
+solution:
+  commands:
+    - "git init -b main"
+    - "git branch feature/login"
+    - "git branch -m feature/login feature/auth"
+    - "git branch > renamed-branches.txt"
+  explanation: "-m renames branch labels while preserving commit pointer."
+checks:
+  - type: "file_contains"
+    path: "renamed-branches.txt"
+    expected: "feature/auth"

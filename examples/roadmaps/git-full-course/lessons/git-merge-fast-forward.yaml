@@ -1,0 +1,33 @@
+version: 1
+id: roadmap-git-merge-fast-forward
+title: "Fast-forward merge"
+commands: ["git"]
+difficulty: "intermediate"
+intro: "Create one feature commit ahead of main, merge it into main with git merge --ff-only feature/ff, then save one-line log to merge-log.txt."
+workspace:
+  files:
+    - path: ".home/.gitconfig"
+      content: "[user]\nname = Terminal Learner\nemail = learner@example.com\n"
+    - path: "app.txt"
+      content: "base\n"
+hints:
+  - "Commit baseline on main first."
+  - "Create feature/ff and add one commit there."
+  - "Switch back to main before running --ff-only merge."
+solution:
+  commands:
+    - "git init -b main"
+    - "git add app.txt"
+    - "git commit -m 'base commit'"
+    - "git switch -c feature/ff"
+    - "echo 'feature ff' >> app.txt"
+    - "git add app.txt"
+    - "git commit -m 'feature ff change'"
+    - "git switch main"
+    - "git merge --ff-only feature/ff"
+    - "git log --oneline -n 2 > merge-log.txt"
+  explanation: "--ff-only succeeds only when merge can be a pointer move."
+checks:
+  - type: "file_contains"
+    path: "merge-log.txt"
+    expected: "feature ff change"

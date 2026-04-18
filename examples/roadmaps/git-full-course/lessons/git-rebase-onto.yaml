@@ -1,0 +1,42 @@
+version: 1
+id: roadmap-git-rebase-onto
+title: "Move commit range with --onto"
+commands: ["git"]
+difficulty: "advanced"
+intro: "Create topic branch with two commits from base, advance main separately, then run git rebase --onto main HEAD~2 on topic and save one-line log to onto-log.txt."
+workspace:
+  files:
+    - path: ".home/.gitconfig"
+      content: "[user]\nname = Terminal Learner\nemail = learner@example.com\n"
+    - path: "base.txt"
+      content: "base\n"
+hints:
+  - "Create two commits on topic."
+  - "On topic, HEAD~2 should point to commit before the two topic commits."
+solution:
+  commands:
+    - "git init -b main"
+    - "git add base.txt"
+    - "git commit -m 'base commit'"
+    - "git switch -c topic"
+    - "echo 'topic one' > topic.txt"
+    - "git add topic.txt"
+    - "git commit -m 'topic commit one'"
+    - "echo 'topic two' >> topic.txt"
+    - "git add topic.txt"
+    - "git commit -m 'topic commit two'"
+    - "git switch main"
+    - "echo 'main advanced' > main.txt"
+    - "git add main.txt"
+    - "git commit -m 'main advanced'"
+    - "git switch topic"
+    - "git rebase --onto main HEAD~2"
+    - "git log --oneline -n 4 > onto-log.txt"
+  explanation: "--onto re-anchors selected commits onto a different base."
+checks:
+  - type: "file_contains"
+    path: "onto-log.txt"
+    expected: "topic commit two"
+  - type: "file_contains"
+    path: "onto-log.txt"
+    expected: "main advanced"

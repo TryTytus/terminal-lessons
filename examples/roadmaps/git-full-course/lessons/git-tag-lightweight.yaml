@@ -1,0 +1,26 @@
+version: 1
+id: roadmap-git-tag-lightweight
+title: "Create lightweight tag"
+commands: ["git"]
+difficulty: "beginner"
+intro: "Create one commit, add lightweight tag v0.1.0, then write git tag --list output to tags.txt."
+workspace:
+  files:
+    - path: ".home/.gitconfig"
+      content: "[user]\nname = Terminal Learner\nemail = learner@example.com\n"
+    - path: "README.md"
+      content: "release prep\n"
+hints:
+  - "Commit first, then run git tag v0.1.0."
+solution:
+  commands:
+    - "git init -b main"
+    - "git add README.md"
+    - "git commit -m 'prepare release'"
+    - "git tag v0.1.0"
+    - "git tag --list > tags.txt"
+  explanation: "Lightweight tags are simple references to commits."
+checks:
+  - type: "file_contains"
+    path: "tags.txt"
+    expected: "v0.1.0"

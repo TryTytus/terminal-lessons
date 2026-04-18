@@ -1,0 +1,35 @@
+version: 1
+id: roadmap-git-log-graph-all
+title: "View branch graph"
+commands: ["git"]
+difficulty: "intermediate"
+intro: "Create main and feature commits, then save git log --graph --decorate --all --oneline to graph.txt."
+workspace:
+  files:
+    - path: ".home/.gitconfig"
+      content: "[user]\nname = Terminal Learner\nemail = learner@example.com\n"
+    - path: "app.txt"
+      content: "base\n"
+hints:
+  - "Commit app.txt on main."
+  - "Create feature branch and add one commit there."
+  - "Return to main and run graph log with --all."
+solution:
+  commands:
+    - "git init -b main"
+    - "git add app.txt"
+    - "git commit -m 'base commit'"
+    - "git switch -c feature/graph"
+    - "echo 'feature line' >> app.txt"
+    - "git add app.txt"
+    - "git commit -m 'feature graph change'"
+    - "git switch main"
+    - "git log --graph --decorate --all --oneline > graph.txt"
+  explanation: "--graph plus --all draws branch topology."
+checks:
+  - type: "file_contains"
+    path: "graph.txt"
+    expected: "feature graph change"
+  - type: "file_contains"
+    path: "graph.txt"
+    expected: "base commit"

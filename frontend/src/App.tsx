@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import {
+  CancelCourseGeneration,
   ListRoadmaps,
   ListLessons,
   LoadRoadmap,
@@ -7,10 +8,12 @@ import {
   RunChecks,
   SelectAndImportLesson,
   SelectAndImportRoadmap,
+  StartCourseGeneration,
   StartLesson,
   StartRoadmapLesson,
   StopLesson
 } from "../wailsjs/go/main/App"
+import { AddCourseDialog } from "@/components/AddCourseDialog"
 import { CheckResults } from "@/components/CheckResults"
 import { CommandManualView } from "@/components/CommandManualView"
 import { LessonDetail } from "@/components/LessonDetail"
@@ -26,8 +29,15 @@ import {
   DialogTitle
 } from "@/components/ui/dialog"
 import { Separator } from "@/components/ui/separator"
+import {
+  onCourseGenerationLog,
+  onCourseGenerationState
+} from "@/lib/events"
 import type {
   CheckResult,
+  CourseGenerationLogEvent,
+  CourseGenerationRequest,
+  CourseGenerationState,
   LessonSessionState,
   LessonSummary,
   Roadmap,
@@ -75,6 +85,16 @@ export default function App() {
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | undefined>()
   const [terminalExit, setTerminalExit] = useState<number | undefined>()
+  const [addCourseOpen, setAddCourseOpen] = useState(false)
+  const [generationState, setGenerationState] = useState<
+    CourseGenerationState | undefined
+  >()
+  const [generationLogs, setGenerationLogs] = useState<CourseGenerationLogEvent[]>(
+    []
+  )
+  const [generatedLessonID, setGeneratedLessonID] = useState<string | undefined>()
+  const [generatedRoadmapID, setGeneratedRoadmapID] = useState<string | undefined>()
+  const handledGenerationRuns = useRef(new Set<string>())
 
   const completedLessonSet = useMemo(
     () => new Set(completedLessonIDs),
@@ -107,6 +127,32 @@ export default function App() {
     return loaded
   }, [])
 
+  const handleCompletedGeneration = useCallback(
+    async (state: CourseGenerationState) => {
+      if (!state.result || handledGenerationRuns.current.has(state.runID)) {
+        return
+      }
+      handledGenerationRuns.current.add(state.runID)
+
+      if (state.result.roadmap) {
+        await loadRoadmaps()
+        const roadmap = await LoadRoadmap(state.result.roadmap.id)
+        setSelectedRoadmap(roadmap)
+        setGeneratedRoadmapID(roadmap.id)
+        setGeneratedLessonID(undefined)
+        setMainView("roadmap")
+        return
+      }
+
+      if (state.result.lesson) {
+        await loadLessons()
+        setGeneratedLessonID(state.result.lesson.id)
+        setGeneratedRoadmapID(undefined)
+      }
+    },
+    [loadLessons, loadRoadmaps]
+  )
+
   useEffect(() => {
     async function loadInitialData() {
       const [loadedLessons, loadedRoadmaps] = await Promise.all([
@@ -125,6 +171,25 @@ export default function App() {
       setError(err instanceof Error ? err.message : String(err))
     })
   }, [])
+
+  useEffect(() => {
+    const cancelState = onCourseGenerationState((state) => {
+      setGenerationState(state)
+      if (state.phase === "completed") {
+        handleCompletedGeneration(state).catch((err: unknown) => {
+          setError(err instanceof Error ? err.message : String(err))
+        })
+      }
+    })
+    const cancelLog = onCourseGenerationLog((event) => {
+      setGenerationLogs((logs) => [...logs, event].slice(-120))
+    })
+
+    return () => {
+      cancelState()
+      cancelLog()
+    }
+  }, [handleCompletedGeneration])
 
   useEffect(() => {
     try {
@@ -209,6 +274,25 @@ export default function App() {
       setBusy(false)
     }
   }, [loadRoadmaps])
+
+  const startCourseGeneration = useCallback(
+    async (request: CourseGenerationRequest) => {
+      setError(undefined)
+      setGenerationLogs([])
+      setGenerationState(undefined)
+      const state = await StartCourseGeneration(request)
+      setGenerationState(state as CourseGenerationState)
+    },
+    []
+  )
+
+  const cancelCourseGeneration = useCallback(async (runID: string) => {
+    try {
+      await CancelCourseGeneration(runID)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err))
+    }
+  }, [])
 
   const startLesson = useCallback(
     async (lessonID: string) => {
@@ -317,8 +401,11 @@ export default function App() {
         activeRoadmapID={session?.roadmapID}
         activeLessonID={session?.lessonID}
         completedLessonIDs={completedLessonSet}
+        generatedLessonID={generatedLessonID}
+        generatedRoadmapID={generatedRoadmapID}
         onImportLesson={importLesson}
         onImportRoadmap={importRoadmap}
+        onAddCourseWithAI={() => setAddCourseOpen(true)}
         onSelectRoadmap={(roadmapID) => {
           selectRoadmap(roadmapID).catch((err: unknown) => {
             setError(err instanceof Error ? err.message : String(err))
@@ -338,10 +425,12 @@ export default function App() {
             roadmap={selectedRoadmap}
             roadmaps={roadmaps}
             completedLessonIDs={completedLessonSet}
+            generatedRoadmapID={generatedRoadmapID}
             activeRoadmapID={session?.roadmapID}
             activeLessonID={session?.lessonID}
             onImportLesson={importLesson}
             onImportRoadmap={importRoadmap}
+            onAddCourseWithAI={() => setAddCourseOpen(true)}
             onSelectRoadmap={(roadmapID) => {
               selectRoadmap(roadmapID).catch((err: unknown) => {
                 setError(err instanceof Error ? err.message : String(err))
@@ -410,6 +499,15 @@ export default function App() {
             <CheckResults results={checkResults} />
           </>
         )}
+
+        <AddCourseDialog
+          open={addCourseOpen}
+          state={generationState}
+          logs={generationLogs}
+          onOpenChange={setAddCourseOpen}
+          onStart={startCourseGeneration}
+          onCancel={cancelCourseGeneration}
+        />
 
         <Dialog open={error !== undefined} onOpenChange={(open) => !open && setError(undefined)}>
           <DialogContent>

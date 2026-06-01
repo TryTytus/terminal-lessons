@@ -114,3 +114,51 @@ export interface CheckResultsEvent {
   sessionID: string
   results: CheckResult[]
 }
+
+export type CourseGenerationProvider = "codex" | "claude"
+export type CourseGenerationFormat = "roadmap" | "lesson"
+export type CourseGenerationPhase =
+  | "preparing"
+  | "prompting"
+  | "running"
+  | "validating"
+  | "importing"
+  | "completed"
+  | "failed"
+  | "canceled"
+
+export interface CourseGenerationRequest {
+  provider: CourseGenerationProvider
+  format: CourseGenerationFormat
+  topic: string
+  difficulty: string
+  commands: string[]
+  extraInstructions: string
+  roadmapSize: string
+}
+
+export interface CourseGenerationResult {
+  format: CourseGenerationFormat
+  sourceDir: string
+  lesson?: LessonSummary
+  roadmap?: RoadmapSummary
+}
+
+export interface CourseGenerationState {
+  runID: string
+  phase: CourseGenerationPhase
+  provider: CourseGenerationProvider
+  format: CourseGenerationFormat
+  message: string
+  sourceDir: string
+  result?: CourseGenerationResult
+  error?: string
+  startedAt: string
+  completedAt?: string
+}
+
+export interface CourseGenerationLogEvent {
+  runID: string
+  stream: string
+  line: string
+}

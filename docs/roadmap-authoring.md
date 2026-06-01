@@ -60,6 +60,9 @@ commands:
   blocks.
 - Store exercises as normal lesson YAML. Roadmaps do not add executable checks or
   scripts.
+- Do not include generated setup, teardown, helper, or test scripts in roadmap
+  folders. Guides/manuals may show command examples, but validation must remain
+  declarative through lesson checks.
 - Add one foundation lesson for a command when it makes sense.
 - Add one focused lesson for each popular daily-use flag or parameter.
 - Use `flag` for short and long forms, such as `-i / --ignore-case`, when the
@@ -68,3 +71,11 @@ commands:
 - Add `kind: capstone` for exercises that combine multiple flags or concepts.
 
 See `examples/roadmaps/shell-text-essentials` for a complete importable roadmap.
+
+## AI Generation
+
+The in-app "Add with AI" roadmap flow asks Codex or Claude to create a complete
+roadmap folder in an app-owned staging directory. The expected output is
+`roadmap.yaml`, `commands/*.md`, optional `manuals/*.md`, and `lessons/*.yaml`.
+The app validates the staged folder with the normal roadmap importer before it
+copies anything into the roadmap store.

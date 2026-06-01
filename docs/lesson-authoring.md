@@ -36,9 +36,21 @@ checks:
 - Use `version: 1`.
 - Use only safe relative paths in `workspace.files[].path` and check `path`; no absolute paths, `..`, or null bytes.
 - Keep each generated workspace file under 64 KiB.
+- Write intros as explicit learner instructions. Include the starting files to
+  inspect, the exact file or terminal output to produce, any command/flag
+  constraints, and how the learner can tell the check should pass.
 - Prefer focused checks that inspect files or terminal output.
 - Do not expect the app to execute solution commands. The solution is shown to the learner only.
+- Do not include executable setup, teardown, helper, or test scripts in lesson
+  YAML. Workspace files should be small static practice inputs.
 - `file_equals` is whitespace-sensitive by default. Add `trim: true` only when leading/trailing whitespace should not matter.
+
+## AI Generation
+
+The in-app "Add with AI" lesson flow asks Codex or Claude to create `lesson.yaml`
+inside an app-owned staging folder. The app then validates that file with the
+same parser used for manual imports. A generated lesson is imported only if it
+passes this schema and safety validation.
 
 ## Check Types
 

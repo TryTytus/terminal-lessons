@@ -52,6 +52,29 @@ const roadmap: Roadmap = {
 }
 
 describe("RoadmapOverview", () => {
+  it("offers AI course creation in the empty roadmap view", async () => {
+    const addCourseWithAI = vi.fn()
+
+    render(
+      <RoadmapOverview
+        roadmaps={[]}
+        completedLessonIDs={new Set()}
+        busy={false}
+        onImportRoadmap={vi.fn()}
+        onImportLesson={vi.fn()}
+        onAddCourseWithAI={addCourseWithAI}
+        onSelectRoadmap={vi.fn()}
+        onStartRoadmapLesson={vi.fn()}
+        onShowCommandManual={vi.fn()}
+        onShowLesson={vi.fn()}
+      />
+    )
+
+    await userEvent.click(screen.getByRole("button", { name: /Add with AI/i }))
+
+    expect(addCourseWithAI).toHaveBeenCalled()
+  })
+
   it("renders roadmap progress, guide markdown, and starts the first lesson", async () => {
     const startRoadmapLesson = vi.fn()
     const showCommandManual = vi.fn()
@@ -66,6 +89,7 @@ describe("RoadmapOverview", () => {
         busy={false}
         onImportRoadmap={vi.fn()}
         onImportLesson={vi.fn()}
+        onAddCourseWithAI={vi.fn()}
         onSelectRoadmap={vi.fn()}
         onStartRoadmapLesson={startRoadmapLesson}
         onShowCommandManual={showCommandManual}

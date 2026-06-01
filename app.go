@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"terminal-lessons/internal/checks"
+	"terminal-lessons/internal/coursegen"
 	"terminal-lessons/internal/lessons"
 	"terminal-lessons/internal/roadmaps"
 	"terminal-lessons/internal/terminal"
@@ -27,6 +28,8 @@ const (
 	eventLessonState    = "lesson:state"
 	eventRoadmapState   = "roadmap:state"
 	eventChecksResult   = "checks:result"
+	eventCoursegenState = "coursegen:state"
+	eventCoursegenLog   = "coursegen:log"
 )
 
 type App struct {
@@ -36,6 +39,8 @@ type App struct {
 
 	mu       sync.Mutex
 	sessions map[string]*lessonSession
+
+	generations map[string]context.CancelFunc
 }
 
 type lessonSession struct {
@@ -75,7 +80,8 @@ type CheckResultsEvent struct {
 
 func NewApp() *App {
 	return &App{
-		sessions: map[string]*lessonSession{},
+		sessions:    map[string]*lessonSession{},
+		generations: map[string]context.CancelFunc{},
 	}
 }
 
@@ -91,8 +97,15 @@ func (a *App) shutdown(_ context.Context) {
 	for id := range a.sessions {
 		ids = append(ids, id)
 	}
+	cancels := make([]context.CancelFunc, 0, len(a.generations))
+	for _, cancel := range a.generations {
+		cancels = append(cancels, cancel)
+	}
 	a.mu.Unlock()
 
+	for _, cancel := range cancels {
+		cancel()
+	}
 	for _, id := range ids {
 		_ = a.StopLesson(id)
 	}
@@ -173,6 +186,48 @@ func (a *App) ImportRoadmap(path string) (*roadmaps.Summary, error) {
 	return &summary, nil
 }
 
+func (a *App) StartCourseGeneration(request coursegen.Request) (*coursegen.State, error) {
+	if err := a.ensureStore(); err != nil {
+		return nil, err
+	}
+	if err := a.ensureRoadmapStore(); err != nil {
+		return nil, err
+	}
+
+	run, err := coursegen.Prepare(appDataDir(), request)
+	if err != nil {
+		return nil, err
+	}
+
+	baseCtx := a.ctx
+	if baseCtx == nil {
+		baseCtx = context.Background()
+	}
+	ctx, cancel := context.WithCancel(baseCtx)
+
+	a.mu.Lock()
+	a.generations[run.RunID] = cancel
+	a.mu.Unlock()
+
+	state := coursegen.InitialState(run)
+	a.emit(eventCoursegenState, state)
+
+	go a.runCourseGeneration(ctx, run)
+
+	return state, nil
+}
+
+func (a *App) CancelCourseGeneration(runID string) error {
+	a.mu.Lock()
+	cancel, ok := a.generations[runID]
+	a.mu.Unlock()
+	if !ok {
+		return fmt.Errorf("course generation run %q not found", runID)
+	}
+	cancel()
+	return nil
+}
+
 func (a *App) LoadRoadmap(roadmapID string) (*roadmaps.Roadmap, error) {
 	if err := a.ensureRoadmapStore(); err != nil {
 		return nil, err
@@ -200,6 +255,73 @@ func (a *App) StartRoadmapLesson(roadmapID, lessonID string) (*LessonSessionStat
 		return nil, err
 	}
 	return a.startLesson(lesson, roadmapID)
+}
+
+func (a *App) runCourseGeneration(ctx context.Context, run *coursegen.Run) {
+	defer a.removeGeneration(run.RunID)
+
+	a.emit(eventCoursegenState, coursegen.StateForPhase(run, coursegen.PhasePrompting, "Prompt assembled with Terminal Lessons schema and safety rules."))
+	a.emit(eventCoursegenState, coursegen.StateForPhase(run, coursegen.PhaseRunning, fmt.Sprintf("Running %s in the staged course folder.", run.Request.Provider)))
+
+	runner := coursegen.Runner{}
+	if err := runner.RunProvider(ctx, run, func(event coursegen.LogEvent) {
+		a.emit(eventCoursegenLog, event)
+	}); err != nil {
+		a.emit(eventCoursegenState, coursegen.FailedState(run, coursegen.PhaseFailed, err))
+		return
+	}
+
+	a.emit(eventCoursegenState, coursegen.StateForPhase(run, coursegen.PhaseValidating, "Validating generated files before import."))
+	if err := coursegen.ValidateSource(run.Request.Format, run.SourceDir); err != nil {
+		a.emit(eventCoursegenState, coursegen.FailedState(run, coursegen.PhaseFailed, err))
+		return
+	}
+
+	a.emit(eventCoursegenState, coursegen.StateForPhase(run, coursegen.PhaseImporting, "Importing validated course content."))
+	result, err := a.importGeneratedCourse(run)
+	if err != nil {
+		a.emit(eventCoursegenState, coursegen.FailedState(run, coursegen.PhaseFailed, err))
+		return
+	}
+
+	a.emit(eventCoursegenState, coursegen.CompletedState(run, result))
+}
+
+func (a *App) importGeneratedCourse(run *coursegen.Run) (coursegen.Result, error) {
+	switch run.Request.Format {
+	case coursegen.FormatLesson:
+		if err := a.ensureStore(); err != nil {
+			return coursegen.Result{}, err
+		}
+		lesson, err := a.store.Import(filepath.Join(run.SourceDir, "lesson.yaml"))
+		if err != nil {
+			return coursegen.Result{}, err
+		}
+		summary := lesson.Summary()
+		a.emit(eventLessonState, summary)
+		return coursegen.Result{
+			Format:    coursegen.FormatLesson,
+			SourceDir: run.SourceDir,
+			Lesson:    &summary,
+		}, nil
+	case coursegen.FormatRoadmap:
+		if err := a.ensureRoadmapStore(); err != nil {
+			return coursegen.Result{}, err
+		}
+		roadmap, err := a.roadmapStore.ImportOrReplace(run.SourceDir)
+		if err != nil {
+			return coursegen.Result{}, err
+		}
+		summary := roadmap.ToSummary()
+		a.emit(eventRoadmapState, summary)
+		return coursegen.Result{
+			Format:    coursegen.FormatRoadmap,
+			SourceDir: run.SourceDir,
+			Roadmap:   &summary,
+		}, nil
+	default:
+		return coursegen.Result{}, fmt.Errorf("unsupported generation format %q", run.Request.Format)
+	}
 }
 
 func (a *App) TerminalInput(sessionID, data string) error {
@@ -323,6 +445,13 @@ func (a *App) removeSession(sessionID string) (*lessonSession, error) {
 	}
 	delete(a.sessions, sessionID)
 	return session, nil
+}
+
+func (a *App) removeGeneration(runID string) {
+	a.mu.Lock()
+	defer a.mu.Unlock()
+
+	delete(a.generations, runID)
 }
 
 func (a *App) ensureStore() error {

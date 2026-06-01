@@ -1,5 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from "vitest"
-import { onCheckResults, onTerminalOutput } from "./events"
+import {
+  onCheckResults,
+  onCourseGenerationLog,
+  onCourseGenerationState,
+  onTerminalOutput
+} from "./events"
 import { EventsOn } from "../../wailsjs/runtime/runtime"
 
 vi.mock("../../wailsjs/runtime/runtime", () => ({
@@ -30,5 +35,16 @@ describe("events", () => {
     onCheckResults(handler)
 
     expect(EventsOn).toHaveBeenCalledWith("checks:result", expect.any(Function))
+  })
+
+  it("subscribes to course generation events", () => {
+    const stateHandler = vi.fn()
+    const logHandler = vi.fn()
+
+    onCourseGenerationState(stateHandler)
+    onCourseGenerationLog(logHandler)
+
+    expect(EventsOn).toHaveBeenCalledWith("coursegen:state", expect.any(Function))
+    expect(EventsOn).toHaveBeenCalledWith("coursegen:log", expect.any(Function))
   })
 })

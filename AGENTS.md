@@ -23,6 +23,7 @@ Backend:
 - YAML parsing with `gopkg.in/yaml.v3`
 - Lesson validation and storage in `internal/lessons`
 - Roadmap folder validation and storage in `internal/roadmaps`
+- AI course generation prompt/staging/provider execution in `internal/coursegen`
 - Workspace materialization in `internal/workspace`
 - Declarative check execution in `internal/checks`
 - PTY lifecycle/transcript capture in `internal/terminal`
@@ -32,6 +33,8 @@ Wails bound methods:
 - `ImportRoadmap(path)`
 - `SelectAndImportLesson()`
 - `SelectAndImportRoadmap()`
+- `StartCourseGeneration(request)`
+- `CancelCourseGeneration(runID)`
 - `ListLessons()`
 - `ListRoadmaps()`
 - `LoadRoadmap(roadmapID)`
@@ -50,17 +53,21 @@ Wails events:
 - `lesson:state`
 - `roadmap:state`
 - `checks:result`
+- `coursegen:state`
+- `coursegen:log`
 
 ## Current State
 
 Initial baseline: Empty Repo / Scaffolding.
 
-Current actual state: scaffolded MVP implemented and verified. The project now has Go/Wails backend packages, React/Xterm frontend, YAML lesson schema/docs, roadmap folder schema/docs, 11 standalone example lessons, an importable shell text essentials roadmap with 28 command sections and 80 exercises, plus an importable git full course roadmap with 19 command sections and 49 exercises, short command guides, full command manuals, tests, and a successful macOS Wails production build.
+Current actual state: scaffolded MVP implemented and verified. The project now has Go/Wails backend packages, React/Xterm frontend, YAML lesson schema/docs, roadmap folder schema/docs, 11 standalone example lessons, an importable shell text essentials roadmap with 28 command sections and 80 exercises, plus an importable git full course roadmap with 19 command sections and 49 exercises, short command guides, full command manuals, an "Add with AI" course generation flow for Codex/Claude CLI providers, tests, and a successful macOS Wails production build.
 
 Important environment notes:
 - Go is available at `/usr/local/go/bin/go`.
 - Wails is available at `/Users/trytytus/go/bin/wails`.
 - pnpm is available at `/Users/trytytus/Library/pnpm/pnpm`.
+- Codex CLI is available at `/opt/homebrew/bin/codex`.
+- Claude CLI was not on `PATH` when the AI course generation feature was added.
 - On macOS, Wails production builds require `CGO_ENABLED=1`.
 - `darwin_link.go` links `UniformTypeIdentifiers` for the macOS Wails/WebKit build.
 
@@ -84,6 +91,8 @@ Important environment notes:
 - [x] Next: add per-command full manual Markdown pages with cheat sheets, roadmap entry points, and exercise-page book buttons.
 - [x] Next: expand `examples/roadmaps/shell-text-essentials` to cover navigation, file operations, permissions, shell utilities, viewing, search, and text-processing commands with one exercise per common form/flag.
 - [x] Next: add `examples/roadmaps/git-full-course` with focused Git exercises for init/status/add/commit/log/diff/branch/switch/checkout/restore/mv/rm/merge/rebase/cherry-pick/reset/tag/show/bisect, including merge-vs-rebase-vs-squash ASCII diagrams.
+- [x] Next: add "Add with AI" course generation using staged Codex/Claude CLI runs, validation-before-import, coursegen events/logs, and a guided React dialog.
 - [ ] Next: manually run the app, import `examples/roadmaps/shell-text-essentials`, start a roadmap exercise, pass checks, and confirm progress updates in the roadmap view.
 - [ ] Next: manually run the app, import `examples/roadmaps/git-full-course`, complete representative exercises (merge/rebase/reset/bisect), and confirm roadmap progress updates in the UI.
+- [ ] Next: manually run "Add with AI" with Codex for one standalone lesson and one small roadmap, confirm successful import, and confirm missing Claude CLI failures are clear.
 - [ ] Next: decide whether to add a real app icon.

@@ -7,7 +7,8 @@ import {
   LibraryBig,
   Map,
   Play,
-  Route
+  Route,
+  Sparkles
 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -21,10 +22,13 @@ interface RoadmapSidebarProps {
   lessons: LessonSummary[]
   activeRoadmapID?: string
   activeLessonID?: string
+  generatedLessonID?: string
+  generatedRoadmapID?: string
   completedLessonIDs: Set<string>
   busy: boolean
   onImportLesson: () => void
   onImportRoadmap: () => void
+  onAddCourseWithAI: () => void
   onSelectRoadmap: (roadmapID: string) => void
   onStartLesson: (lessonID: string) => void
   onStartRoadmapLesson: (roadmapID: string, lessonID: string) => void
@@ -37,10 +41,13 @@ export function RoadmapSidebar({
   lessons,
   activeRoadmapID,
   activeLessonID,
+  generatedLessonID,
+  generatedRoadmapID,
   completedLessonIDs,
   busy,
   onImportLesson,
   onImportRoadmap,
+  onAddCourseWithAI,
   onSelectRoadmap,
   onStartLesson,
   onStartRoadmapLesson,
@@ -63,7 +70,7 @@ export function RoadmapSidebar({
             </p>
           </div>
         </div>
-        <div className="mt-4 grid grid-cols-2 gap-2">
+        <div className="mt-4 grid grid-cols-3 gap-2">
           <Button onClick={onImportRoadmap} size="sm" disabled={busy}>
             <FolderPlus aria-hidden className="mr-2 h-4 w-4" />
             Roadmap
@@ -71,6 +78,10 @@ export function RoadmapSidebar({
           <Button onClick={onImportLesson} variant="outline" size="sm" disabled={busy}>
             <Import aria-hidden className="mr-2 h-4 w-4" />
             Lesson
+          </Button>
+          <Button onClick={onAddCourseWithAI} variant="secondary" size="sm" disabled={busy}>
+            <Sparkles aria-hidden className="mr-2 h-4 w-4" />
+            Add with AI
           </Button>
         </div>
       </div>
@@ -98,7 +109,8 @@ export function RoadmapSidebar({
                 key={roadmap.id}
                 className={cn(
                   "grid gap-2 rounded-lg border border-[#c9d6cb] bg-white p-3 text-left transition-colors hover:border-[#2d6b55]",
-                  selectedRoadmap?.id === roadmap.id && "border-[#2d6b55] bg-[#eef6ef]"
+                  selectedRoadmap?.id === roadmap.id && "border-[#2d6b55] bg-[#eef6ef]",
+                  generatedRoadmapID === roadmap.id && "ring-2 ring-[#f0c85a]"
                 )}
                 onClick={() => onSelectRoadmap(roadmap.id)}
                 disabled={busy}
@@ -122,6 +134,7 @@ export function RoadmapSidebar({
                   <Badge>{roadmap.commandCount} commands</Badge>
                   <Badge>{roadmap.lessonCount} lessons</Badge>
                   {roadmap.difficulty ? <Badge>{roadmap.difficulty}</Badge> : null}
+                  {generatedRoadmapID === roadmap.id ? <Badge>New</Badge> : null}
                 </div>
               </button>
             ))}
@@ -248,7 +261,8 @@ export function RoadmapSidebar({
                   "grid gap-2 rounded-lg border border-[#c9d6cb] bg-white p-3 text-left transition-colors hover:border-[#2d6b55]",
                   !activeRoadmapID &&
                     activeLessonID === lesson.id &&
-                    "border-[#2d6b55] bg-[#eef6ef]"
+                    "border-[#2d6b55] bg-[#eef6ef]",
+                  generatedLessonID === lesson.id && "ring-2 ring-[#f0c85a]"
                 )}
                 onClick={() => onStartLesson(lesson.id)}
                 disabled={busy}
@@ -261,6 +275,7 @@ export function RoadmapSidebar({
                     <div className="mt-1 flex flex-wrap gap-1">
                       <Badge>{lesson.difficulty || "practice"}</Badge>
                       <Badge>{lesson.checkCount} checks</Badge>
+                      {generatedLessonID === lesson.id ? <Badge>New</Badge> : null}
                     </div>
                   </div>
                   {!activeRoadmapID && activeLessonID === lesson.id ? (

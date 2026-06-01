@@ -1,6 +1,8 @@
 import { EventsOn } from "../../wailsjs/runtime/runtime"
 import type {
   CheckResultsEvent,
+  CourseGenerationLogEvent,
+  CourseGenerationState,
   TerminalErrorEvent,
   TerminalExitEvent,
   TerminalOutputEvent
@@ -12,7 +14,9 @@ export const events = {
   terminalError: "terminal:error",
   lessonState: "lesson:state",
   roadmapState: "roadmap:state",
-  checksResult: "checks:result"
+  checksResult: "checks:result",
+  coursegenState: "coursegen:state",
+  coursegenLog: "coursegen:log"
 } as const
 
 type Handler<T> = (payload: T) => void
@@ -31,4 +35,16 @@ export function onTerminalError(handler: Handler<TerminalErrorEvent>) {
 
 export function onCheckResults(handler: Handler<CheckResultsEvent>) {
   return EventsOn(events.checksResult, (payload) => handler(payload as CheckResultsEvent))
+}
+
+export function onCourseGenerationState(handler: Handler<CourseGenerationState>) {
+  return EventsOn(events.coursegenState, (payload) =>
+    handler(payload as CourseGenerationState)
+  )
+}
+
+export function onCourseGenerationLog(handler: Handler<CourseGenerationLogEvent>) {
+  return EventsOn(events.coursegenLog, (payload) =>
+    handler(payload as CourseGenerationLogEvent)
+  )
 }

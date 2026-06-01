@@ -4,6 +4,9 @@ import {lessons} from '../models';
 import {roadmaps} from '../models';
 import {main} from '../models';
 import {checks} from '../models';
+import {coursegen} from '../models';
+
+export function CancelCourseGeneration(arg1:string):Promise<void>;
 
 export function ImportLesson(arg1:string):Promise<lessons.Summary>;
 
@@ -22,6 +25,8 @@ export function RunChecks(arg1:string):Promise<Array<checks.Result>>;
 export function SelectAndImportLesson():Promise<lessons.Summary>;
 
 export function SelectAndImportRoadmap():Promise<roadmaps.Summary>;
+
+export function StartCourseGeneration(arg1:coursegen.Request):Promise<coursegen.State>;
 
 export function StartLesson(arg1:string):Promise<main.LessonSessionState>;
 

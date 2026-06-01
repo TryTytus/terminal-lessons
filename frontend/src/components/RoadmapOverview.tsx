@@ -8,6 +8,7 @@ import {
   Import,
   Play,
   Route,
+  Sparkles,
   TerminalSquare
 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
@@ -21,11 +22,13 @@ interface RoadmapOverviewProps {
   roadmap?: Roadmap
   roadmaps: RoadmapSummary[]
   completedLessonIDs: Set<string>
+  generatedRoadmapID?: string
   activeRoadmapID?: string
   activeLessonID?: string
   busy: boolean
   onImportRoadmap: () => void
   onImportLesson: () => void
+  onAddCourseWithAI: () => void
   onSelectRoadmap: (roadmapID: string) => void
   onStartRoadmapLesson: (roadmapID: string, lessonID: string) => void
   onShowCommandManual: (commandName: string) => void
@@ -36,11 +39,13 @@ export function RoadmapOverview({
   roadmap,
   roadmaps,
   completedLessonIDs,
+  generatedRoadmapID,
   activeRoadmapID,
   activeLessonID,
   busy,
   onImportRoadmap,
   onImportLesson,
+  onAddCourseWithAI,
   onSelectRoadmap,
   onStartRoadmapLesson,
   onShowCommandManual,
@@ -72,6 +77,10 @@ export function RoadmapOverview({
                   <Import aria-hidden className="mr-2 h-4 w-4" />
                   Import lesson
                 </Button>
+                <Button onClick={onAddCourseWithAI} variant="secondary" disabled={busy}>
+                  <Sparkles aria-hidden className="mr-2 h-4 w-4" />
+                  Add with AI
+                </Button>
               </div>
             </div>
 
@@ -80,7 +89,10 @@ export function RoadmapOverview({
                 {roadmaps.map((summary) => (
                   <button
                     key={summary.id}
-                    className="grid gap-3 rounded-lg border border-[#c5d1c7] bg-white p-4 text-left transition-colors hover:border-[#2d6b55]"
+                    className={cn(
+                      "grid gap-3 rounded-lg border border-[#c5d1c7] bg-white p-4 text-left transition-colors hover:border-[#2d6b55]",
+                      generatedRoadmapID === summary.id && "ring-2 ring-[#f0c85a]"
+                    )}
                     onClick={() => onSelectRoadmap(summary.id)}
                     disabled={busy}
                   >
@@ -98,6 +110,7 @@ export function RoadmapOverview({
                     <div className="flex flex-wrap gap-1">
                       <Badge>{summary.commandCount} commands</Badge>
                       <Badge>{summary.lessonCount} lessons</Badge>
+                      {generatedRoadmapID === summary.id ? <Badge>New</Badge> : null}
                     </div>
                   </button>
                 ))}
@@ -136,6 +149,11 @@ export function RoadmapOverview({
                   {roadmap.difficulty ? (
                     <span className="rounded-md bg-white/10 px-2 py-1 text-xs text-white">
                       {roadmap.difficulty}
+                    </span>
+                  ) : null}
+                  {generatedRoadmapID === roadmap.id ? (
+                    <span className="rounded-md bg-[#f0c85a] px-2 py-1 text-xs text-[#1f2116]">
+                      New
                     </span>
                   ) : null}
                 </div>

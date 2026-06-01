@@ -21,6 +21,119 @@ export namespace checks {
 
 }
 
+export namespace coursegen {
+
+	export class Request {
+	    provider: string;
+	    format: string;
+	    topic: string;
+	    difficulty: string;
+	    commands: string[];
+	    extraInstructions: string;
+	    roadmapSize: string;
+
+	    static createFrom(source: any = {}) {
+	        return new Request(source);
+	    }
+
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.provider = source["provider"];
+	        this.format = source["format"];
+	        this.topic = source["topic"];
+	        this.difficulty = source["difficulty"];
+	        this.commands = source["commands"];
+	        this.extraInstructions = source["extraInstructions"];
+	        this.roadmapSize = source["roadmapSize"];
+	    }
+	}
+	export class Result {
+	    format: string;
+	    sourceDir: string;
+	    lesson?: lessons.Summary;
+	    roadmap?: roadmaps.Summary;
+
+	    static createFrom(source: any = {}) {
+	        return new Result(source);
+	    }
+
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.format = source["format"];
+	        this.sourceDir = source["sourceDir"];
+	        this.lesson = this.convertValues(source["lesson"], lessons.Summary);
+	        this.roadmap = this.convertValues(source["roadmap"], roadmaps.Summary);
+	    }
+
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	export class State {
+	    runID: string;
+	    phase: string;
+	    provider: string;
+	    format: string;
+	    message: string;
+	    sourceDir: string;
+	    result?: Result;
+	    error?: string;
+	    startedAt: string;
+	    completedAt?: string;
+
+	    static createFrom(source: any = {}) {
+	        return new State(source);
+	    }
+
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.runID = source["runID"];
+	        this.phase = source["phase"];
+	        this.provider = source["provider"];
+	        this.format = source["format"];
+	        this.message = source["message"];
+	        this.sourceDir = source["sourceDir"];
+	        this.result = this.convertValues(source["result"], Result);
+	        this.error = source["error"];
+	        this.startedAt = source["startedAt"];
+	        this.completedAt = source["completedAt"];
+	    }
+
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+
+}
+
 export namespace lessons {
 	
 	export class Check {
@@ -370,4 +483,3 @@ export namespace roadmaps {
 	}
 
 }
-

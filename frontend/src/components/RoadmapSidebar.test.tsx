@@ -49,6 +49,7 @@ describe("RoadmapSidebar", () => {
   it("shows command lessons in the agenda and opens the full manual", async () => {
     const showCommandManual = vi.fn()
     const startRoadmapLesson = vi.fn()
+    const addCourseWithAI = vi.fn()
 
     render(
       <RoadmapSidebar
@@ -59,12 +60,16 @@ describe("RoadmapSidebar", () => {
         busy={false}
         onImportLesson={vi.fn()}
         onImportRoadmap={vi.fn()}
+        onAddCourseWithAI={addCourseWithAI}
         onSelectRoadmap={vi.fn()}
         onStartLesson={vi.fn()}
         onStartRoadmapLesson={startRoadmapLesson}
         onShowCommandManual={showCommandManual}
       />
     )
+
+    await userEvent.click(screen.getByRole("button", { name: /Add with AI/i }))
+    expect(addCourseWithAI).toHaveBeenCalled()
 
     await userEvent.click(
       screen.getByRole("button", { name: /Command lesson Full grep reference/i })

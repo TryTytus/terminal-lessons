@@ -9,7 +9,7 @@ The frontend lives in `frontend/` and uses React, TypeScript, Vite, Xterm.js, an
 Key responsibilities:
 - Render roadmap navigation, the full roadmap agenda, Markdown command guides,
   full command manuals, standalone lesson list, task details, hints, solution,
-  check results, and terminal pane.
+  check results, AI course generation dialog, and terminal pane.
 - Initialize Xterm.js, fit it to the available space, forward user input to Go, and write PTY output back into the terminal.
 - Call Wails bound methods from `frontend/wailsjs/go/main/App`.
 - Subscribe to Wails runtime events through `frontend/src/lib/events.ts`.
@@ -25,6 +25,9 @@ Key packages:
   lesson lookup.
 - `internal/workspace`: creates fresh temporary lesson workspaces and workspace-local home directories.
 - `internal/checks`: runs declarative checks against files and the bounded terminal transcript.
+- `internal/coursegen`: builds strict AI curriculum prompts, creates staged
+  output folders, runs Codex or Claude CLI providers, streams provider logs,
+  and validates generated lesson/roadmap output before import.
 - `internal/terminal`: starts local PTY sessions with `github.com/creack/pty`, streams output, handles input/resize, stores bounded transcript, and stops sessions.
 
 The app targets macOS/Linux for the MVP. Windows/WSL is intentionally out of scope until a later adapter exists.
@@ -35,6 +38,8 @@ The app targets macOS/Linux for the MVP. Windows/WSL is intentionally out of sco
 - `ImportRoadmap(path string) (*roadmaps.Summary, error)`: import and validate a roadmap folder from a filesystem path.
 - `SelectAndImportLesson() (*lessons.Summary, error)`: open a native file dialog and import the selected YAML lesson.
 - `SelectAndImportRoadmap() (*roadmaps.Summary, error)`: open a native folder dialog and import the selected roadmap folder.
+- `StartCourseGeneration(request coursegen.Request) (*coursegen.State, error)`: create an app-owned AI generation staging folder, start Codex or Claude asynchronously, and emit course generation state/log events.
+- `CancelCourseGeneration(runID string) error`: cancel a running AI generation provider process.
 - `ListLessons() ([]lessons.Summary, error)`: list imported lessons.
 - `ListRoadmaps() ([]roadmaps.Summary, error)`: list imported roadmap summaries.
 - `LoadRoadmap(roadmapID string) (*roadmaps.Roadmap, error)`: load an imported roadmap with command guide/manual Markdown and hydrated lesson metadata.
@@ -97,6 +102,51 @@ RoadmapSummary
   }>
 }
 ```
+
+`coursegen:state`
+```ts
+{
+  runID: string
+  phase: "preparing" | "prompting" | "running" | "validating" | "importing" | "completed" | "failed" | "canceled"
+  provider: "codex" | "claude"
+  format: "lesson" | "roadmap"
+  message: string
+  sourceDir: string
+  result?: {
+    format: "lesson" | "roadmap"
+    sourceDir: string
+    lesson?: LessonSummary
+    roadmap?: RoadmapSummary
+  }
+  error?: string
+  startedAt: string
+  completedAt?: string
+}
+```
+
+`coursegen:log`
+```ts
+{
+  runID: string
+  stream: "stdout" | "stderr"
+  line: string
+}
+```
+
+## AI Course Generation
+
+The "Add with AI" workflow does not call model APIs directly. It relies on an
+installed, already-authenticated CLI provider:
+
+- Codex runs as `codex exec -c approval_policy=never --sandbox workspace-write --skip-git-repo-check -C <sourceDir> -` with the generated prompt on stdin. This matches `codex-cli 0.136.0`, where `--ask-for-approval` is not accepted by `codex exec`.
+- Claude runs as `claude --bare -p --permission-mode acceptEdits --tools Read,Write,Edit,MultiEdit --output-format stream-json <prompt>`.
+
+Every run writes into `<appDataDir>/ai-generated/<timestamp>-<slug>-<suffix>/source`.
+For a lesson, the provider must create `lesson.yaml`. For a roadmap, it must
+create `roadmap.yaml` plus referenced Markdown and YAML files. The app validates
+the staged output with the existing lesson or roadmap parser before importing.
+Failed generation folders are retained for inspection; only validated output is
+copied into the normal lesson or roadmap stores.
 
 ## Lesson Format
 
